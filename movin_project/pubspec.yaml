@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   location: ^3.0.0
+  mapbox_gl: ^0.8.0
   flutter:
     sdk: flutter
 
