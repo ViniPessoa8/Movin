@@ -4,33 +4,11 @@ import 'package:movin_project/views/widgets/login/painel_cadastro.dart';
 import 'package:movin_project/views/widgets/login/painel_carregamento.dart';
 import 'package:movin_project/views/widgets/login/painel_login.dart';
 
-class PaginaLogin extends StatefulWidget {
+class PaginaLogin extends StatelessWidget {
   static final String nomeRota = '/PaginaLogin';
+  final Function _carregaPainelLogin;
 
-  @override
-  _PaginaLoginState createState() => _PaginaLoginState();
-}
-
-class _PaginaLoginState extends State<PaginaLogin> {
-  List<Map<String, Object>> _paginas;
-  int _indexPaginaSelecionada = 1;
-
-  @override
-  void initState() {
-    _paginas = [
-      {'pagina': PainelCarregamento(), 'titulo': 'Carregamento'},
-      {'pagina': PainelBoasVindas(), 'titulo': 'BoasVindas'},
-      {'pagina': PainelLogin(), 'titulo': 'Login'},
-      {'pagina': PainelCadastro(), 'titulo': 'Cadastro'},
-    ];
-    super.initState();
-  }
-
-  void _selecionaPagina(int index) {
-    setState(() {
-      _indexPaginaSelecionada = index;
-    });
-  }
+  PaginaLogin(this._carregaPainelLogin);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +19,7 @@ class _PaginaLoginState extends State<PaginaLogin> {
       appBar: AppBar(
         title: Text('Movin'),
       ),
-      body: _paginas[_indexPaginaSelecionada]['pagina'],
+      body: PainelBoasVindas(_carregaPainelLogin),
     );
   }
 }
