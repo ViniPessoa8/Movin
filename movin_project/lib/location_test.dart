@@ -17,33 +17,12 @@ class _LocationTestState extends State<LocationTest> {
   MapboxMapController _mapBoxController;
   double _mapLatitude = 0.0;
   double _mapLongitude = 0.0;
+  final double _userLocationZoom = 14.0;
 
   @override
   void initState() {
     updateLocalizacao();
     super.initState();
-  }
-
-  // Future<void> createMapBoxController() async {
-  //   await MapboxMapController.init(
-  //     0,
-  //     CameraPosition(
-  //       target: LatLng(
-  //         _mapLatitude,
-  //         _mapLongitude,
-  //       ),
-  //       zoom: _mapZoom,
-  //     ),
-  //   ).then((value) {
-  //     print('fooooi');
-  //     setState(() {
-  //       _mapBoxController = value;
-  //     });
-  //   });
-  // }
-
-  void onMapCreate(MapboxMapController controller) {
-    _mapBoxController = controller;
   }
 
   Future<void> updateLocalizacao() async {
@@ -77,17 +56,44 @@ class _LocationTestState extends State<LocationTest> {
     });
   }
 
-  void aumentarZoom() {
-    _mapBoxController.animateCamera(CameraUpdate.zoomIn());
-  }
-
-  void move() {
+  void moveNorth() {
     setState(() {
-      _mapLatitude += 1.0;
+      _mapLatitude += 0.01;
     });
     _mapBoxController.animateCamera(
       CameraUpdate.newLatLng(
         LatLng(_mapLatitude, _mapLongitude),
+      ),
+    );
+  }
+
+  void moveSouth() {
+    setState(() {
+      _mapLatitude -= 0.01;
+    });
+    _mapBoxController.animateCamera(
+      CameraUpdate.newLatLng(
+        LatLng(_mapLatitude, _mapLongitude),
+      ),
+    );
+  }
+
+  void zoomIn() {
+    _mapBoxController.animateCamera(CameraUpdate.zoomIn());
+  }
+
+  void zoomOut() {
+    _mapBoxController.animateCamera(CameraUpdate.zoomOut());
+  }
+
+  void moveUserLocation() {
+    _mapBoxController.animateCamera(
+      CameraUpdate.newLatLngZoom(
+        LatLng(
+          _localizacao.latitude,
+          _localizacao.longitude,
+        ),
+        _userLocationZoom,
       ),
     );
   }
@@ -100,13 +106,13 @@ class _LocationTestState extends State<LocationTest> {
     return Container(
       height: height,
       child: new MapboxMap(
-        trackCameraPosition: true,
+        // trackCameraPosition: true,
         initialCameraPosition: new CameraPosition(
             target: LatLng(
               latitude,
               longitude,
             ),
-            zoom: 14.0),
+            zoom: _userLocationZoom),
         accessToken: MAP_BOX_TOKEN,
         myLocationEnabled: true,
         zoomGesturesEnabled: true,
@@ -115,6 +121,10 @@ class _LocationTestState extends State<LocationTest> {
         onMapCreated: onMapCreate,
       ),
     );
+  }
+
+  void onMapCreate(MapboxMapController controller) {
+    _mapBoxController = controller;
   }
 
   @override
@@ -153,12 +163,56 @@ class _LocationTestState extends State<LocationTest> {
                 ),
                 Row(
                   children: [
+                    Column(
+                      children: [
+                        FlatButton(
+                          onPressed: zoomIn, //aumentarZoom,
+                          child: Row(
+                            children: [
+                              Icon(Icons.add),
+                              Text('Zoom'),
+                            ],
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: zoomOut, //aumentarZoom,
+                          child: Row(
+                            children: [
+                              Icon(Icons.remove),
+                              Text('Zoom'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        FlatButton(
+                          onPressed: moveNorth, //aumentarZoom,
+                          child: Row(
+                            children: [
+                              Icon(Icons.arrow_upward),
+                              Text('Move North'),
+                            ],
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: moveSouth, //aumentarZoom,
+                          child: Row(
+                            children: [
+                              Icon(Icons.arrow_downward),
+                              Text('Move South'),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                     FlatButton(
-                      onPressed: move, //aumentarZoom,
+                      onPressed: moveUserLocation,
                       child: Row(
                         children: [
-                          Icon(Icons.add),
-                          Text('Zoom'),
+                          Icon(Icons.location_on),
+                          Text('Meu Local'),
                         ],
                       ),
                     )
