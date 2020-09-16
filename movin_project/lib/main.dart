@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:movin_project/views/pages/pagina_login.dart';
 import 'package:movin_project/views/pages/pagina_principal.dart';
+import 'package:movin_project/views/widgets/login/painel_boas_vindas.dart';
+import 'package:movin_project/views/widgets/login/painel_cadastro.dart';
+import 'package:movin_project/views/widgets/login/painel_login.dart';
 import 'package:movin_project/views/widgets/painel_emergencia.dart';
 
 void main() {
   runApp(MyApp());
+}
+
+bool usuarioLogado() {
+  return false;
 }
 
 class MyApp extends StatelessWidget {
@@ -16,10 +24,14 @@ class MyApp extends StatelessWidget {
           accentColor: Colors.orange[600],
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        initialRoute: '/',
+        initialRoute: usuarioLogado() ? '/' : PaginaLogin.nomeRota,
         routes: {
           '/': (ctx) => PaginaPrincipal(),
-          PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
+          PaginaLogin.nomeRota: (ctx) => PaginaLogin(),
+          // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
+          // PainelLogin.nomeRota: (ctx) => PainelLogin(),
+          // PainelCadastro.nomeRota: (ctx) => PainelCadastro(),
+          // PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
         });
   }
 }
