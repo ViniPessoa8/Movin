@@ -4,8 +4,9 @@ import 'package:movin_project/views/widgets/login/painel_login.dart';
 class PainelBoasVindas extends StatelessWidget {
   static final String nomeRota = '/BoasVindas';
   final Function carregaPainelLogin;
+  final Function carregaPainelCadastro;
 
-  PainelBoasVindas(this.carregaPainelLogin);
+  PainelBoasVindas(this.carregaPainelLogin, this.carregaPainelCadastro);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class PainelBoasVindas extends StatelessWidget {
                         fontSize: 20,
                       ),
                 ),
-                onPressed: () {},
+                onPressed: () => carregaPainelCadastro(context),
               ),
             ),
             FlatButton(
@@ -49,7 +50,7 @@ class PainelBoasVindas extends StatelessWidget {
                       fontSize: 20,
                     ),
               ),
-              onPressed: () => {carregaPainelLogin(context)},
+              onPressed: () => carregaPainelLogin(context),
             ),
           ],
         ),

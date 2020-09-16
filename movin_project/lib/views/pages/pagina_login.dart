@@ -7,8 +7,9 @@ import 'package:movin_project/views/widgets/login/painel_login.dart';
 class PaginaLogin extends StatelessWidget {
   static final String nomeRota = '/PaginaLogin';
   final Function _carregaPainelLogin;
+  final Function _carregaPainelCadastro;
 
-  PaginaLogin(this._carregaPainelLogin);
+  PaginaLogin(this._carregaPainelLogin, this._carregaPainelCadastro);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class PaginaLogin extends StatelessWidget {
       appBar: AppBar(
         title: Text('Movin'),
       ),
-      body: PainelBoasVindas(_carregaPainelLogin),
+      body: PainelBoasVindas(_carregaPainelLogin, _carregaPainelCadastro),
     );
   }
 }

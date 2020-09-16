@@ -14,9 +14,14 @@ bool usuarioLogado() {
   return false;
 }
 
-void _carregaPainelLogin(context) {
+void _carregaPainelLogin(BuildContext context) {
   print('chamou');
   Navigator.of(context).pushNamed(PainelLogin.nomeRota);
+}
+
+void _carregaPainelCadastro(BuildContext context) {
+  print('chamou');
+  Navigator.of(context).pushNamed(PainelCadastro.nomeRota);
 }
 
 class MyApp extends StatelessWidget {
@@ -57,10 +62,11 @@ class MyApp extends StatelessWidget {
         initialRoute: usuarioLogado() ? '' : PaginaLogin.nomeRota,
         routes: {
           '/': (ctx) => PaginaPrincipal(),
-          PaginaLogin.nomeRota: (ctx) => PaginaLogin(_carregaPainelLogin),
+          PaginaLogin.nomeRota: (ctx) =>
+              PaginaLogin(_carregaPainelLogin, _carregaPainelCadastro),
           // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
           PainelLogin.nomeRota: (ctx) => PainelLogin(),
-          // PainelCadastro.nomeRota: (ctx) => PainelCadastro(),
+          PainelCadastro.nomeRota: (ctx) => PainelCadastro(),
           // PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
         });
   }
