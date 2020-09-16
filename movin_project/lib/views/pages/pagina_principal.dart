@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movin_project/views/widgets/painel_drawer.dart';
 import 'package:movin_project/views/widgets/painel_mapa.dart';
 import 'package:movin_project/views/widgets/painel_ocorrencias.dart';
 import 'package:movin_project/views/widgets/painel_perfil.dart';
@@ -38,6 +39,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
         title: Text('Movin'),
       ),
       body: _paginas[_indexPaginaSelecionada]['pagina'],
+      drawer: PainelDrawer(),
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selecionaPagina,
         backgroundColor: primaryColor,
