@@ -80,7 +80,10 @@ class PainelCadastro extends StatelessWidget {
                   ],
                 ),
                 RaisedButton(
-                  child: Text('Cadastrar'),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 70),
+                    child: Text('Cadastrar'),
+                  ),
                   onPressed: () {},
                 ),
               ],
@@ -93,6 +96,12 @@ class PainelCadastro extends StatelessWidget {
             // CADASTRO ALTERNATIVO
             child: Column(
               children: [
+                Text(
+                  'Cadastre-se com',
+                  style: Theme.of(context).textTheme.bodyText1.copyWith(
+                        fontSize: 20,
+                      ),
+                ),
                 Divider(
                   color: Colors.black,
                 ),
