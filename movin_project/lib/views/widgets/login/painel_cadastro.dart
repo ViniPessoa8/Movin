@@ -3,11 +3,32 @@ import 'package:flutter/material.dart';
 class PainelCadastro extends StatelessWidget {
   static final String nomeRota = '/Cadastro';
 
+  Widget buildLoginAlternativo(
+      BuildContext ctx, String titulo, IconData icone) {
+    return Container(
+      // decoration: BoxDecoration(border: Border.all()),
+      padding: EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Icon(
+            icone,
+            size: 40,
+          ),
+          Text(
+            titulo,
+            style: Theme.of(ctx).textTheme.headline6,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Cadastro')),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             // FORM CADASTRO
@@ -66,7 +87,25 @@ class PainelCadastro extends StatelessWidget {
             ),
           ), // FORM CADASTRO
           Container(
-            child: null,
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            width: double.infinity,
+            height: 200,
+            // CADASTRO ALTERNATIVO
+            child: Column(
+              children: [
+                Divider(
+                  color: Colors.black,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    buildLoginAlternativo(
+                        context, 'Google  ', Icons.play_arrow),
+                    buildLoginAlternativo(context, 'Facebook', Icons.face),
+                  ],
+                ),
+              ],
+            ),
           ), // CADASTRO ALTERNATIVO
         ],
       ),
