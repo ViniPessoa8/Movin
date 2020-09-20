@@ -15,12 +15,10 @@ bool usuarioLogado() {
 }
 
 void _carregaPainelLogin(BuildContext context) {
-  print('chamou');
   Navigator.of(context).pushNamed(PainelLogin.nomeRota);
 }
 
 void _carregaPainelCadastro(BuildContext context) {
-  print('chamou');
   Navigator.of(context).pushNamed(PainelCadastro.nomeRota);
 }
 
@@ -59,7 +57,7 @@ class MyApp extends StatelessWidget {
                 ),
               ),
         ),
-        initialRoute: usuarioLogado() ? '' : PaginaLogin.nomeRota,
+        initialRoute: usuarioLogado() ? '/' : PaginaLogin.nomeRota,
         routes: {
           '/': (ctx) => PaginaPrincipal(),
           PaginaLogin.nomeRota: (ctx) =>
