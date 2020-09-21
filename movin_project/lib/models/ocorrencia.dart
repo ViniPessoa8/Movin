@@ -8,7 +8,7 @@ class Ocorrencia {
   final String descricao;
   final DateTime data;
   final String categoria;
-  final Location local;
+  // final Location local;
 
   Ocorrencia({
     @required this.idOcorrencia,
@@ -17,6 +17,6 @@ class Ocorrencia {
     @required this.descricao,
     @required this.data,
     @required this.categoria,
-    @required this.local,
+    // @required this.local,
   });
 }
