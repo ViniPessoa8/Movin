@@ -41,49 +41,51 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Movin',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          accentColor: Colors.orange[600],
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          fontFamily: 'Raleway',
-          textTheme: ThemeData.light().textTheme.copyWith(
-                bodyText1: TextStyle(
-                  color: Color.fromRGBO(20, 51, 51, 1),
-                ),
-                bodyText2: TextStyle(
-                  color: Color.fromRGBO(20, 51, 51, 1),
-                  fontWeight: FontWeight.bold,
-                ),
-                headline3: TextStyle(
-                  fontSize: 55,
-                  fontFamily: 'RobotoCondensed',
-                  fontWeight: FontWeight.normal,
-                ),
-                headline6: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'RobotoCondensed',
-                  fontWeight: FontWeight.bold,
-                ),
-                headline5: TextStyle(
-                  fontSize: 20,
-                  fontFamily: 'RobotoCondensed',
-                  fontWeight: FontWeight.normal,
-                ),
+      title: 'Movin',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        accentColor: Colors.orange[600],
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        fontFamily: 'Raleway',
+        textTheme: ThemeData.light().textTheme.copyWith(
+              bodyText1: TextStyle(
+                color: Color.fromRGBO(20, 51, 51, 1),
               ),
-        ),
-        initialRoute:
-            usuarioLogou() ? PaginaPrincipal.nomeRota : PaginaLogin.nomeRota,
-        routes: {
-          PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(
-                indexPainelInicial: 1,
+              bodyText2: TextStyle(
+                color: Color.fromRGBO(20, 51, 51, 1),
+                fontWeight: FontWeight.bold,
               ),
-          PaginaLogin.nomeRota: (ctx) =>
-              PaginaLogin(_carregaPainelLogin, _carregaPainelCadastro),
-          // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
-          PainelLogin.nomeRota: (ctx) => PainelLogin(logaUsuario),
-          PainelCadastro.nomeRota: (ctx) => PainelCadastro(),
-          // PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
-        });
+              headline3: TextStyle(
+                fontSize: 55,
+                fontFamily: 'RobotoCondensed',
+                fontWeight: FontWeight.normal,
+              ),
+              headline6: TextStyle(
+                fontSize: 20,
+                fontFamily: 'RobotoCondensed',
+                fontWeight: FontWeight.bold,
+              ),
+              headline5: TextStyle(
+                fontSize: 20,
+                fontFamily: 'RobotoCondensed',
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+      ),
+      initialRoute:
+          usuarioLogou() ? PaginaPrincipal.nomeRota : PaginaLogin.nomeRota,
+      routes: {
+        PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(
+              indexPainelInicial: 1,
+            ),
+        PaginaLogin.nomeRota: (ctx) =>
+            PaginaLogin(_carregaPainelLogin, _carregaPainelCadastro),
+        // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
+        PainelLogin.nomeRota: (ctx) => PainelLogin(logaUsuario),
+        PainelCadastro.nomeRota: (ctx) => PainelCadastro(),
+        // PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
+      },
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
