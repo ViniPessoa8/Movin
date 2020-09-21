@@ -13,12 +13,17 @@ class PainelOcorrencias extends StatefulWidget {
 
 class _PainelOcorrenciasState extends State<PainelOcorrencias> {
   Widget _imprimeOcorrencias() {
-    return ListView.builder(
-      itemCount: widget.ocorrencias.length,
-      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-      itemBuilder: (context, index) {
-        return ItemOcorrencia(widget.ocorrencias[index]);
-      },
+    return SingleChildScrollView(
+      child: Container(
+        height: 800,
+        child: ListView.builder(
+          itemCount: widget.ocorrencias.length,
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+          itemBuilder: (context, index) {
+            return ItemOcorrencia(widget.ocorrencias[index]);
+          },
+        ),
+      ),
     );
   }
 
