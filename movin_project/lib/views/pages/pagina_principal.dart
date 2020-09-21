@@ -23,12 +23,18 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
   void initState() {
     _indexPaginaInicial = widget.indexPainelInicial;
     _paginas = [
-      {'pagina': PainelMapa(), 'titulo': 'Mapa'},
+      {
+        'pagina': PainelMapa(),
+        'titulo': 'Mapa',
+      },
       {
         'pagina': PainelOcorrencias(DadosInternos.OCORRENCIAS_EXEMPLO),
-        'titulo': 'Ocorrências'
+        'titulo': 'Ocorrências',
       },
-      {'pagina': PainelPerfil(), 'titulo': 'Perfil'},
+      {
+        'pagina': PainelPerfil(),
+        'titulo': 'Perfil',
+      },
     ];
     super.initState();
   }
