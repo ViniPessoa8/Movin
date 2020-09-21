@@ -10,10 +10,6 @@ void main() {
   runApp(MyApp());
 }
 
-bool usuarioLogado() {
-  return false;
-}
-
 void _carregaPainelLogin(BuildContext context) {
   Navigator.of(context).pushNamed(PainelLogin.nomeRota);
 }
@@ -22,7 +18,26 @@ void _carregaPainelCadastro(BuildContext context) {
   Navigator.of(context).pushNamed(PainelCadastro.nomeRota);
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  bool usuarioLogado = false;
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool usuarioLogou() {
+    return widget.usuarioLogado;
+  }
+
+  void logaUsuario(BuildContext context) {
+    print('loga usuario.');
+    setState(() {
+      widget.usuarioLogado = true;
+      Navigator.of(context).pushReplacementNamed(PaginaPrincipal.nomeRota);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -57,13 +72,14 @@ class MyApp extends StatelessWidget {
                 ),
               ),
         ),
-        initialRoute: usuarioLogado() ? '/' : PaginaLogin.nomeRota,
+        initialRoute:
+            usuarioLogou() ? PaginaPrincipal.nomeRota : PaginaLogin.nomeRota,
         routes: {
-          '/': (ctx) => PaginaPrincipal(),
+          PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(),
           PaginaLogin.nomeRota: (ctx) =>
               PaginaLogin(_carregaPainelLogin, _carregaPainelCadastro),
           // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
-          PainelLogin.nomeRota: (ctx) => PainelLogin(),
+          PainelLogin.nomeRota: (ctx) => PainelLogin(logaUsuario),
           PainelCadastro.nomeRota: (ctx) => PainelCadastro(),
           // PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
         });

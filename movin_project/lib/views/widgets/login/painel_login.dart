@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class PainelLogin extends StatelessWidget {
   static final String nomeRota = '/Login';
+  final Function _logar;
+
+  PainelLogin(this._logar);
 
   Widget buildLoginAlternativo(
       BuildContext ctx, String titulo, IconData icone) {
     return Container(
-      // decoration: BoxDecoration(border: Border.all()),
       padding: EdgeInsets.all(10),
       child: Row(
         children: [
@@ -67,7 +69,7 @@ class PainelLogin extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 80),
                       child: Text('Login'),
                     ),
-                    onPressed: () {},
+                    onPressed: () => _logar(context),
                   )
                 ],
               ),
