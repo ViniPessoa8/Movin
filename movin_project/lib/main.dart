@@ -19,7 +19,7 @@ void _carregaPainelCadastro(BuildContext context) {
 }
 
 class MyApp extends StatefulWidget {
-  bool usuarioLogado = false;
+  bool usuarioLogado = true;
 
   @override
   _MyAppState createState() => _MyAppState();
@@ -75,7 +75,9 @@ class _MyAppState extends State<MyApp> {
         initialRoute:
             usuarioLogou() ? PaginaPrincipal.nomeRota : PaginaLogin.nomeRota,
         routes: {
-          PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(),
+          PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(
+                indexPainelInicial: 1,
+              ),
           PaginaLogin.nomeRota: (ctx) =>
               PaginaLogin(_carregaPainelLogin, _carregaPainelCadastro),
           // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
