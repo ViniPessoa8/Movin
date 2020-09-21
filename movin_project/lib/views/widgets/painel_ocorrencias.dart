@@ -24,29 +24,31 @@ void _mostraCriaOcorrencia(BuildContext context) {
 class _PainelOcorrenciasState extends State<PainelOcorrencias> {
   Widget _imprimeOcorrencias() {
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Stack(
         children: [
           Container(
-            height: 600,
-            child: SingleChildScrollView(
-              child: Container(
-                height: 800,
-                child: ListView.builder(
-                  itemCount: widget.ocorrencias.length,
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                  itemBuilder: (context, index) {
-                    return ItemOcorrencia(widget.ocorrencias[index]);
-                  },
-                ),
-              ),
+            child: ListView.builder(
+              itemCount: widget.ocorrencias.length,
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              itemBuilder: (context, index) {
+                return ItemOcorrencia(widget.ocorrencias[index]);
+              },
             ),
           ),
-          FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              _mostraCriaOcorrencia(context);
-            },
+          Positioned(
+            bottom: 15,
+            right: 15,
+            child: FloatingActionButton(
+              child: Icon(
+                Icons.add,
+                size: 40,
+                color: Colors.white,
+              ),
+              backgroundColor: Theme.of(context).primaryColor,
+              onPressed: () {
+                _mostraCriaOcorrencia(context);
+              },
+            ),
           ),
         ],
       ),
