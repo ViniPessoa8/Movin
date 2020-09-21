@@ -29,7 +29,7 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
           Container(
             child: ListView.builder(
               itemCount: widget.ocorrencias.length,
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               itemBuilder: (context, index) {
                 return ItemOcorrencia(widget.ocorrencias[index]);
               },
