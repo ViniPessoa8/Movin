@@ -5,6 +5,8 @@ import 'package:movin_project/views/widgets/painel_ocorrencias.dart';
 import 'package:movin_project/views/widgets/painel_perfil.dart';
 
 class PaginaPrincipal extends StatefulWidget {
+  static final nomeRota = '/principal';
+
   @override
   _PaginaPrincipalState createState() => _PaginaPrincipalState();
 }
