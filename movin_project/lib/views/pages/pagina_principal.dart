@@ -7,6 +7,9 @@ import 'package:movin_project/views/widgets/painel_perfil.dart';
 
 class PaginaPrincipal extends StatefulWidget {
   static final nomeRota = '/principal';
+  final int indexPainelInicial;
+
+  PaginaPrincipal({this.indexPainelInicial = 0});
 
   @override
   _PaginaPrincipalState createState() => _PaginaPrincipalState();
@@ -14,10 +17,11 @@ class PaginaPrincipal extends StatefulWidget {
 
 class _PaginaPrincipalState extends State<PaginaPrincipal> {
   List<Map<String, Object>> _paginas;
-  int _indexPaginaSelecionada = 0;
+  int _indexPaginaInicial;
 
   @override
   void initState() {
+    _indexPaginaInicial = widget.indexPainelInicial;
     _paginas = [
       {'pagina': PainelMapa(), 'titulo': 'Mapa'},
       {
@@ -31,7 +35,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
 
   void _selecionaPagina(int index) {
     setState(() {
-      _indexPaginaSelecionada = index;
+      _indexPaginaInicial = index;
     });
   }
 
@@ -44,14 +48,14 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
       appBar: AppBar(
         title: Text('Movin'),
       ),
-      body: _paginas[_indexPaginaSelecionada]['pagina'],
+      body: _paginas[_indexPaginaInicial]['pagina'],
       drawer: PainelDrawer(),
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selecionaPagina,
         backgroundColor: primaryColor,
         unselectedItemColor: Colors.white,
         selectedItemColor: accentColor,
-        currentIndex: _indexPaginaSelecionada,
+        currentIndex: _indexPaginaInicial,
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
