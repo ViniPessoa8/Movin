@@ -1,10 +1,45 @@
-final List<String> categoria = [
-  'Assalto e Furto',
-  'Acidente',
-  'Buraco',
-  'Calçada Irregular',
-  'Congestionamento',
-  'Entulho',
-  'Iluminação',
-  'Obra',
-];
+import 'package:location/location.dart';
+import 'package:movin_project/models/ocorrencia.dart';
+
+class DadosInternos {
+  static final List<String> categorias = [
+    'Assalto e Furto',
+    'Acidente',
+    'Buraco',
+    'Calçada Irregular',
+    'Congestionamento',
+    'Entulho',
+    'Iluminação',
+    'Obra',
+  ];
+
+  static final List<Ocorrencia> OCORRENCIAS_EXEMPLO = [
+    Ocorrencia(
+      idOcorrencia: 0,
+      idAutor: 0,
+      titulo: 'Assalto',
+      descricao: 'Assalto à mão armada',
+      categoria: 'Assaltos e Furtos',
+      data: DateTime.now(),
+      // local: null,
+    ),
+    Ocorrencia(
+      idOcorrencia: 1,
+      idAutor: 0,
+      titulo: 'Buraco',
+      descricao: 'Buraco na calçada',
+      categoria: 'Infraestrutura',
+      data: DateTime.now(),
+      // local: null,
+    ),
+    Ocorrencia(
+      idOcorrencia: 2,
+      idAutor: 1,
+      titulo: 'Trânsito',
+      descricao: 'Trânsito intenso sentido bairro.',
+      categoria: 'Trânsito',
+      data: DateTime.now(),
+      // local: null,
+    ),
+  ];
+}
