@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movin_project/utils/dados_internos.dart';
 import 'package:movin_project/views/widgets/painel_drawer.dart';
 import 'package:movin_project/views/widgets/painel_mapa.dart';
 import 'package:movin_project/views/widgets/painel_ocorrencias.dart';
@@ -19,7 +20,10 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
   void initState() {
     _paginas = [
       {'pagina': PainelMapa(), 'titulo': 'Mapa'},
-      {'pagina': PainelOcorrencias(), 'titulo': 'Ocorrências'},
+      {
+        'pagina': PainelOcorrencias(DadosInternos.OCORRENCIAS_EXEMPLO),
+        'titulo': 'Ocorrências'
+      },
       {'pagina': PainelPerfil(), 'titulo': 'Perfil'},
     ];
     super.initState();
