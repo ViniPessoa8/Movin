@@ -50,5 +50,14 @@ class DadosInternos {
       data: DateTime.now(),
       // local: null,
     ),
+    Ocorrencia(
+      idOcorrencia: 4,
+      idAutor: 2,
+      titulo: 'Jogador de Free-Fire',
+      descricao: 'Pessoa jogando Free-Fire publicamente.',
+      categoria: 'Desrespeito Geral',
+      data: DateTime.now(),
+      // local: null,
+    ),
   ];
 }
