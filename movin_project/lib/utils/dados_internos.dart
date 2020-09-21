@@ -41,5 +41,14 @@ class DadosInternos {
       data: DateTime.now(),
       // local: null,
     ),
+    Ocorrencia(
+      idOcorrencia: 3,
+      idAutor: 2,
+      titulo: 'TESTEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE',
+      descricao: 'Testeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.',
+      categoria: 'testeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+      data: DateTime.now(),
+      // local: null,
+    ),
   ];
 }
