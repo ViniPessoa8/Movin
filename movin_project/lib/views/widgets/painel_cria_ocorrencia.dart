@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:movin_project/utils/dados_internos.dart';
 
-class PainelCriaOcorrencia extends StatelessWidget {
-  List<String> valores = ['Um', 'Dois', 'Três', 'Quatro'];
+class PainelCriaOcorrencia extends StatefulWidget {
+  @override
+  _PainelCriaOcorrenciaState createState() => _PainelCriaOcorrenciaState();
+}
+
+class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
+  List<String> valores = DadosInternos.categorias;
+  String dropdownValue;
 
   @override
   Widget build(BuildContext context) {
-    String dropdownValue = valores[0];
     return Container(
       padding: EdgeInsets.all(10),
       child: Column(
@@ -14,19 +20,37 @@ class PainelCriaOcorrencia extends StatelessWidget {
             'Criar Ocorrência',
             style: Theme.of(context).textTheme.headline6,
           ),
+          Divider(
+            color: Colors.black,
+          ),
           Container(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                DropdownButton<String>(
-                  autofocus: true,
-                  value: dropdownValue,
-                  items: valores.map((elemento) {
-                    return DropdownMenuItem(
-                      value: elemento,
-                      child: Text(elemento),
-                    );
-                  }).toList(),
-                  onChanged: null,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Categoria:'),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    DropdownButton<String>(
+                      autofocus: true,
+                      hint: Text('Selecione a Categoria'),
+                      value: dropdownValue,
+                      items: valores.map((elemento) {
+                        return DropdownMenuItem(
+                          value: elemento,
+                          child: Text(elemento),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          dropdownValue = value;
+                        });
+                      },
+                    ),
+                  ],
                 ),
                 TextField(
                   decoration: InputDecoration(
@@ -43,6 +67,32 @@ class PainelCriaOcorrencia extends StatelessWidget {
                           color: Colors.black54,
                         ),
                   ),
+                ),
+                FlatButton(
+                  onPressed: null,
+                  child: Row(
+                    children: [
+                      Icon(Icons.add_location),
+                      Text('Adicionar Localização'),
+                    ],
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FlatButton(
+                      child: Icon(Icons.add_a_photo, size: 70),
+                      onPressed: null,
+                    ),
+                    FlatButton(
+                      child: Icon(Icons.add_a_photo, size: 70),
+                      onPressed: null,
+                    ),
+                    FlatButton(
+                      child: Icon(Icons.add_a_photo, size: 70),
+                      onPressed: null,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -70,8 +120,8 @@ class PainelCriaOcorrencia extends StatelessWidget {
                 },
               );
             },
-            child: Text('Criar'),
-          )
+            child: Text('Criar Ocorrência'),
+          ),
         ],
       ),
     );
