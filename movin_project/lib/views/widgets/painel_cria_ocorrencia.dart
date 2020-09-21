@@ -30,10 +30,6 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('Categoria:'),
-                    SizedBox(
-                      width: 30,
-                    ),
                     DropdownButton<String>(
                       autofocus: true,
                       hint: Text('Selecione a Categoria'),
