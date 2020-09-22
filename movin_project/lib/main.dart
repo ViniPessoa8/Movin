@@ -4,6 +4,7 @@ import 'package:movin_project/views/pages/pagina_principal.dart';
 import 'package:movin_project/views/widgets/login/painel_boas_vindas.dart';
 import 'package:movin_project/views/widgets/login/painel_cadastro.dart';
 import 'package:movin_project/views/widgets/login/painel_login.dart';
+import 'package:movin_project/views/widgets/painel_config_conta.dart';
 import 'package:movin_project/views/widgets/painel_emergencia.dart';
 
 void main() {
@@ -83,6 +84,7 @@ class _MyAppState extends State<MyApp> {
         // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
         PainelLogin.nomeRota: (ctx) => PainelLogin(logaUsuario),
         PainelCadastro.nomeRota: (ctx) => PainelCadastro(),
+        PainelConfiguracoesConta.nomeRota: (ctx) => PainelConfiguracoesConta(),
         // PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
       },
       debugShowCheckedModeBanner: false,
