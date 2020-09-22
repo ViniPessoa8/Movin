@@ -45,6 +45,14 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     });
   }
 
+  BottomNavigationBarItem _buildNavBarItem(String titulo, IconData icone) {
+    return BottomNavigationBarItem(
+      backgroundColor: Theme.of(context).primaryColor,
+      icon: Icon(icone),
+      title: Text(titulo),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
@@ -64,21 +72,9 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
         currentIndex: _indexPaginaInicial,
         type: BottomNavigationBarType.fixed,
         items: [
-          BottomNavigationBarItem(
-            backgroundColor: primaryColor,
-            icon: Icon(Icons.map),
-            title: Text('Mapa'),
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: primaryColor,
-            icon: Icon(Icons.warning),
-            title: Text('Ocorrências'),
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: primaryColor,
-            icon: Icon(Icons.person),
-            title: Text('Perfil'),
-          )
+          _buildNavBarItem('Mapa', Icons.map),
+          _buildNavBarItem('Ocorrências', Icons.warning),
+          _buildNavBarItem('Perfil', Icons.person),
         ],
       ),
     );
