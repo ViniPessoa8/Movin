@@ -132,6 +132,27 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     );
   }
 
+  Widget _buildTituloAppbar() {
+    String texto;
+
+    switch (_indexPaginaInicial) {
+      case 0:
+        texto = 'Home';
+        break;
+      case 1:
+        texto = 'Ocorrências';
+        break;
+      case 2:
+        texto = 'Perfil';
+        break;
+      default:
+        texto = 'Movin';
+        break;
+    }
+
+    return Text(texto);
+  }
+
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
@@ -139,7 +160,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Movin'),
+        title: _buildTituloAppbar(),
       ),
       body: _paginas[_indexPaginaInicial]['pagina'],
       drawer: PainelDrawer(),
