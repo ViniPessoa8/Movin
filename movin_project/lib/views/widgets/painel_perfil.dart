@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class PainelPerfil extends StatelessWidget {
-  Widget _buildBotaoConfig(BuildContext context, String title) {
+  Widget _buildBotaoConfig(
+      {@required BuildContext context,
+      @required String titulo,
+      IconData icone = Icons.settings}) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 10,
@@ -11,14 +14,14 @@ class PainelPerfil extends StatelessWidget {
         onPressed: () {},
         child: Column(
           children: [
-            Icon(Icons.blur_circular, size: 80),
+            Icon(icone, size: 80),
             Container(
               alignment: Alignment.center,
               width: 150,
               height: 50,
               child: Expanded(
                 child: Text(
-                  title,
+                  titulo,
                   style: Theme.of(context).textTheme.bodyText2,
                   textAlign: TextAlign.center,
                 ),
@@ -61,14 +64,29 @@ class PainelPerfil extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    _buildBotaoConfig(context, 'Configurações da Conta'),
-                    _buildBotaoConfig(context, 'Minhas Ocorrências'),
+                    _buildBotaoConfig(
+                      context: context,
+                      titulo: 'Configurações da Conta',
+                    ),
+                    _buildBotaoConfig(
+                      context: context,
+                      titulo: 'Minhas Ocorrências',
+                      icone: Icons.warning,
+                    ),
                   ],
                 ),
                 Column(
                   children: [
-                    _buildBotaoConfig(context, 'Rotas Favoritas'),
-                    _buildBotaoConfig(context, 'Rotas Utilizadas'),
+                    _buildBotaoConfig(
+                      context: context,
+                      titulo: 'Rotas Favoritas',
+                      icone: Icons.favorite,
+                    ),
+                    _buildBotaoConfig(
+                      context: context,
+                      titulo: 'Rotas Utilizadas',
+                      icone: Icons.arrow_forward,
+                    ),
                   ],
                 )
               ],
