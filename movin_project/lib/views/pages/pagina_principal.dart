@@ -70,7 +70,10 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
   BottomNavigationBarItem _buildNavBarItem(String titulo, IconData icone) {
     return BottomNavigationBarItem(
       backgroundColor: Theme.of(context).primaryColor,
-      icon: Icon(icone),
+      icon: Icon(
+        icone,
+        size: 35,
+      ),
       title: Text(titulo),
     );
   }
