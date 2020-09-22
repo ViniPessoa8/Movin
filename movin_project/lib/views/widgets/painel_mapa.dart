@@ -110,16 +110,6 @@ class _PainelMapaState extends State<PainelMapa> {
                 ),
                 Positioned(
                   bottom: 15,
-                  right: 15,
-                  child: FloatingActionButton(
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.add,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: 15,
                   child: FlatButton.icon(
                     onPressed: moveUserLocation,
                     icon: Icon(

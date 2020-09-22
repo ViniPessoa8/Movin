@@ -12,15 +12,6 @@ class PainelOcorrencias extends StatefulWidget {
   _PainelOcorrenciasState createState() => _PainelOcorrenciasState();
 }
 
-void _mostraCriaOcorrencia(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (context) {
-      return PainelCriaOcorrencia();
-    },
-  );
-}
-
 class _PainelOcorrenciasState extends State<PainelOcorrencias> {
   Widget _imprimeOcorrencias() {
     return Container(
@@ -32,21 +23,6 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               itemBuilder: (context, index) {
                 return ItemOcorrencia(widget.ocorrencias[index]);
-              },
-            ),
-          ),
-          Positioned(
-            bottom: 15,
-            right: 15,
-            child: FloatingActionButton(
-              child: Icon(
-                Icons.add,
-                size: 40,
-                color: Colors.white,
-              ),
-              backgroundColor: Theme.of(context).primaryColor,
-              onPressed: () {
-                _mostraCriaOcorrencia(context);
               },
             ),
           ),

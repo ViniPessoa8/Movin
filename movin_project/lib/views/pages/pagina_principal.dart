@@ -4,6 +4,8 @@ import 'package:movin_project/views/widgets/painel_drawer.dart';
 import 'package:movin_project/views/widgets/painel_mapa.dart';
 import 'package:movin_project/views/widgets/painel_ocorrencias.dart';
 import 'package:movin_project/views/widgets/painel_perfil.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:movin_project/views/widgets/painel_cria_ocorrencia.dart';
 
 class PaginaPrincipal extends StatefulWidget {
   static final nomeRota = '/principal';
@@ -39,17 +41,91 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     super.initState();
   }
 
+  // Métodos
+  void _mostraCriaOcorrencia(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return PainelCriaOcorrencia();
+      },
+    );
+  }
+
   void _selecionaPagina(int index) {
     setState(() {
       _indexPaginaInicial = index;
     });
   }
 
+  void criaOcorrencia() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return PainelCriaOcorrencia();
+      },
+    );
+  }
+
+  // Builders
   BottomNavigationBarItem _buildNavBarItem(String titulo, IconData icone) {
     return BottomNavigationBarItem(
       backgroundColor: Theme.of(context).primaryColor,
       icon: Icon(icone),
       title: Text(titulo),
+    );
+  }
+
+  Widget _buildBotaoMapa() {
+    return SpeedDial(
+      animatedIcon: AnimatedIcons.menu_close,
+      animatedIconTheme: IconThemeData(size: 22),
+      curve: Curves.bounceIn,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.5,
+      tooltip: 'Opções',
+      elevation: 8.0,
+      child: Icon(
+        Icons.add,
+        size: 30,
+      ),
+      children: [
+        SpeedDialChild(
+          child: Icon(Icons.warning),
+          label: 'Criar Ocorrência',
+          backgroundColor: Colors.yellow,
+          onTap: criaOcorrencia,
+        ),
+        SpeedDialChild(
+          child: Icon(
+            Icons.filter,
+            color: Colors.white,
+          ),
+          label: 'Filtro',
+          backgroundColor: Colors.purple,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBotaoOcorrencias() {
+    return FloatingActionButton(
+      onPressed: () {
+        _mostraCriaOcorrencia(context);
+      },
+      child: Icon(
+        Icons.add,
+        size: 30,
+        color: Colors.white,
+      ),
+      backgroundColor: Theme.of(context).primaryColor,
+    );
+  }
+
+  Widget _buildFloatingButton() {
+    if (_indexPaginaInicial == 0) return _buildBotaoMapa();
+    if (_indexPaginaInicial == 1) return _buildBotaoOcorrencias();
+    return SpeedDial(
+      visible: false,
     );
   }
 
@@ -77,6 +153,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
           _buildNavBarItem('Perfil', Icons.person),
         ],
       ),
+      floatingActionButton: _buildFloatingButton(),
     );
   }
 }
