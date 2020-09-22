@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:movin_project/utils/dados_internos.dart';
 
 class PainelCriaOcorrencia extends StatefulWidget {
+  static String nomeRota = '/ocorrencia/criar';
+
   @override
   _PainelCriaOcorrenciaState createState() => _PainelCriaOcorrenciaState();
 }
