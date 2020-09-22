@@ -13,7 +13,7 @@ class PainelConfiguracoesConta extends StatelessWidget {
       onPressed: () {},
       child: Container(
         width: 400,
-        height: 50,
+        height: 70,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
