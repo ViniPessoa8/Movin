@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:movin_project/views/widgets/painel_config_conta.dart';
+import 'package:movin_project/views/widgets/painel_cria_ocorrencia.dart';
 
 class PainelPerfil extends StatelessWidget {
   Widget _buildBotaoConfig(
       {@required BuildContext context,
       @required String titulo,
+      Function onPressed,
       IconData icone = Icons.settings}) {
     return Container(
       padding: EdgeInsets.symmetric(
@@ -11,7 +14,7 @@ class PainelPerfil extends StatelessWidget {
         vertical: 20,
       ),
       child: FlatButton(
-        onPressed: () {},
+        onPressed: onPressed,
         child: Column(
           children: [
             Icon(icone, size: 80),
@@ -19,12 +22,10 @@ class PainelPerfil extends StatelessWidget {
               alignment: Alignment.center,
               width: 150,
               height: 50,
-              child: Expanded(
-                child: Text(
-                  titulo,
-                  style: Theme.of(context).textTheme.bodyText2,
-                  textAlign: TextAlign.center,
-                ),
+              child: Text(
+                titulo,
+                style: Theme.of(context).textTheme.bodyText2,
+                textAlign: TextAlign.center,
               ),
             ),
           ],
@@ -65,9 +66,12 @@ class PainelPerfil extends StatelessWidget {
                 Column(
                   children: [
                     _buildBotaoConfig(
-                      context: context,
-                      titulo: 'Configurações da Conta',
-                    ),
+                        context: context,
+                        titulo: 'Configurações da Conta',
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pushNamed(PainelConfiguracoesConta.nomeRota);
+                        }),
                     _buildBotaoConfig(
                       context: context,
                       titulo: 'Minhas Ocorrências',
