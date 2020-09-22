@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movin_project/views/pages/pagina_principal.dart';
 import 'package:movin_project/views/widgets/painel_emergencia.dart';
 
 class PainelDrawer extends StatelessWidget {
@@ -42,7 +43,8 @@ class PainelDrawer extends StatelessWidget {
           ),
           SizedBox(height: 20),
           buildListTile('Home', Icons.restaurant, () {
-            Navigator.of(context).pushReplacementNamed('/');
+            Navigator.of(context)
+                .pushReplacementNamed(PaginaPrincipal.nomeRota);
           }),
           buildListTile('Emergência', Icons.settings, () {
             Navigator.of(context).pushNamed(PainelEmergencia.nomeRota);
