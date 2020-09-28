@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 
 class PainelCadastro extends StatelessWidget {
   static final String nomeRota = '/Cadastro';
+  final AssetImage googleLogo = AssetImage('assets/media/google_logo.png');
+  final AssetImage facebookLogo = AssetImage('assets/media/facebook_logo.png');
 
   Widget buildLoginAlternativo(
-      BuildContext ctx, String titulo, IconData icone) {
+      BuildContext ctx, String titulo, AssetImage imagem) {
     return Container(
       // decoration: BoxDecoration(border: Border.all()),
       padding: EdgeInsets.all(10),
       child: Row(
         children: [
-          Icon(
-            icone,
-            size: 40,
+          Container(
+            margin: EdgeInsets.only(right: 10.0),
+            child: Image(
+              image: imagem,
+              width: 30,
+            ),
           ),
           Text(
             titulo,
@@ -38,19 +43,19 @@ class PainelCadastro extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.image, size: 50),
-                    Text(
-                      'Cadastro',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(fontSize: 30),
-                    ),
-                  ],
-                ),
+                //   Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Icon(Icons.image, size: 50),
+                //       Text(
+                //         'Cadastro',
+                //         style: Theme.of(context)
+                //             .textTheme
+                //             .headline5
+                //             .copyWith(fontSize: 30),
+                //       ),
+                //     ],
+                //   ),
                 Column(
                   children: [
                     TextField(
@@ -106,11 +111,10 @@ class PainelCadastro extends StatelessWidget {
                   color: Colors.black,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    buildLoginAlternativo(
-                        context, 'Google  ', Icons.play_arrow),
-                    buildLoginAlternativo(context, 'Facebook', Icons.face),
+                    buildLoginAlternativo(context, 'Google  ', googleLogo),
+                    buildLoginAlternativo(context, 'Facebook', facebookLogo),
                   ],
                 ),
               ],
