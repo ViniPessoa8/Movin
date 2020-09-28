@@ -3,18 +3,24 @@ import 'package:flutter/material.dart';
 class PainelLogin extends StatelessWidget {
   static final String nomeRota = '/Login';
   final Function _logar;
+  final AssetImage googleLogo = AssetImage('assets/media/google_logo.png');
+  final AssetImage facebookLogo = AssetImage('assets/media/facebook_logo.png');
 
   PainelLogin(this._logar);
 
   Widget buildLoginAlternativo(
-      BuildContext ctx, String titulo, IconData icone) {
+      BuildContext ctx, String titulo, AssetImage imagem) {
     return Container(
+      // decoration: BoxDecoration(border: Border.all()),
       padding: EdgeInsets.all(10),
       child: Row(
         children: [
-          Icon(
-            icone,
-            size: 40,
+          Container(
+            margin: EdgeInsets.only(right: 10.0),
+            child: Image(
+              image: imagem,
+              width: 30,
+            ),
           ),
           Text(
             titulo,
@@ -90,11 +96,10 @@ class PainelLogin extends StatelessWidget {
                     color: Colors.black,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      buildLoginAlternativo(
-                          context, 'Google  ', Icons.play_arrow),
-                      buildLoginAlternativo(context, 'Facebook', Icons.face),
+                      buildLoginAlternativo(context, 'Google  ', googleLogo),
+                      buildLoginAlternativo(context, 'Facebook', facebookLogo),
                     ],
                   ),
                 ],
