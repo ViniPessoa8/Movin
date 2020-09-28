@@ -17,7 +17,10 @@ class PainelBoasVindas extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             'Bem-Vindo ao Movin',
-            style: Theme.of(context).textTheme.headline3,
+            style: Theme.of(context).textTheme.headline5.copyWith(
+                  fontSize: 60,
+                  color: Theme.of(context).primaryColor,
+                ),
             textAlign: TextAlign.center,
           ),
         ),
@@ -25,20 +28,23 @@ class PainelBoasVindas extends StatelessWidget {
           width: double.infinity,
           height: 300,
           child: Icon(
-            Icons.image,
+            Icons.location_on,
+            color: Theme.of(context).primaryColor,
             size: 300,
           ),
         ),
         Column(
           children: [
             Container(
-              width: 200,
+              width: 250,
               child: RaisedButton(
+                color: Theme.of(context).accentColor,
                 child: Text(
                   'Cadastre-se',
-                  style: Theme.of(context).textTheme.bodyText2.copyWith(
-                        fontSize: 20,
-                      ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText2
+                      .copyWith(fontSize: 25, color: Colors.white),
                 ),
                 onPressed: () => carregaPainelCadastro(context),
               ),
@@ -47,7 +53,8 @@ class PainelBoasVindas extends StatelessWidget {
               child: Text(
                 'Já possuo uma conta',
                 style: Theme.of(context).textTheme.bodyText1.copyWith(
-                      fontSize: 20,
+                      fontSize: 25,
+                      color: Theme.of(context).accentColor,
                     ),
               ),
               onPressed: () => carregaPainelLogin(context),
