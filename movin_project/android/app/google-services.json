@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "478352509543",
+    "firebase_url": "https://movin-65e62.firebaseio.com",
+    "project_id": "movin-65e62",
+    "storage_bucket": "movin-65e62.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478352509543:android:507c7dd39a9d05a849a2c2",
+        "android_client_info": {
+          "package_name": "com.example.movin_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478352509543-nghkiq6n4k23hp6j68e8tsi40oqnb9te.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMCXMfggaoM08zWeOFjFH3K-gN3YTOLYU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478352509543-nghkiq6n4k23hp6j68e8tsi40oqnb9te.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
