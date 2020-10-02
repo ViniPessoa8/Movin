@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movin_project/modelview/model_view.dart';
+import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/pages/pagina_login.dart';
 import 'package:movin_project/view/pages/pagina_principal.dart';
 import 'package:movin_project/view/widgets/painel_boas_vindas.dart';
@@ -8,13 +8,13 @@ import 'package:movin_project/view/widgets/painel_login.dart';
 import 'package:movin_project/view/widgets/painel_config_conta.dart';
 import 'package:movin_project/view/widgets/painel_emergencia.dart';
 
+final ModelView modelView = ModelView();
+
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  final ModelView mv = ModelView();
-
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -22,19 +22,21 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   initState() {
-    widget.mv.inicializaFirestore();
+    modelView.inicializaFirestore();
     super.initState();
   }
 
   void logaUsuario(BuildContext context) {
     print('loga usuario.');
-    widget.mv.realizaLogin();
-    Navigator.of(context).pushReplacementNamed(PaginaPrincipal.nomeRota);
+    modelView.realizaLogin();
+    setState(() {
+      Navigator.of(context).pushReplacementNamed(PaginaPrincipal.nomeRota);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    widget.mv.getOcorrencia();
+    modelView.getOcorrencia();
     return MaterialApp(
       title: 'Movin',
       theme: ThemeData(
@@ -67,13 +69,11 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
       ),
-      initialRoute: widget.mv.usuarioLogou
+      initialRoute: modelView.usuarioLogou
           ? PaginaPrincipal.nomeRota
           : PaginaLogin.nomeRota,
       routes: {
-        PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(
-              indexPainelInicial: 0,
-            ),
+        PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(modelView),
         PaginaLogin.nomeRota: (ctx) => PaginaLogin(),
         // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
         PainelLogin.nomeRota: (ctx) => PainelLogin(logaUsuario),

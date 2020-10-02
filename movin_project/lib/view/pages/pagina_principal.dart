@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/utils/dados_internos.dart';
 import 'package:movin_project/view/widgets/painel_drawer.dart';
 import 'package:movin_project/view/widgets/painel_mapa.dart';
@@ -6,42 +7,20 @@ import 'package:movin_project/view/widgets/painel_ocorrencias.dart';
 import 'package:movin_project/view/widgets/painel_perfil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:movin_project/view/widgets/painel_cria_ocorrencia.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:provider/provider.dart';
 
 class PaginaPrincipal extends StatefulWidget {
   static final nomeRota = '/principal';
-  final int indexPainelInicial;
+  final ModelView mv;
 
-  PaginaPrincipal({this.indexPainelInicial = 0});
+  PaginaPrincipal(this.mv);
 
   @override
   _PaginaPrincipalState createState() => _PaginaPrincipalState();
 }
 
 class _PaginaPrincipalState extends State<PaginaPrincipal> {
-  List<Map<String, Object>> _paginas;
-  int _indexPaginaInicial;
-
-  @override
-  void initState() {
-    _indexPaginaInicial = widget.indexPainelInicial;
-    _paginas = [
-      {
-        'pagina': PainelMapa(),
-        'titulo': 'Mapa',
-      },
-      {
-        'pagina': PainelOcorrencias(DadosInternos.OCORRENCIAS_EXEMPLO),
-        'titulo': 'Ocorrências',
-      },
-      {
-        'pagina': PainelPerfil(),
-        'titulo': 'Perfil',
-      },
-    ];
-    super.initState();
-  }
-
-  // Métodos
   void _mostraCriaOcorrencia(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -49,12 +28,6 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
         return PainelCriaOcorrencia();
       },
     );
-  }
-
-  void _selecionaPagina(int index) {
-    setState(() {
-      _indexPaginaInicial = index;
-    });
   }
 
   void criaOcorrencia() {
@@ -66,7 +39,6 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     );
   }
 
-  // Builders
   BottomNavigationBarItem _buildNavBarItem(String titulo, IconData icone) {
     return BottomNavigationBarItem(
       backgroundColor: Theme.of(context).primaryColor,
@@ -125,8 +97,8 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
   }
 
   Widget _buildFloatingButton() {
-    if (_indexPaginaInicial == 0) return _buildBotaoMapa();
-    if (_indexPaginaInicial == 1) return _buildBotaoOcorrencias();
+    if (widget.mv.indexPainelPrincipal == 0) return _buildBotaoMapa();
+    if (widget.mv.indexPainelPrincipal == 1) return _buildBotaoOcorrencias();
     return SpeedDial(
       visible: false,
     );
@@ -135,7 +107,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
   Widget _buildTituloAppbar() {
     String texto;
 
-    switch (_indexPaginaInicial) {
+    switch (widget.mv.indexPainelPrincipal) {
       case 0:
         texto = 'Home';
         break;
@@ -158,26 +130,36 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     Color primaryColor = Theme.of(context).primaryColor;
     Color accentColor = Theme.of(context).accentColor;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: _buildTituloAppbar(),
+    return ScopedModel(
+      model: ModelView(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: _buildTituloAppbar(),
+        ),
+        body:
+            ScopedModelDescendant<ModelView>(builder: (context, child, model) {
+          return model.paginas[model.indexPainelPrincipal]['pagina'];
+        }),
+        drawer: PainelDrawer(),
+        bottomNavigationBar: ScopedModelDescendant<ModelView>(
+          builder: (context, child, model) {
+            return BottomNavigationBar(
+              onTap: model.selecionaPagina,
+              backgroundColor: primaryColor,
+              unselectedItemColor: Colors.white,
+              selectedItemColor: accentColor,
+              currentIndex: model.indexPainelPrincipal,
+              type: BottomNavigationBarType.fixed,
+              items: [
+                _buildNavBarItem('Mapa', Icons.map),
+                _buildNavBarItem('Ocorrências', Icons.warning),
+                _buildNavBarItem('Perfil', Icons.person),
+              ],
+            );
+          },
+        ),
+        floatingActionButton: _buildFloatingButton(),
       ),
-      body: _paginas[_indexPaginaInicial]['pagina'],
-      drawer: PainelDrawer(),
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: _selecionaPagina,
-        backgroundColor: primaryColor,
-        unselectedItemColor: Colors.white,
-        selectedItemColor: accentColor,
-        currentIndex: _indexPaginaInicial,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          _buildNavBarItem('Mapa', Icons.map),
-          _buildNavBarItem('Ocorrências', Icons.warning),
-          _buildNavBarItem('Perfil', Icons.person),
-        ],
-      ),
-      floatingActionButton: _buildFloatingButton(),
     );
   }
 }

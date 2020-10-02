@@ -3,7 +3,7 @@ import 'package:movin_project/view/widgets/painel_boas_vindas.dart';
 import 'package:movin_project/view/widgets/painel_cadastro.dart';
 import 'package:movin_project/view/widgets/painel_carregamento.dart';
 import 'package:movin_project/view/widgets/painel_login.dart';
-import 'package:movin_project/modelview/model_view.dart';
+import 'package:movin_project/model_view/model_view.dart';
 
 void _carregaPainelLogin(BuildContext context) {
   Navigator.of(context).pushNamed(PainelLogin.nomeRota);

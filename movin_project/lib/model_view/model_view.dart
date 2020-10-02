@@ -1,16 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:movin_project/utils/dados_internos.dart';
+import 'package:movin_project/view/widgets/painel_mapa.dart';
+import 'package:movin_project/view/widgets/painel_ocorrencias.dart';
+import 'package:movin_project/view/widgets/painel_perfil.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-class ModelView {
+class ModelView extends Model {
   /*** LOGIN ***/
 
   bool _dbIniciado = false;
   bool _usuarioLogado = false;
 
   get usuarioLogou => _usuarioLogado;
-  set usuarioLogou(value) => _usuarioLogado = value;
 
-  void realizaLogin() => usuarioLogou(true);
+  void realizaLogin() {
+    _usuarioLogado = true;
+    notifyListeners();
+  }
 
   /*** FIREBASE ***/
 
@@ -18,6 +26,7 @@ class ModelView {
     try {
       await Firebase.initializeApp();
       _dbIniciado = true;
+      notifyListeners();
     } catch (e) {
       print('Erro ao carregar Banco de Dados (Firebase):\n$e');
     }
@@ -37,6 +46,27 @@ class ModelView {
   }
 
   /*** MAIN ***/
+  int indexPainelPrincipal = 0;
+  List<Map<String, Object>> paginas = [
+    {
+      'pagina': PainelMapa(),
+      'titulo': 'Mapa',
+    },
+    {
+      'pagina': PainelOcorrencias(DadosInternos.OCORRENCIAS_EXEMPLO),
+      'titulo': 'Ocorrências',
+    },
+    {
+      'pagina': PainelPerfil(),
+      'titulo': 'Perfil',
+    },
+  ];
+
+  void selecionaPagina(int index) {
+    indexPainelPrincipal = index;
+    print('$indexPainelPrincipal, $index');
+    notifyListeners();
+  }
 
   // void logaUsuario(BuildContext context) {
   //   print('loga usuario.');
