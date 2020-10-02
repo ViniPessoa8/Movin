@@ -8,7 +8,6 @@ import 'package:movin_project/view/widgets/painel_perfil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:movin_project/view/widgets/painel_cria_ocorrencia.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:provider/provider.dart';
 
 class PaginaPrincipal extends StatefulWidget {
   static final nomeRota = '/principal';
