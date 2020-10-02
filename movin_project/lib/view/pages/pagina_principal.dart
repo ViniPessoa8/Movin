@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:movin_project/utils/dados_internos.dart';
-import 'package:movin_project/views/widgets/painel_drawer.dart';
-import 'package:movin_project/views/widgets/painel_mapa.dart';
-import 'package:movin_project/views/widgets/painel_ocorrencias.dart';
-import 'package:movin_project/views/widgets/painel_perfil.dart';
+import 'package:movin_project/view/widgets/painel_drawer.dart';
+import 'package:movin_project/view/widgets/painel_mapa.dart';
+import 'package:movin_project/view/widgets/painel_ocorrencias.dart';
+import 'package:movin_project/view/widgets/painel_perfil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:movin_project/views/widgets/painel_cria_ocorrencia.dart';
+import 'package:movin_project/view/widgets/painel_cria_ocorrencia.dart';
 
 class PaginaPrincipal extends StatefulWidget {
   static final nomeRota = '/principal';

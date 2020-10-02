@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movin_project/views/widgets/painel_config_conta.dart';
-import 'package:movin_project/views/widgets/painel_cria_ocorrencia.dart';
+import 'package:movin_project/view/widgets/painel_config_conta.dart';
+import 'package:movin_project/view/widgets/painel_cria_ocorrencia.dart';
 
 class PainelPerfil extends StatelessWidget {
   Widget _buildBotaoConfig(

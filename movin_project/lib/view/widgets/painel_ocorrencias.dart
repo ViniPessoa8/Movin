@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:movin_project/models/ocorrencia.dart';
-import 'package:movin_project/views/items/item_ocorrencia.dart';
-import 'package:movin_project/views/widgets/painel_cria_ocorrencia.dart';
+import 'package:movin_project/model/ocorrencia.dart';
+import 'package:movin_project/view/widgets/item_ocorrencia.dart';
+import 'package:movin_project/view/widgets/painel_cria_ocorrencia.dart';
 
 class PainelOcorrencias extends StatefulWidget {
   final List<Ocorrencia> ocorrencias;

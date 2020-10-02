@@ -1,46 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:movin_project/views/pages/pagina_login.dart';
-import 'package:movin_project/views/pages/pagina_principal.dart';
-import 'package:movin_project/views/widgets/login/painel_boas_vindas.dart';
-import 'package:movin_project/views/widgets/login/painel_cadastro.dart';
-import 'package:movin_project/views/widgets/login/painel_login.dart';
-import 'package:movin_project/views/widgets/painel_config_conta.dart';
-import 'package:movin_project/views/widgets/painel_emergencia.dart';
+import 'package:movin_project/modelview/model_view.dart';
+import 'package:movin_project/view/pages/pagina_login.dart';
+import 'package:movin_project/view/pages/pagina_principal.dart';
+import 'package:movin_project/view/widgets/painel_boas_vindas.dart';
+import 'package:movin_project/view/widgets/painel_cadastro.dart';
+import 'package:movin_project/view/widgets/painel_login.dart';
+import 'package:movin_project/view/widgets/painel_config_conta.dart';
+import 'package:movin_project/view/widgets/painel_emergencia.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-void _carregaPainelLogin(BuildContext context) {
-  Navigator.of(context).pushNamed(PainelLogin.nomeRota);
-}
-
-void _carregaPainelCadastro(BuildContext context) {
-  Navigator.of(context).pushNamed(PainelCadastro.nomeRota);
-}
-
 class MyApp extends StatefulWidget {
-  bool usuarioLogado = false;
+  final ModelView mv = ModelView();
 
   @override
   _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  bool usuarioLogou() {
-    return widget.usuarioLogado;
+  @override
+  initState() {
+    widget.mv.inicializaFirestore();
+    super.initState();
   }
 
   void logaUsuario(BuildContext context) {
     print('loga usuario.');
-    setState(() {
-      widget.usuarioLogado = true;
-      Navigator.of(context).pushReplacementNamed(PaginaPrincipal.nomeRota);
-    });
+    widget.mv.realizaLogin();
+    Navigator.of(context).pushReplacementNamed(PaginaPrincipal.nomeRota);
   }
 
   @override
   Widget build(BuildContext context) {
+    widget.mv.getOcorrencia();
     return MaterialApp(
       title: 'Movin',
       theme: ThemeData(
@@ -73,14 +67,14 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
       ),
-      initialRoute:
-          usuarioLogou() ? PaginaPrincipal.nomeRota : PaginaLogin.nomeRota,
+      initialRoute: widget.mv.usuarioLogou
+          ? PaginaPrincipal.nomeRota
+          : PaginaLogin.nomeRota,
       routes: {
         PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(
               indexPainelInicial: 0,
             ),
-        PaginaLogin.nomeRota: (ctx) =>
-            PaginaLogin(_carregaPainelLogin, _carregaPainelCadastro),
+        PaginaLogin.nomeRota: (ctx) => PaginaLogin(),
         // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
         PainelLogin.nomeRota: (ctx) => PainelLogin(logaUsuario),
         PainelCadastro.nomeRota: (ctx) => PainelCadastro(),

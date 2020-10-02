@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movin_project/models/ocorrencia.dart';
+import 'package:movin_project/model/ocorrencia.dart';
 import 'package:intl/intl.dart';
 
 class ItemOcorrencia extends StatelessWidget {

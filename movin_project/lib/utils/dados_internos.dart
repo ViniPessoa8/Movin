@@ -1,5 +1,5 @@
 import 'package:location/location.dart';
-import 'package:movin_project/models/ocorrencia.dart';
+import 'package:movin_project/model/ocorrencia.dart';
 
 class DadosInternos {
   static final List<String> categorias = [
