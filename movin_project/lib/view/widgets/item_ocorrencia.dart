@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:intl/intl.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:movin_project/model_view/model_view.dart';
 
 class ItemOcorrencia extends StatelessWidget {
   final Ocorrencia ocorrencia;
   final DateFormat formatadorData = DateFormat('dd/MM/yyyy');
+  ModelView mv = ModelView();
 
-  ItemOcorrencia(this.ocorrencia);
+  ItemOcorrencia(this.mv, this.ocorrencia);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
+      // height: 160,
       margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       decoration: BoxDecoration(
         border: Border.all(),
         borderRadius: BorderRadius.circular(10.0),
@@ -36,7 +40,7 @@ class ItemOcorrencia extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    ocorrencia.titulo,
+                    ocorrencia.categoria,
                     style: Theme.of(context).textTheme.headline6.copyWith(
                           fontSize: 25,
                         ),
@@ -63,9 +67,9 @@ class ItemOcorrencia extends StatelessWidget {
                     softWrap: false,
                   ),
                   Text(
-                    ocorrencia.categoria,
+                    mv.formatEndereco(mv.endereco),
                     style: Theme.of(context).textTheme.bodyText1.copyWith(
-                          fontSize: 20,
+                          fontSize: 17,
                         ),
                     overflow: TextOverflow.fade,
                     maxLines: 1,

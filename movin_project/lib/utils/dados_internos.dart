@@ -17,7 +17,6 @@ class DadosInternos {
     Ocorrencia(
       idOcorrencia: 0,
       idAutor: 0,
-      titulo: 'Assalto',
       descricao: 'Assalto à mão armada',
       categoria: 'Assaltos e Furtos',
       data: DateTime.now(),
@@ -26,7 +25,6 @@ class DadosInternos {
     Ocorrencia(
       idOcorrencia: 1,
       idAutor: 0,
-      titulo: 'Buraco',
       descricao: 'Buraco na calçada',
       categoria: 'Infraestrutura',
       data: DateTime.now(),
@@ -35,7 +33,6 @@ class DadosInternos {
     Ocorrencia(
       idOcorrencia: 2,
       idAutor: 1,
-      titulo: 'Trânsito',
       descricao: 'Trânsito intenso sentido bairro.',
       categoria: 'Trânsito',
       data: DateTime.now(),

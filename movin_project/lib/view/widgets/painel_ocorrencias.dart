@@ -41,8 +41,11 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
                 itemCount: widget.mv.ocorrencias.length,
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                 itemBuilder: (context, index) {
-                  print(widget.mv.ocorrencias[index].titulo);
-                  return ItemOcorrencia(widget.mv.ocorrencias[index]);
+                  print(widget.mv.ocorrencias[index].descricao);
+                  return ItemOcorrencia(
+                    widget.mv,
+                    widget.mv.ocorrencias[index],
+                  );
                 },
               ),
             ),

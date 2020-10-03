@@ -1,22 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
 
 class Ocorrencia {
   final int idOcorrencia;
   final int idAutor;
-  final String titulo;
   final String descricao;
   final DateTime data;
   final String categoria;
-  // final Location local;
+  final GeoPoint local;
 
   Ocorrencia({
     @required this.idOcorrencia,
     @required this.idAutor,
-    @required this.titulo,
     @required this.descricao,
     @required this.data,
     @required this.categoria,
-    // @required this.local,
+    @required this.local,
   });
 }

@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/utils/dados_internos.dart';
 
 class PainelCriaOcorrencia extends StatefulWidget {
   static String nomeRota = '/ocorrencia/criar';
+  final ModelView mv;
+
+  PainelCriaOcorrencia(this.mv);
 
   @override
   _PainelCriaOcorrenciaState createState() => _PainelCriaOcorrenciaState();
@@ -16,21 +20,6 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
       FirebaseFirestore.instance.collection('ocorrencias');
   TextEditingController tituloController = new TextEditingController();
   TextEditingController descricaoController = new TextEditingController();
-
-  Future<void> addOcorrencia(
-      {String titulo,
-      String descricao,
-      String categoria,
-      DateTime data,
-      int idUsuario}) {
-    return ocorrencias.add({
-      'titulo': titulo,
-      'descicao': descricao,
-      'categoria': categoria,
-      'data': data,
-      'userId': idUsuario
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,11 +111,11 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
           ),
           RaisedButton(
             onPressed: () {
-              addOcorrencia(
-                titulo: tituloController.text,
+              widget.mv.addOcorrencia(
                 descricao: descricaoController.text,
                 categoria: categoria,
                 data: DateTime.now(),
+                local: widget.mv.localUsuario,
                 idUsuario: 0,
               );
               Navigator.of(context).pop();

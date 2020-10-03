@@ -45,7 +45,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return PainelCriaOcorrencia();
+        return PainelCriaOcorrencia(widget.mv);
       },
     );
   }
@@ -54,7 +54,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return PainelCriaOcorrencia();
+        return PainelCriaOcorrencia(widget.mv);
       },
     );
   }
