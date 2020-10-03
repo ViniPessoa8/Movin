@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:movin_project/model/ocorrencia.dart';
 import 'package:movin_project/utils/dados_internos.dart';
 import 'package:movin_project/view/widgets/painel_mapa.dart';
 import 'package:movin_project/view/widgets/painel_ocorrencias.dart';
@@ -8,12 +9,16 @@ import 'package:movin_project/view/widgets/painel_perfil.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class ModelView extends Model {
+  bool _carregouOcorrencias = false;
+  List<Ocorrencia> ocorrencias;
+
   /*** LOGIN ***/
 
   bool _dbIniciado = false;
-  bool _usuarioLogado = false;
+  bool _usuarioLogado = true;
 
   get usuarioLogou => _usuarioLogado;
+  get carregouOcorrencias => _carregouOcorrencias;
 
   void realizaLogin() {
     _usuarioLogado = true;
@@ -26,45 +31,47 @@ class ModelView extends Model {
     try {
       await Firebase.initializeApp();
       _dbIniciado = true;
+      await fetchOcorrencias();
       notifyListeners();
     } catch (e) {
       print('Erro ao carregar Banco de Dados (Firebase):\n$e');
     }
   }
 
-  getOcorrencia() {
+  get getOcorrencias => ocorrencias;
+
+  fetchOcorrencias() async {
+    print('FETCH OCORRENCIAS');
+    List<Ocorrencia> listaOcorrencias = [];
     if (_dbIniciado) {
-      FirebaseFirestore.instance
-          .collection('ocorrencias/tJceIBXVieL1i0ZuAsWJ/ocorrencia')
-          .snapshots()
-          .listen((data) {
-        data.docs.forEach((element) {
-          print(element['titulo']);
-        });
-      });
+      await FirebaseFirestore.instance.collection('ocorrencias').get().then(
+        (value) {
+          value.docs.forEach(
+            (element) {
+              Ocorrencia ocorrencia = Ocorrencia(
+                idOcorrencia: 0,
+                idAutor: 0,
+                titulo: element.get('titulo'),
+                descricao: element.get('descicao'),
+                data: element.get('data').toDate(),
+                categoria: element.get('categoria'),
+              );
+              listaOcorrencias.add(ocorrencia);
+            },
+          );
+        },
+      );
     }
+    this.ocorrencias = listaOcorrencias;
+    _carregouOcorrencias = true;
+    notifyListeners();
   }
 
   /*** MAIN ***/
-  int indexPainelPrincipal = 0;
-  List<Map<String, Object>> paginas = [
-    {
-      'pagina': PainelMapa(),
-      'titulo': 'Mapa',
-    },
-    {
-      'pagina': PainelOcorrencias(DadosInternos.OCORRENCIAS_EXEMPLO),
-      'titulo': 'Ocorrências',
-    },
-    {
-      'pagina': PainelPerfil(),
-      'titulo': 'Perfil',
-    },
-  ];
+  int indexPainelPrincipal = 1;
 
   void selecionaPagina(int index) {
     indexPainelPrincipal = index;
-    print('$indexPainelPrincipal, $index');
     notifyListeners();
   }
 

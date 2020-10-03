@@ -20,6 +20,27 @@ class PaginaPrincipal extends StatefulWidget {
 }
 
 class _PaginaPrincipalState extends State<PaginaPrincipal> {
+  List<Map<String, Object>> paginas;
+
+  @override
+  void initState() {
+    paginas = [
+      {
+        'pagina': PainelMapa(),
+        'titulo': 'Mapa',
+      },
+      {
+        'pagina': PainelOcorrencias(widget.mv),
+        'titulo': 'Ocorrências',
+      },
+      {
+        'pagina': PainelPerfil(),
+        'titulo': 'Perfil',
+      },
+    ];
+    super.initState();
+  }
+
   void _mostraCriaOcorrencia(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -137,7 +158,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
         ),
         body:
             ScopedModelDescendant<ModelView>(builder: (context, child, model) {
-          return model.paginas[model.indexPainelPrincipal]['pagina'];
+          return paginas[model.indexPainelPrincipal]['pagina'];
         }),
         drawer: PainelDrawer(),
         bottomNavigationBar: ScopedModelDescendant<ModelView>(

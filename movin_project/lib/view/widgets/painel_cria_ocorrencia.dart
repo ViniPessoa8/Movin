@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:movin_project/utils/dados_internos.dart';
 
@@ -10,7 +11,26 @@ class PainelCriaOcorrencia extends StatefulWidget {
 
 class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
   List<String> valores = DadosInternos.categorias;
-  String dropdownValue;
+  String categoria;
+  CollectionReference ocorrencias =
+      FirebaseFirestore.instance.collection('ocorrencias');
+  TextEditingController tituloController = new TextEditingController();
+  TextEditingController descricaoController = new TextEditingController();
+
+  Future<void> addOcorrencia(
+      {String titulo,
+      String descricao,
+      String categoria,
+      DateTime data,
+      int idUsuario}) {
+    return ocorrencias.add({
+      'titulo': titulo,
+      'descicao': descricao,
+      'categoria': categoria,
+      'data': data,
+      'userId': idUsuario
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +55,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                     DropdownButton<String>(
                       autofocus: true,
                       hint: Text('Selecione a Categoria'),
-                      value: dropdownValue,
+                      value: categoria,
                       items: valores.map((elemento) {
                         return DropdownMenuItem(
                           value: elemento,
@@ -44,13 +64,14 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                       }).toList(),
                       onChanged: (value) {
                         setState(() {
-                          dropdownValue = value;
+                          categoria = value;
                         });
                       },
                     ),
                   ],
                 ),
                 TextField(
+                  controller: tituloController,
                   decoration: InputDecoration(
                     labelText: 'Título',
                     labelStyle: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -59,6 +80,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                   ),
                 ),
                 TextField(
+                  controller: descricaoController,
                   decoration: InputDecoration(
                     labelText: 'Descrição',
                     labelStyle: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -100,6 +122,13 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
           ),
           RaisedButton(
             onPressed: () {
+              addOcorrencia(
+                titulo: tituloController.text,
+                descricao: descricaoController.text,
+                categoria: categoria,
+                data: DateTime.now(),
+                idUsuario: 0,
+              );
               Navigator.of(context).pop();
               showDialog(
                 context: context,

@@ -36,7 +36,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    modelView.getOcorrencia();
     return MaterialApp(
       title: 'Movin',
       theme: ThemeData(
