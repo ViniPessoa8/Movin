@@ -38,10 +38,7 @@ class ModelView extends Model {
     }
   }
 
-  get getOcorrencias => ocorrencias;
-
   fetchOcorrencias() async {
-    print('FETCH OCORRENCIAS');
     List<Ocorrencia> listaOcorrencias = [];
     if (_dbIniciado) {
       await FirebaseFirestore.instance.collection('ocorrencias').get().then(
@@ -69,6 +66,8 @@ class ModelView extends Model {
 
   /*** MAIN ***/
   int indexPainelPrincipal = 1;
+
+  get getOcorrencias => ocorrencias;
 
   void selecionaPagina(int index) {
     indexPainelPrincipal = index;

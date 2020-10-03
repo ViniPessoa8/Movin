@@ -34,23 +34,19 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
       }
 
       return Container(
-        child: ScopedModelDescendant<ModelView>(
-          builder: (context, child, model) {
-            return Stack(
-              children: [
-                Container(
-                  child: ListView.builder(
-                    itemCount: model.ocorrencias.length,
-                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                    itemBuilder: (context, index) {
-                      print(model.ocorrencias[index].titulo);
-                      return ItemOcorrencia(model.ocorrencias[index]);
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
+        child: Stack(
+          children: [
+            Container(
+              child: ListView.builder(
+                itemCount: widget.mv.ocorrencias.length,
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                itemBuilder: (context, index) {
+                  print(widget.mv.ocorrencias[index].titulo);
+                  return ItemOcorrencia(widget.mv.ocorrencias[index]);
+                },
+              ),
+            ),
+          ],
         ),
       );
     } else {
@@ -72,15 +68,12 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModel(
-      model: widget.mv,
-      child: ScopedModelDescendant<ModelView>(
-        builder: (context, child, model) {
-          return Center(
-            child: _imprimeOcorrencias(),
-          );
-        },
-      ),
+    return ScopedModelDescendant<ModelView>(
+      builder: (context, child, model) {
+        return Center(
+          child: _imprimeOcorrencias(),
+        );
+      },
     );
   }
 }

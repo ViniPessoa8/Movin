@@ -151,7 +151,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     Color accentColor = Theme.of(context).accentColor;
 
     return ScopedModel(
-      model: ModelView(),
+      model: widget.mv,
       child: Scaffold(
         appBar: AppBar(
           title: _buildTituloAppbar(),
