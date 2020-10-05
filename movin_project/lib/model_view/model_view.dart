@@ -82,12 +82,13 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  Future<void> addOcorrencia(
-      {@required String descricao,
-      @required String categoria,
-      DateTime data,
-      LocationData local,
-      @required int idUsuario}) async {
+  Future<void> addOcorrencia({
+    @required String descricao,
+    @required String categoria,
+    DateTime data,
+    LocationData local,
+    @required int idUsuario,
+  }) async {
     if (data == null) data = DateTime.now();
     if (local == null) {
       await Location().getLocation().then((value) => local = value);
