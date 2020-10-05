@@ -13,7 +13,6 @@ class ItemOcorrencia extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // height: 160,
       margin: EdgeInsets.symmetric(vertical: 10),
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
       decoration: BoxDecoration(
