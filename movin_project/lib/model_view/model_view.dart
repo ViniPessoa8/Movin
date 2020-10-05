@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
+import 'package:movin_project/db/firebase_controller.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -12,6 +13,7 @@ class ModelView extends Model {
   List<Ocorrencia> ocorrencias;
   LocationData localUsuario;
   Address endereco;
+  FirebaseController fc;
 
   /*** FIREBASE ***/
 
