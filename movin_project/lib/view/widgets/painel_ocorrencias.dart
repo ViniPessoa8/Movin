@@ -28,7 +28,25 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
       if (widget.mv.ocorrencias == null) {
         return Text('ocorrencias null');
       } else if (widget.mv.ocorrencias.isEmpty) {
-        return Text('Não há ocorrências');
+        return Container(
+          alignment: Alignment.center,
+          child: RefreshIndicator(
+            onRefresh: widget.mv.fetchOcorrencias,
+            child: ListView.builder(
+              itemCount: 1,
+              itemBuilder: (ctx, index) {
+                return Align(
+                  heightFactor: 30.0, // ?
+                  child: Text(
+                    'Não há ocorrências',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
       }
 
       return Container(
