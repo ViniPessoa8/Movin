@@ -1,21 +1,25 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:geopoint/geopoint.dart' as gp;
 import 'package:location/location.dart';
-import 'package:movin_project/db/firebase_controller.dart';
-import 'package:movin_project/model/ocorrencia.dart';
+import 'package:mapbox_gl/mapbox_gl.dart' as mb;
 import 'package:scoped_model/scoped_model.dart';
+import 'package:movin_project/model/ocorrencia.dart';
+import 'package:movin_project/db/firebase_controller.dart';
 
 class ModelView extends Model {
-  CollectionReference ocorrenciasBD;
-  bool _carregouOcorrencias = false;
   List<Ocorrencia> ocorrencias;
-  LocationData localUsuario;
-  Address endereco;
+  gp.GeoPoint localUsuario;
+  Address enderecoUsuario;
   FirebaseController fc;
+  bool _dbIniciado;
 
-  /*** FIREBASE ***/
+  ModelView() {
+    _usuarioLogado = true;
+    indexPainelPrincipal = 1;
+    iniciaDb();
+    // ocorrencias = [];
+  }
 
   // Firebase
 
@@ -25,34 +29,27 @@ class ModelView extends Model {
     carregaDados();
   }
 
+  /*** LOGIN ***/
+  bool _usuarioLogado;
+
+  get usuarioLogou => _usuarioLogado;
+  get carregouOcorrencias => ocorrencias != null;
+  get carregouLocalUsuario => localUsuario != null;
+
+  void realizaLogin() {
+    _usuarioLogado = true;
+    notifyListeners();
+  }
+
+  /*** MAIN ***/
+  int indexPainelPrincipal;
+
+  get getOcorrencias => ocorrencias;
+  get getEndereco => enderecoUsuario;
+
   void carregaDados() {
-    if (_dbIniciado) {
-      ocorrenciasBD = FirebaseFirestore.instance.collection('ocorrencias');
-      fetchOcorrencias();
-      fetchLocalUsuario();
-    }
-  }
-
-  Future<void> fetchLocalUsuario() async {
-    Location().getLocation().then((value) {
-      print('[DEBUG fetchLocalUsuario] $value');
-      localUsuario = value;
-      fetchEndereco();
-    });
-    notifyListeners();
-  }
-
-  Future<void> fetchEndereco() async {
-    final coordinates =
-        Coordinates(localUsuario.latitude, localUsuario.longitude);
-    await Geocoder.local
-        .findAddressesFromCoordinates(coordinates)
-        .then((value) {
-      endereco = value.elementAt(0);
-    });
-    print(
-        '${endereco.thoroughfare}, ${endereco.subLocality}. ${endereco.subAdminArea}, ${endereco.adminArea}, ${endereco.countryName}');
-    notifyListeners();
+    atualizaLocalUsuario();
+    atualizaOcorrencias();
   }
 
   //Atualizadores
@@ -67,53 +64,26 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  Future<void> addOcorrencia({
-    @required String descricao,
-    @required String categoria,
-    DateTime data,
-    LocationData local,
-    @required int idUsuario,
-  }) async {
-    if (data == null) data = DateTime.now();
-    if (local == null) {
-      await Location().getLocation().then((value) => local = value);
+  Future<void> atualizaLocalUsuario() async {
+    if (_dbIniciado) {
+      localUsuario = await fc.fetchLocalUsuario();
+      atualizaEnderecoUsuario();
+      notifyListeners();
     }
-
-    //Conversão de LocationData -> GeoPoint (Firebase)
-    GeoPoint geopoint = GeoPoint(local.latitude, local.longitude);
-
-    //Criação da ocorrência no banco de dados
-    var id = ocorrenciasBD.add({
-      'descicao': descricao,
-      'categoria': categoria,
-      'data': data,
-      'local': geopoint,
-      'userId': idUsuario
-    });
-
-    print(id);
-    notifyListeners();
   }
 
-  escutaOcorrencias() async {
-    FirebaseFirestore.instance
-        .collection('ocorrencias')
-        .snapshots()
-        .listen((event) {
-      fetchOcorrencias();
-    });
+  Future<void> atualizaEnderecoUsuario() async {
+    if (_dbIniciado) {
+      enderecoUsuario = await fc.fetchEndereco(
+        localUsuario.latitude,
+        localUsuario.longitude,
+      );
+      notifyListeners();
+    }
   }
 
-  /*** LOGIN ***/
-
-  bool _dbIniciado = false;
-  bool _usuarioLogado = true;
-
-  get usuarioLogou => _usuarioLogado;
-  get carregouOcorrencias => _carregouOcorrencias;
-
-  void realizaLogin() {
-    _usuarioLogado = true;
+  void selecionaPagina(int index) {
+    indexPainelPrincipal = index;
     notifyListeners();
   }
 

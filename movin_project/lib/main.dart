@@ -21,11 +21,10 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  initState() {
-    modelView.inicializaFirestore();
-    super.initState();
-  }
+  // @override
+  // initState() {
+  //   super.initState();
+  // }
 
   void logaUsuario(BuildContext context) {
     print('loga usuario.');

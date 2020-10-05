@@ -21,15 +21,15 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
   //   super.initState();
   // }
 
-  Widget _imprimeOcorrencias() {
-    if (widget.mv.carregouOcorrencias && widget.mv.localUsuario != null) {
-      if (widget.mv.ocorrencias == null) {
+  Widget _imprimeOcorrencias(ModelView mv) {
+    if (mv.carregouOcorrencias && mv.carregouLocalUsuario) {
+      if (mv.ocorrencias == null) {
         return Text('ocorrencias null');
-      } else if (widget.mv.ocorrencias.isEmpty) {
+      } else if (mv.ocorrencias.isEmpty) {
         return Container(
           alignment: Alignment.center,
           child: RefreshIndicator(
-            onRefresh: widget.mv.fetchOcorrencias,
+            onRefresh: mv.atualizaOcorrencias,
             child: ListView.builder(
               itemCount: 1,
               itemBuilder: (ctx, index) {
@@ -52,15 +52,14 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
           children: [
             Container(
               child: RefreshIndicator(
-                onRefresh: widget.mv.fetchOcorrencias,
+                onRefresh: mv.atualizaOcorrencias,
                 child: ListView.builder(
-                  itemCount: widget.mv.ocorrencias.length,
+                  itemCount: mv.ocorrencias.length,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   itemBuilder: (context, index) {
-                    print(widget.mv.ocorrencias[index].descricao);
                     return ItemOcorrencia(
-                      widget.mv,
-                      widget.mv.ocorrencias[index],
+                      mv,
+                      mv.ocorrencias[index],
                     );
                   },
                 ),
@@ -91,7 +90,7 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
     return ScopedModelDescendant<ModelView>(
       builder: (context, child, model) {
         return Center(
-          child: _imprimeOcorrencias(),
+          child: _imprimeOcorrencias(model),
         );
       },
     );

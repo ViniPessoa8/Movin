@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:movin_project/db/firebase_controller.dart';
 import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/utils/dados_internos.dart';
 import 'package:movin_project/view/widgets/painel_drawer.dart';
@@ -150,7 +152,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     Color primaryColor = Theme.of(context).primaryColor;
     Color accentColor = Theme.of(context).accentColor;
 
-    return ScopedModel(
+    return ScopedModel<ModelView>(
       model: widget.mv,
       child: Scaffold(
         appBar: AppBar(

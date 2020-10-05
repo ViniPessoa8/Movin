@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
+import 'package:movin_project/model/ocorrencia.dart';
 import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/utils/dados_internos.dart';
+import 'package:geopoint/geopoint.dart' as gp;
 
 class PainelCriaOcorrencia extends StatefulWidget {
   static String nomeRota = '/ocorrencia/criar';
@@ -14,6 +17,7 @@ class PainelCriaOcorrencia extends StatefulWidget {
 }
 
 class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
+  gp.GeoPoint local;
   List<String> valores = DadosInternos.categorias;
   String categoria;
   CollectionReference ocorrencias =
@@ -21,8 +25,19 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
   TextEditingController tituloController = new TextEditingController();
   TextEditingController descricaoController = new TextEditingController();
 
+  getLocal({double latitude, double longitude}) async {
+    LocationData localAtual = await Location().getLocation();
+    if (latitude == null || longitude == null) {
+      local = gp.GeoPoint(
+        latitude: localAtual.latitude,
+        longitude: localAtual.longitude,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    getLocal();
     return Container(
       padding: EdgeInsets.all(10),
       child: Column(
@@ -102,14 +117,14 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
           ),
           RaisedButton(
             onPressed: () {
-              widget.mv.addOcorrencia(
+              widget.mv.addOcorrencia(Ocorrencia(
                 descricao: descricaoController.text,
                 categoria: categoria,
                 data: DateTime.now(),
-                local: widget.mv.localUsuario,
-                idUsuario: 0,
-              );
-              widget.mv.fetchOcorrencias();
+                local: local,
+                idAutor: 0,
+              ));
+              widget.mv.atualizaOcorrencias();
               Navigator.of(context).pop();
               showDialog(
                 context: context,
