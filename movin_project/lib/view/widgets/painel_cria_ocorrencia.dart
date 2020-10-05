@@ -109,6 +109,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                 local: widget.mv.localUsuario,
                 idUsuario: 0,
               );
+              widget.mv.fetchOcorrencias();
               Navigator.of(context).pop();
               showDialog(
                 context: context,
