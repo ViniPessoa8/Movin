@@ -60,15 +60,6 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                   ],
                 ),
                 TextField(
-                  controller: tituloController,
-                  decoration: InputDecoration(
-                    labelText: 'Título',
-                    labelStyle: Theme.of(context).textTheme.bodyText1.copyWith(
-                          color: Colors.black54,
-                        ),
-                  ),
-                ),
-                TextField(
                   controller: descricaoController,
                   decoration: InputDecoration(
                     labelText: 'Descrição',
