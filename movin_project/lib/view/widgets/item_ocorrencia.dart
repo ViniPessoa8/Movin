@@ -64,7 +64,7 @@ class ItemOcorrencia extends StatelessWidget {
                     softWrap: false,
                   ),
                   Text(
-                    mv.formatEndereco(mv.endereco),
+                    mv.formatEndereco(mv.enderecoUsuario),
                     style: Theme.of(context).textTheme.bodyText1.copyWith(
                           fontSize: 17,
                         ),

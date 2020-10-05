@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geopoint/geopoint.dart' as gp;
 import 'package:flutter/material.dart';
 
 class Ocorrencia {
@@ -7,10 +8,10 @@ class Ocorrencia {
   final String descricao;
   final DateTime data;
   final String categoria;
-  final GeoPoint local;
+  final gp.GeoPoint local;
 
   Ocorrencia({
-    @required this.idOcorrencia,
+    this.idOcorrencia,
     @required this.idAutor,
     @required this.descricao,
     @required this.data,
