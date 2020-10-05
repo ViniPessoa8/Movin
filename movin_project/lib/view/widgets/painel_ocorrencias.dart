@@ -15,13 +15,11 @@ class PainelOcorrencias extends StatefulWidget {
 }
 
 class _PainelOcorrenciasState extends State<PainelOcorrencias> {
-  @override
-  void initState() {
-    // widget.mv.fetchOcorrencias();
-    super.initState();
-  }
-
-  testeCarregaOcorrencias() {}
+  // @override
+  // void initState() {
+  //   // widget.mv.fetchOcorrencias();
+  //   super.initState();
+  // }
 
   Widget _imprimeOcorrencias() {
     if (widget.mv.carregouOcorrencias && widget.mv.localUsuario != null) {

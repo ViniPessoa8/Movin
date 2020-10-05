@@ -15,15 +15,12 @@ class ModelView extends Model {
 
   /*** FIREBASE ***/
 
-  Future<void> inicializaFirestore() async {
-    try {
-      await Firebase.initializeApp();
-      _dbIniciado = true;
-      carregaDados();
-      notifyListeners();
-    } catch (e) {
-      print('Erro ao carregar Banco de Dados (Firebase):\n$e');
-    }
+  // Firebase
+
+  iniciaDb() async {
+    fc = FirebaseController();
+    _dbIniciado = await fc.inicializaFirestore();
+    carregaDados();
   }
 
   void carregaDados() {
@@ -56,29 +53,15 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  Future<void> fetchOcorrencias({String filtro}) async {
-    List<Ocorrencia> listaOcorrencias = [];
+  //Atualizadores
+
+  Future<void> atualizaOcorrencias({String bairro}) async {
+    print('[DEBUG] atualizaOcorrencias($bairro)');
     if (_dbIniciado) {
-      await FirebaseFirestore.instance.collection('ocorrencias').get().then(
-        (value) {
-          value.docs.forEach(
-            (element) {
-              Ocorrencia ocorrencia = Ocorrencia(
-                idOcorrencia: 0,
-                idAutor: 0,
-                descricao: element.get('descicao'),
-                data: element.get('data').toDate(),
-                categoria: element.get('categoria'),
-                local: element.get('local'),
-              );
-              listaOcorrencias.add(ocorrencia);
-            },
-          );
-        },
-      );
+      ocorrencias = await fc.fetchOcorrencias(bairro: bairro);
+    } else {
+      ocorrencias = [];
     }
-    this.ocorrencias = listaOcorrencias;
-    _carregouOcorrencias = true;
     notifyListeners();
   }
 
@@ -132,21 +115,36 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  /*** MAIN ***/
-  int indexPainelPrincipal = 1;
+  // Ocorrencia
 
-  get getOcorrencias => ocorrencias;
-  get getEnderesso => endereco;
+  void addOcorrencia(Ocorrencia ocorrencia) async {
+    bool resp = await fc.addOcorrencia(
+      descricao: ocorrencia.descricao,
+      categoria: ocorrencia.categoria,
+      data: ocorrencia.data,
+      local: ocorrencia.local,
+      idUsuario: ocorrencia.idAutor,
+    );
 
-  void selecionaPagina(int index) {
-    indexPainelPrincipal = index;
-    notifyListeners();
+    if (resp) {
+      print('Ocorrência criada.');
+    } else {
+      print('Erro na criação da ocorrência.');
+    }
   }
 
   // Endereço
+
   String formatEndereco(Address endereco) {
-    if (endereco != null)
-      return '${endereco.thoroughfare}, ${endereco.subLocality}. ${endereco.subAdminArea}, ${endereco.adminArea}, ${endereco.countryName}';
+    String saida = '';
+    if (endereco != null) {
+      if (endereco.thoroughfare != null && endereco.subLocality != null) {
+        saida += '${endereco.thoroughfare}, ${endereco.subLocality}. ';
+      }
+      saida += '${endereco.subAdminArea}, ${endereco.adminArea}, ' +
+          '${endereco.countryName}';
+    }
+    return saida;
   }
 
   // void logaUsuario(BuildContext context) {
