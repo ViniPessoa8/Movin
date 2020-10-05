@@ -15,13 +15,11 @@ class PainelOcorrencias extends StatefulWidget {
 }
 
 class _PainelOcorrenciasState extends State<PainelOcorrencias> {
-  @override
-  void initState() {
-    // widget.mv.fetchOcorrencias();
-    super.initState();
-  }
-
-  testeCarregaOcorrencias() {}
+  // @override
+  // void initState() {
+  //   // widget.mv.fetchOcorrencias();
+  //   super.initState();
+  // }
 
   Widget _imprimeOcorrencias(ModelView mv) {
     if (mv.carregouOcorrencias && mv.carregouLocalUsuario) {
@@ -59,7 +57,6 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
                   itemCount: mv.ocorrencias.length,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   itemBuilder: (context, index) {
-                    print(mv.ocorrencias[index].descricao);
                     return ItemOcorrencia(
                       mv,
                       mv.ocorrencias[index],
@@ -72,8 +69,6 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
         ),
       );
     } else {
-      print(
-          '${widget.mv.carregouOcorrencias} && ${widget.mv.carregouLocalUsuario}');
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

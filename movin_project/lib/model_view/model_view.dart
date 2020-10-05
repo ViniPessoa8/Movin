@@ -21,6 +21,8 @@ class ModelView extends Model {
     // ocorrencias = [];
   }
 
+  // Firebase
+
   iniciaDb() async {
     fc = FirebaseController();
     _dbIniciado = await fc.inicializaFirestore();
@@ -50,16 +52,16 @@ class ModelView extends Model {
     atualizaOcorrencias();
   }
 
-  Future<void> atualizaOcorrencias() async {
-    print('[DEBUG] atualizaOcorrencias()');
+  //Atualizadores
+
+  Future<void> atualizaOcorrencias({String bairro}) async {
+    print('[DEBUG] atualizaOcorrencias($bairro)');
     if (_dbIniciado) {
-      print('[DEBUG] atualizaOcorrencias() dbIniciado');
-      ocorrencias = await fc.fetchOcorrencias();
-      print('[DEBUG] atualizaOcorrencias() dbIniciado $ocorrencias');
-      notifyListeners();
+      ocorrencias = await fc.fetchOcorrencias(bairro: bairro);
     } else {
       ocorrencias = [];
     }
+    notifyListeners();
   }
 
   Future<void> atualizaLocalUsuario() async {
@@ -85,6 +87,8 @@ class ModelView extends Model {
     notifyListeners();
   }
 
+  // Ocorrencia
+
   void addOcorrencia(Ocorrencia ocorrencia) async {
     bool resp = await fc.addOcorrencia(
       descricao: ocorrencia.descricao,
@@ -102,12 +106,16 @@ class ModelView extends Model {
   }
 
   // Endereço
+
   String formatEndereco(Address endereco) {
-    String saida = '(sem endereço)';
-    if (endereco != null)
-      saida = '${endereco.thoroughfare}, ${endereco.subLocality}. ' +
-          '${endereco.subAdminArea}, ${endereco.adminArea}, ' +
+    String saida = '';
+    if (endereco != null) {
+      if (endereco.thoroughfare != null && endereco.subLocality != null) {
+        saida += '${endereco.thoroughfare}, ${endereco.subLocality}. ';
+      }
+      saida += '${endereco.subAdminArea}, ${endereco.adminArea}, ' +
           '${endereco.countryName}';
+    }
     return saida;
   }
 

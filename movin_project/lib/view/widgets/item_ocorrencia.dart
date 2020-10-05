@@ -1,14 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:intl/intl.dart';
 import 'package:movin_project/model_view/model_view.dart';
 
-class ItemOcorrencia extends StatelessWidget {
+class ItemOcorrencia extends StatefulWidget {
   final Ocorrencia ocorrencia;
-  final DateFormat formatadorData = DateFormat('dd/MM/yyyy');
   final ModelView mv;
 
   ItemOcorrencia(this.mv, this.ocorrencia);
+
+  @override
+  _ItemOcorrenciaState createState() => _ItemOcorrenciaState();
+}
+
+class _ItemOcorrenciaState extends State<ItemOcorrencia> {
+  final DateFormat formatadorData = DateFormat('dd/MM/yyyy');
+
+  Address endereco;
+
+  @override
+  void initState() {
+    carregaEndereco();
+    super.initState();
+  }
+
+  carregaEndereco() async {
+    print('carregaEndereco()');
+    double latitude = widget.ocorrencia.local.latitude;
+    double longitude = widget.ocorrencia.local.longitude;
+
+    Address localEnd = await widget.mv.fc.fetchEndereco(latitude, longitude);
+    setState(() {
+      endereco = localEnd;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +63,7 @@ class ItemOcorrencia extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    ocorrencia.categoria,
+                    widget.ocorrencia.categoria,
                     style: Theme.of(context).textTheme.headline6.copyWith(
                           fontSize: 25,
                         ),
@@ -46,7 +72,7 @@ class ItemOcorrencia extends StatelessWidget {
                     softWrap: false,
                   ),
                   Text(
-                    ocorrencia.descricao,
+                    widget.ocorrencia.descricao,
                     style: Theme.of(context).textTheme.bodyText1.copyWith(
                           fontSize: 20,
                         ),
@@ -55,7 +81,7 @@ class ItemOcorrencia extends StatelessWidget {
                     softWrap: false,
                   ),
                   Text(
-                    formatadorData.format(ocorrencia.data),
+                    formatadorData.format(widget.ocorrencia.data),
                     style: Theme.of(context).textTheme.bodyText1.copyWith(
                           fontSize: 20,
                         ),
@@ -64,7 +90,9 @@ class ItemOcorrencia extends StatelessWidget {
                     softWrap: false,
                   ),
                   Text(
-                    mv.formatEndereco(mv.enderecoUsuario),
+                    endereco == null
+                        ? '(Sem Endereço)'
+                        : widget.mv.formatEndereco(endereco),
                     style: Theme.of(context).textTheme.bodyText1.copyWith(
                           fontSize: 17,
                         ),
