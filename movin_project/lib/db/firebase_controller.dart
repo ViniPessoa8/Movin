@@ -55,22 +55,23 @@ class FirebaseController extends Model {
     // print(
     // '${endereco.thoroughfare}, ${endereco.subLocality}. ${endereco.subAdminArea}, ${endereco.adminArea}, ${endereco.countryName}');
     // notifyListeners();
+    print(endereco.addressLine);
     return endereco;
   }
 
-  Future<List<Ocorrencia>> fetchOcorrencias({String filtro}) async {
+  Future<List<Ocorrencia>> fetchOcorrencias({String bairro}) async {
     List<Ocorrencia> listaOcorrencias = [];
     if (_dbIniciado) {
       await FirebaseFirestore.instance.collection('ocorrencias').get().then(
         (value) {
           value.docs.forEach(
             (element) {
+              //Tratamento do elemento
               GeoPoint localBd = element.get('local');
               gp.GeoPoint local = gp.GeoPoint(
                 latitude: localBd.latitude,
                 longitude: localBd.longitude,
               );
-              // String bairro_filtro = local.;
               Ocorrencia ocorrencia = Ocorrencia(
                 idOcorrencia: 0,
                 idAutor: 0,
@@ -79,7 +80,20 @@ class FirebaseController extends Model {
                 categoria: element.get('categoria'),
                 local: local,
               );
-              listaOcorrencias.add(ocorrencia);
+
+              if (bairro != null) {
+                fetchEndereco(local.latitude, local.longitude).then((value) {
+                  print('SubLocality: ${value.subLocality} | bairro: $bairro');
+                  print(
+                      'value.subLocality == bairro: ${value.subLocality == bairro}');
+                  if (value.subLocality == bairro) {
+                    listaOcorrencias.add(ocorrencia);
+                    return;
+                  }
+                });
+              } else {
+                listaOcorrencias.add(ocorrencia);
+              }
             },
           );
         },
