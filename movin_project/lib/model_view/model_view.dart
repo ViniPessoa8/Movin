@@ -33,7 +33,7 @@ class ModelView extends Model {
 
   /*** FIREBASE ***/
 
-  void inicializaFirestore() async {
+  Future<void> inicializaFirestore() async {
     try {
       await Firebase.initializeApp();
       _dbIniciado = true;
@@ -52,7 +52,7 @@ class ModelView extends Model {
     }
   }
 
-  fetchLocalUsuario() async {
+  Future<void> fetchLocalUsuario() async {
     Location().getLocation().then((value) {
       print('[DEBUG fetchLocalUsuario] $value');
       localUsuario = value;
@@ -61,7 +61,7 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  fetchEndereco() async {
+  Future<void> fetchEndereco() async {
     final coordinates =
         Coordinates(localUsuario.latitude, localUsuario.longitude);
     await Geocoder.local
@@ -74,7 +74,7 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  fetchOcorrencias() async {
+  Future<void> fetchOcorrencias() async {
     List<Ocorrencia> listaOcorrencias = [];
     if (_dbIniciado) {
       await FirebaseFirestore.instance.collection('ocorrencias').get().then(
@@ -100,9 +100,8 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  void addOcorrencia(
-      {@required String titulo,
-      @required String descricao,
+  Future<void> addOcorrencia(
+      {@required String descricao,
       @required String categoria,
       DateTime data,
       LocationData local,
@@ -115,9 +114,8 @@ class ModelView extends Model {
     //Conversão de LocationData -> GeoPoint (Firebase)
     GeoPoint geopoint = GeoPoint(local.latitude, local.longitude);
 
-    //Criação da Ocorrência
+    //Criação da ocorrência no banco de dados
     var id = ocorrenciasBD.add({
-      'titulo': titulo,
       'descicao': descricao,
       'categoria': categoria,
       'data': data,
