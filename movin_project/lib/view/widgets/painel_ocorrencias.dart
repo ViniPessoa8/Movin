@@ -24,7 +24,7 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
   testeCarregaOcorrencias() {}
 
   Widget _imprimeOcorrencias() {
-    if (widget.mv.carregouOcorrencias) {
+    if (widget.mv.carregouOcorrencias && widget.mv.localUsuario != null) {
       if (widget.mv.ocorrencias == null) {
         return Text('ocorrencias null');
       } else if (widget.mv.ocorrencias.isEmpty) {
@@ -35,16 +35,19 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
         child: Stack(
           children: [
             Container(
-              child: ListView.builder(
-                itemCount: widget.mv.ocorrencias.length,
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                itemBuilder: (context, index) {
-                  print(widget.mv.ocorrencias[index].descricao);
-                  return ItemOcorrencia(
-                    widget.mv,
-                    widget.mv.ocorrencias[index],
-                  );
-                },
+              child: RefreshIndicator(
+                onRefresh: widget.mv.fetchOcorrencias,
+                child: ListView.builder(
+                  itemCount: widget.mv.ocorrencias.length,
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                  itemBuilder: (context, index) {
+                    print(widget.mv.ocorrencias[index].descricao);
+                    return ItemOcorrencia(
+                      widget.mv,
+                      widget.mv.ocorrencias[index],
+                    );
+                  },
+                ),
               ),
             ),
           ],
