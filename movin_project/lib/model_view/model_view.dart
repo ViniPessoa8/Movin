@@ -3,13 +3,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
-import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:scoped_model/scoped_model.dart';
-// import 'package:movin_project/utils/dados_internos.dart';
-// import 'package:movin_project/view/widgets/painel_mapa.dart';
-// import 'package:movin_project/view/widgets/painel_ocorrencias.dart';
-// import 'package:movin_project/view/widgets/painel_perfil.dart';
 
 class ModelView extends Model {
   CollectionReference ocorrenciasBD;
@@ -17,19 +12,6 @@ class ModelView extends Model {
   List<Ocorrencia> ocorrencias;
   LocationData localUsuario;
   Address endereco;
-
-  /*** LOGIN ***/
-
-  bool _dbIniciado = false;
-  bool _usuarioLogado = true;
-
-  get usuarioLogou => _usuarioLogado;
-  get carregouOcorrencias => _carregouOcorrencias;
-
-  void realizaLogin() {
-    _usuarioLogado = true;
-    notifyListeners();
-  }
 
   /*** FIREBASE ***/
 
@@ -74,7 +56,7 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  Future<void> fetchOcorrencias() async {
+  Future<void> fetchOcorrencias({String filtro}) async {
     List<Ocorrencia> listaOcorrencias = [];
     if (_dbIniciado) {
       await FirebaseFirestore.instance.collection('ocorrencias').get().then(
@@ -134,6 +116,19 @@ class ModelView extends Model {
         .listen((event) {
       fetchOcorrencias();
     });
+  }
+
+  /*** LOGIN ***/
+
+  bool _dbIniciado = false;
+  bool _usuarioLogado = true;
+
+  get usuarioLogou => _usuarioLogado;
+  get carregouOcorrencias => _carregouOcorrencias;
+
+  void realizaLogin() {
+    _usuarioLogado = true;
+    notifyListeners();
   }
 
   /*** MAIN ***/
