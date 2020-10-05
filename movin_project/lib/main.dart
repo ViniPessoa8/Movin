@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/pages/pagina_login.dart';
 import 'package:movin_project/view/pages/pagina_principal.dart';
+import 'package:movin_project/view/widgets/painel_emergencia.dart';
 import 'package:movin_project/view/widgets/painel_login.dart';
 import 'package:movin_project/view/widgets/painel_config_conta.dart';
 import 'package:movin_project/view/widgets/painel_cadastro.dart';
@@ -78,7 +79,7 @@ class _MyAppState extends State<MyApp> {
         PainelLogin.nomeRota: (ctx) => PainelLogin(logaUsuario),
         PainelCadastro.nomeRota: (ctx) => PainelCadastro(),
         PainelConfiguracoesConta.nomeRota: (ctx) => PainelConfiguracoesConta(),
-        // PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
+        PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
       },
       debugShowCheckedModeBanner: false,
     );
