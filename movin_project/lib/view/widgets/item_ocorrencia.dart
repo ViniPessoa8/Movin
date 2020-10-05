@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:location/location.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:intl/intl.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:movin_project/model_view/model_view.dart';
 
 class ItemOcorrencia extends StatelessWidget {
   final Ocorrencia ocorrencia;
   final DateFormat formatadorData = DateFormat('dd/MM/yyyy');
-  ModelView mv = ModelView();
+  final ModelView mv;
 
   ItemOcorrencia(this.mv, this.ocorrencia);
 
