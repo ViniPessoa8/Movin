@@ -58,32 +58,40 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                maxWidth: 269,
-                maxHeight: 100,
+                maxWidth: 295,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    ocorrencia.categoria,
-                    style: Theme.of(context).textTheme.headline6.copyWith(
-                          fontSize: 25,
+                  Container(
+                    width: double.infinity,
+                    // decoration: BoxDecoration(border: Border.all()),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          ocorrencia.categoria,
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                                fontSize: 25,
+                              ),
+                          overflow: TextOverflow.fade,
+                          maxLines: 1,
+                          softWrap: false,
                         ),
-                    overflow: TextOverflow.fade,
-                    maxLines: 1,
-                    softWrap: false,
+                        Text(
+                          formatadorData.format(ocorrencia.data),
+                          style: Theme.of(context).textTheme.bodyText1.copyWith(
+                                fontSize: 18,
+                              ),
+                          overflow: TextOverflow.fade,
+                          maxLines: 1,
+                          softWrap: false,
+                        ),
+                      ],
+                    ),
                   ),
                   Text(
                     ocorrencia.descricao,
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(
-                          fontSize: 20,
-                        ),
-                    overflow: TextOverflow.fade,
-                    maxLines: 1,
-                    softWrap: false,
-                  ),
-                  Text(
-                    formatadorData.format(ocorrencia.data),
                     style: Theme.of(context).textTheme.bodyText1.copyWith(
                           fontSize: 20,
                         ),
