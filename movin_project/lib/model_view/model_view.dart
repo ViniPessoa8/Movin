@@ -11,7 +11,7 @@ class ModelView extends Model {
   List<Ocorrencia> ocorrencias;
   gp.GeoPoint localUsuario;
   Address enderecoUsuario;
-  FirebaseController fc;
+  FirebaseController _fc;
   bool _dbIniciado;
 
   ModelView() {
@@ -24,8 +24,8 @@ class ModelView extends Model {
   // Firebase
 
   iniciaDb() async {
-    fc = FirebaseController();
-    _dbIniciado = await fc.inicializaFirestore();
+    _fc = FirebaseController();
+    _dbIniciado = await _fc.inicializaFirestore();
     carregaDados();
   }
 
@@ -57,7 +57,7 @@ class ModelView extends Model {
   Future<void> atualizaOcorrencias({String bairro}) async {
     print('[DEBUG] atualizaOcorrencias($bairro)');
     if (_dbIniciado) {
-      ocorrencias = await fc.fetchOcorrencias(bairro: bairro);
+      ocorrencias = await _fc.fetchOcorrencias(bairro: bairro);
     } else {
       ocorrencias = [];
     }
@@ -66,7 +66,7 @@ class ModelView extends Model {
 
   Future<void> atualizaLocalUsuario() async {
     if (_dbIniciado) {
-      localUsuario = await fc.fetchLocalUsuario();
+      localUsuario = await _fc.fetchLocalUsuario();
       atualizaEnderecoUsuario();
       notifyListeners();
     }
@@ -74,7 +74,7 @@ class ModelView extends Model {
 
   Future<void> atualizaEnderecoUsuario() async {
     if (_dbIniciado) {
-      enderecoUsuario = await fc.fetchEndereco(
+      enderecoUsuario = await _fc.fetchEndereco(
         localUsuario.latitude,
         localUsuario.longitude,
       );
@@ -90,7 +90,7 @@ class ModelView extends Model {
   // Ocorrencia
 
   void addOcorrencia(Ocorrencia ocorrencia) async {
-    bool resp = await fc.addOcorrencia(
+    bool resp = await _fc.addOcorrencia(
       descricao: ocorrencia.descricao,
       categoria: ocorrencia.categoria,
       data: ocorrencia.data,
@@ -106,6 +106,12 @@ class ModelView extends Model {
   }
 
   // Endereço
+
+  Future<Address> getEnderecoBD(double latitude, double longitude) async {
+    Address result;
+    result = await _fc.fetchEndereco(latitude, longitude);
+    return result;
+  }
 
   String formatEndereco(Address endereco) {
     String saida = '';

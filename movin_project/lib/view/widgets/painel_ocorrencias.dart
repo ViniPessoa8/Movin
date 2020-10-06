@@ -21,15 +21,15 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
   //   super.initState();
   // }
 
-  Widget _imprimeOcorrencias(ModelView mv) {
-    if (mv.carregouOcorrencias && mv.carregouLocalUsuario) {
-      if (mv.ocorrencias == null) {
+  Widget _imprimeOcorrencias() {
+    if (widget.mv.carregouOcorrencias && widget.mv.carregouLocalUsuario) {
+      if (widget.mv.ocorrencias == null) {
         return Text('ocorrencias null');
-      } else if (mv.ocorrencias.isEmpty) {
+      } else if (widget.mv.ocorrencias.isEmpty) {
         return Container(
           alignment: Alignment.center,
           child: RefreshIndicator(
-            onRefresh: mv.atualizaOcorrencias,
+            onRefresh: widget.mv.atualizaOcorrencias,
             child: ListView.builder(
               itemCount: 1,
               itemBuilder: (ctx, index) {
@@ -52,14 +52,14 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
           children: [
             Container(
               child: RefreshIndicator(
-                onRefresh: mv.atualizaOcorrencias,
+                onRefresh: widget.mv.atualizaOcorrencias,
                 child: ListView.builder(
-                  itemCount: mv.ocorrencias.length,
+                  itemCount: widget.mv.ocorrencias.length,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   itemBuilder: (context, index) {
                     return ItemOcorrencia(
-                      mv,
-                      mv.ocorrencias[index],
+                      widget.mv,
+                      index,
                     );
                   },
                 ),
@@ -90,7 +90,7 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
     return ScopedModelDescendant<ModelView>(
       builder: (context, child, model) {
         return Center(
-          child: _imprimeOcorrencias(model),
+          child: _imprimeOcorrencias(),
         );
       },
     );

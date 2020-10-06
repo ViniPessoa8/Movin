@@ -52,10 +52,6 @@ class FirebaseController extends Model {
         .then((value) {
       endereco = value.elementAt(0);
     });
-    // print(
-    // '${endereco.thoroughfare}, ${endereco.subLocality}. ${endereco.subAdminArea}, ${endereco.adminArea}, ${endereco.countryName}');
-    // notifyListeners();
-    print(endereco.addressLine);
     return endereco;
   }
 
@@ -72,6 +68,7 @@ class FirebaseController extends Model {
                 latitude: localBd.latitude,
                 longitude: localBd.longitude,
               );
+
               Ocorrencia ocorrencia = Ocorrencia(
                 idOcorrencia: 0,
                 idAutor: 0,
@@ -79,8 +76,8 @@ class FirebaseController extends Model {
                 data: element.get('data').toDate(),
                 categoria: element.get('categoria'),
                 local: local,
+                // endereco: value,
               );
-
               if (bairro != null) {
                 fetchEndereco(local.latitude, local.longitude).then((value) {
                   print('SubLocality: ${value.subLocality} | bairro: $bairro');

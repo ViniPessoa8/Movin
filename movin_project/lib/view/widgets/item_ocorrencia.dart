@@ -5,10 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:movin_project/model_view/model_view.dart';
 
 class ItemOcorrencia extends StatefulWidget {
-  final Ocorrencia ocorrencia;
+  final int indexOcorrencia;
   final ModelView mv;
 
-  ItemOcorrencia(this.mv, this.ocorrencia);
+  ItemOcorrencia(this.mv, this.indexOcorrencia);
 
   @override
   _ItemOcorrenciaState createState() => _ItemOcorrenciaState();
@@ -18,19 +18,21 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
   final DateFormat formatadorData = DateFormat('dd/MM/yyyy');
 
   Address endereco;
+  Ocorrencia ocorrencia;
 
   @override
   void initState() {
+    ocorrencia = widget.mv.ocorrencias[widget.indexOcorrencia];
     carregaEndereco();
     super.initState();
   }
 
   carregaEndereco() async {
     print('carregaEndereco()');
-    double latitude = widget.ocorrencia.local.latitude;
-    double longitude = widget.ocorrencia.local.longitude;
+    double latitude = ocorrencia.local.latitude;
+    double longitude = ocorrencia.local.longitude;
 
-    Address localEnd = await widget.mv.fc.fetchEndereco(latitude, longitude);
+    Address localEnd = await widget.mv.getEnderecoBD(latitude, longitude);
     setState(() {
       endereco = localEnd;
     });
@@ -63,7 +65,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.ocorrencia.categoria,
+                    ocorrencia.categoria,
                     style: Theme.of(context).textTheme.headline6.copyWith(
                           fontSize: 25,
                         ),
@@ -72,7 +74,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                     softWrap: false,
                   ),
                   Text(
-                    widget.ocorrencia.descricao,
+                    ocorrencia.descricao,
                     style: Theme.of(context).textTheme.bodyText1.copyWith(
                           fontSize: 20,
                         ),
@@ -81,7 +83,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                     softWrap: false,
                   ),
                   Text(
-                    formatadorData.format(widget.ocorrencia.data),
+                    formatadorData.format(ocorrencia.data),
                     style: Theme.of(context).textTheme.bodyText1.copyWith(
                           fontSize: 20,
                         ),
