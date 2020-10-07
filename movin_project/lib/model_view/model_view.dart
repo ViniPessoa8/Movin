@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geopoint/geopoint.dart' as gp;
+import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart' as mb;
 import 'package:scoped_model/scoped_model.dart';
@@ -115,6 +116,7 @@ class ModelView extends Model {
 
   String formatEndereco(Address endereco) {
     String saida = '';
+    print('endereço: $endereco');
     if (endereco != null) {
       if (endereco.thoroughfare != null && endereco.subLocality != null) {
         saida += '${endereco.thoroughfare}, ${endereco.subLocality}. ';
@@ -123,6 +125,11 @@ class ModelView extends Model {
           '${endereco.countryName}';
     }
     return saida;
+  }
+
+  String formatData(DateTime data) {
+    final DateFormat formatadorData = DateFormat('dd/MM/yyyy\nHH:mm');
+    return formatadorData.format(data);
   }
 
   // void logaUsuario(BuildContext context) {
