@@ -32,7 +32,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
         'titulo': 'Mapa',
       },
       {
-        'pagina': PainelOcorrencias(widget.mv),
+        'pagina': PainelOcorrencias(context, widget.mv),
         'titulo': 'Ocorrências',
       },
       {

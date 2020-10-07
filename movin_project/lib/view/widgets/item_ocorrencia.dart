@@ -3,6 +3,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:intl/intl.dart';
 import 'package:movin_project/model_view/model_view.dart';
+import 'package:movin_project/view/widgets/item_ocorrencia_info.dart';
 
 class ItemOcorrencia extends StatefulWidget {
   final int indexOcorrencia;
@@ -35,86 +36,105 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
     Address localEnd = await widget.mv.getEnderecoBD(latitude, longitude);
     setState(() {
       endereco = localEnd;
+      ocorrencia.endereco = endereco;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-      decoration: BoxDecoration(
-        border: Border.all(),
-        borderRadius: BorderRadius.circular(10.0),
-        color: Theme.of(context).accentColor,
+    return InkWell(
+      onTap: () => showDialog(
+        context: context,
+        builder: (context) => ItemOcorrenciaInfo(widget.mv, ocorrencia),
       ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.warning,
-            size: 50,
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: 295,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    // decoration: BoxDecoration(border: Border.all()),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          ocorrencia.categoria,
-                          style: Theme.of(context).textTheme.headline6.copyWith(
-                                fontSize: 25,
-                              ),
-                          overflow: TextOverflow.fade,
-                          maxLines: 1,
-                          softWrap: false,
-                        ),
-                        Text(
-                          formatadorData.format(ocorrencia.data),
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(
-                                fontSize: 18,
-                              ),
-                          overflow: TextOverflow.fade,
-                          maxLines: 1,
-                          softWrap: false,
-                        ),
-                      ],
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        decoration: BoxDecoration(
+          border: Border.all(),
+          borderRadius: BorderRadius.circular(10.0),
+          color: Theme.of(context).accentColor,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.warning,
+              size: 50,
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: 295,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      // decoration: BoxDecoration(border: Border.all()),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 190,
+                            child: Text(
+                              ocorrencia.categoria,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                    fontSize: 30,
+                                  ),
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
+                            ),
+                          ),
+                          Container(
+                            child: Text(
+                              widget.mv.formatData(ocorrencia.data),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(
+                                    fontSize: 18,
+                                  ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              textAlign: TextAlign.right,
+                              softWrap: false,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Text(
-                    ocorrencia.descricao,
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(
-                          fontSize: 20,
-                        ),
-                    overflow: TextOverflow.fade,
-                    maxLines: 1,
-                    softWrap: false,
-                  ),
-                  Text(
-                    endereco == null
-                        ? '(Sem Endereço)'
-                        : widget.mv.formatEndereco(endereco),
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(
-                          fontSize: 17,
-                        ),
-                    overflow: TextOverflow.fade,
-                    maxLines: 1,
-                    softWrap: false,
-                  ),
-                ],
+                    Text(
+                      ocorrencia.descricao,
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                            fontSize: 20,
+                          ),
+                      overflow: TextOverflow.fade,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
+                    Text(
+                      endereco == null
+                          ? '(Sem Endereço)'
+                          : widget.mv.formatEndereco(endereco),
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                            fontSize: 17,
+                          ),
+                      overflow: TextOverflow.fade,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
