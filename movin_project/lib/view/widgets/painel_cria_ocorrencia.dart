@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/utils/dados_internos.dart';
 import 'package:geopoint/geopoint.dart' as gp;
+import 'package:scoped_model/scoped_model.dart';
 
 class PainelCriaOcorrencia extends StatefulWidget {
   static String nomeRota = '/ocorrencia/criar';
@@ -38,114 +42,161 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
   @override
   Widget build(BuildContext context) {
     getLocal();
-    return Container(
-      padding: EdgeInsets.all(10),
-      child: Column(
-        children: [
-          Text(
-            'Criar Ocorrência',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          Divider(
-            color: Colors.black,
-          ),
-          Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    DropdownButton<String>(
-                      autofocus: true,
-                      hint: Text('Selecione a Categoria'),
-                      value: categoria,
-                      items: valores.map((elemento) {
-                        return DropdownMenuItem(
-                          value: elemento,
-                          child: Text(elemento),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          categoria = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                TextField(
-                  controller: descricaoController,
-                  decoration: InputDecoration(
-                    labelText: 'Descrição',
-                    labelStyle: Theme.of(context).textTheme.bodyText1.copyWith(
-                          color: Colors.black54,
+    return ScopedModel<ModelView>(
+      model: widget.mv,
+      child: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Text(
+                'Criar Ocorrência',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Divider(
+                color: Colors.black,
+              ),
+              Column(
+                children: [
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            DropdownButton<String>(
+                              autofocus: true,
+                              hint: Text('Selecione a Categoria'),
+                              value: categoria,
+                              items: valores.map((elemento) {
+                                return DropdownMenuItem(
+                                  value: elemento,
+                                  child: Text(elemento),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  categoria = value;
+                                });
+                              },
+                            ),
+                          ],
                         ),
+                        TextField(
+                          controller: descricaoController,
+                          decoration: InputDecoration(
+                            labelText: 'Descrição',
+                            labelStyle:
+                                Theme.of(context).textTheme.bodyText1.copyWith(
+                                      color: Colors.black54,
+                                    ),
+                          ),
+                        ),
+                        FlatButton(
+                          onPressed: null,
+                          child: Row(
+                            children: [
+                              Icon(Icons.add_location),
+                              Text('Adicionar Localização'),
+                            ],
+                          ),
+                        ),
+                        ScopedModelDescendant<ModelView>(
+                          builder: (context, child, model) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(vertical: 20),
+                              child: widget.mv.imagens.isEmpty
+                                  ? Text(
+                                      '(Sem imagens)',
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
+                                    )
+                                  : Container(
+                                      width: 300,
+                                      height: 100,
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: widget.mv.imagens.length,
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5),
+                                            child: Image.file(
+                                              widget.mv.imagens[index],
+                                              height: 80,
+                                              width: 80,
+                                              fit: BoxFit.fitHeight,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                            );
+                          },
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FlatButton(
+                              child: Icon(Icons.image, size: 40),
+                              onPressed: widget.mv.imgGaleria,
+                            ),
+                            FlatButton(
+                              child: Icon(Icons.add_a_photo, size: 40),
+                              onPressed: widget.mv.imgCamera,
+                            ),
+                          ],
+                        ),
+                        FlatButton(
+                          onPressed: () {
+                            for (File imagem in widget.mv.imagens) {
+                              widget.mv.uploadImagem(imagem);
+                            }
+                          },
+                          child: Text('Enviar imagem'),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                FlatButton(
-                  onPressed: null,
-                  child: Row(
-                    children: [
-                      Icon(Icons.add_location),
-                      Text('Adicionar Localização'),
-                    ],
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    FlatButton(
-                      child: Icon(Icons.add_a_photo, size: 70),
-                      onPressed: null,
-                    ),
-                    FlatButton(
-                      child: Icon(Icons.add_a_photo, size: 70),
-                      onPressed: null,
-                    ),
-                    FlatButton(
-                      child: Icon(Icons.add_a_photo, size: 70),
-                      onPressed: null,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          RaisedButton(
-            onPressed: () {
-              widget.mv.addOcorrencia(Ocorrencia(
-                descricao: descricaoController.text,
-                categoria: categoria,
-                data: DateTime.now(),
-                local: local,
-                idAutor: 0,
-              ));
-              widget.mv.atualizaOcorrencias();
-              Navigator.of(context).pop();
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    content: Text('Ocorrência criada com sucesso.'),
-                    actions: [
-                      RaisedButton(
-                        child: Text('OK'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
+                  RaisedButton(
+                    onPressed: () {
+                      widget.mv.addOcorrencia(Ocorrencia(
+                        descricao: descricaoController.text,
+                        categoria: categoria,
+                        data: DateTime.now(),
+                        local: local,
+                        idAutor: 0,
+                      ));
+                      widget.mv.atualizaOcorrencias();
+                      Navigator.of(context).pop();
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            content: Text('Ocorrência criada com sucesso.'),
+                            actions: [
+                              RaisedButton(
+                                child: Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              )
+                            ],
+                          );
                         },
-                      )
-                    ],
-                  );
-                },
-              );
-            },
-            child: Text('Criar Ocorrência'),
+                      );
+                    },
+                    child: Text('Criar Ocorrência'),
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
