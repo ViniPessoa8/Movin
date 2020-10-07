@@ -74,6 +74,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                       width: double.infinity,
                       // decoration: BoxDecoration(border: Border.all()),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
@@ -109,14 +110,17 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                         ],
                       ),
                     ),
-                    Text(
-                      ocorrencia.descricao,
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(
-                            fontSize: 20,
-                          ),
-                      overflow: TextOverflow.fade,
-                      maxLines: 1,
-                      softWrap: false,
+                    Container(
+                      padding: EdgeInsets.only(bottom: 5),
+                      child: Text(
+                        ocorrencia.descricao,
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(
+                              fontSize: 20,
+                            ),
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                        softWrap: false,
+                      ),
                     ),
                     Text(
                       endereco == null
