@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,8 @@ import 'package:location/location.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:geopoint/geopoint.dart' as gp;
 import 'package:scoped_model/scoped_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as Path;
 
 /*** FIREBASE ***/
 class FirebaseController extends Model {
@@ -27,6 +31,7 @@ class FirebaseController extends Model {
       // notifyListeners();
       print('Banco de dados carregado.');
       ocorrenciasBD = FirebaseFirestore.instance.collection('ocorrencias');
+      // FirebaseStorage.instance.;
     } catch (e) {
       print('Erro ao carregar Banco de Dados (Firebase):\n$e');
     }
@@ -124,6 +129,18 @@ class FirebaseController extends Model {
     print(id);
     return id != null;
     // notifyListeners();
+  }
+
+  Future uploadFile(File imagem) async {
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('imagens/${Path.basename(imagem.path)}}');
+    StorageUploadTask uploadTask = storageReference.putFile(imagem);
+    await uploadTask.onComplete;
+    print('File Uploaded');
+    storageReference.getDownloadURL().then((fileURL) {
+      return fileURL;
+    });
   }
 
   // escutaOcorrencias() async {
