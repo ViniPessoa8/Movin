@@ -1,8 +1,6 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:movin_project/db/firebase_controller.dart';
 import 'package:movin_project/model_view/model_view.dart';
-import 'package:movin_project/utils/dados_internos.dart';
+import 'package:movin_project/view/widgets/filter_box.dart';
 import 'package:movin_project/view/widgets/painel_drawer.dart';
 import 'package:movin_project/view/widgets/painel_mapa.dart';
 import 'package:movin_project/view/widgets/painel_ocorrencias.dart';
@@ -32,7 +30,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
         'titulo': 'Mapa',
       },
       {
-        'pagina': PainelOcorrencias(widget.mv),
+        'pagina': PainelOcorrencias(context, widget.mv),
         'titulo': 'Ocorrências',
       },
       {
@@ -147,6 +145,19 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     return Text(texto);
   }
 
+  void _buildFilterBox() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: FilterBox(context, widget.mv),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Color primaryColor = Theme.of(context).primaryColor;
@@ -157,6 +168,18 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
       child: Scaffold(
         appBar: AppBar(
           title: _buildTituloAppbar(),
+          actions: [
+            widget.mv.indexPainelPrincipal == 1
+                ? ScopedModelDescendant<ModelView>(
+                    builder: (context, child, model) {
+                    return IconButton(
+                        icon: Icon(Icons.filter), onPressed: _buildFilterBox);
+                  })
+                : IconButton(
+                    icon: Icon(null),
+                    onPressed: null,
+                  )
+          ],
         ),
         body:
             ScopedModelDescendant<ModelView>(builder: (context, child, model) {
