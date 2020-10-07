@@ -6,8 +6,6 @@ import 'package:movin_project/view/widgets/painel_emergencia.dart';
 import 'package:movin_project/view/widgets/painel_login.dart';
 import 'package:movin_project/view/widgets/painel_config_conta.dart';
 import 'package:movin_project/view/widgets/painel_cadastro.dart';
-// import 'package:movin_project/view/widgets/painel_boas_vindas.dart';
-// import 'package:movin_project/view/widgets/painel_emergencia.dart';
 
 final ModelView modelView = ModelView();
 

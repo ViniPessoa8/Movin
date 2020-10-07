@@ -1,35 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:movin_project/model_view/model_view.dart';
+import 'package:movin_project/view/widgets/filter_box.dart';
 import 'package:movin_project/view/widgets/item_ocorrencia.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:loading/loading.dart';
 
-class PainelOcorrencias extends StatefulWidget {
+class PainelOcorrencias extends StatelessWidget {
   final ModelView mv;
+  final BuildContext context;
 
-  PainelOcorrencias(this.mv);
-
-  @override
-  _PainelOcorrenciasState createState() => _PainelOcorrenciasState();
-}
-
-class _PainelOcorrenciasState extends State<PainelOcorrencias> {
-  // @override
-  // void initState() {
-  //   // widget.mv.fetchOcorrencias();
-  //   super.initState();
-  // }
+  PainelOcorrencias(this.context, this.mv);
 
   Widget _imprimeOcorrencias() {
-    if (widget.mv.carregouOcorrencias && widget.mv.carregouLocalUsuario) {
-      if (widget.mv.ocorrencias == null) {
+    if (mv.carregouOcorrencias && mv.carregouLocalUsuario) {
+      if (mv.ocorrencias == null) {
         return Text('ocorrencias null');
-      } else if (widget.mv.ocorrencias.isEmpty) {
+      } else if (mv.ocorrencias.isEmpty) {
         return Container(
           alignment: Alignment.center,
           child: RefreshIndicator(
-            onRefresh: widget.mv.atualizaOcorrencias,
+            onRefresh: mv.atualizaOcorrencias,
             child: ListView.builder(
               itemCount: 1,
               itemBuilder: (ctx, index) {
@@ -52,13 +43,13 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias> {
           children: [
             Container(
               child: RefreshIndicator(
-                onRefresh: widget.mv.atualizaOcorrencias,
+                onRefresh: mv.atualizaOcorrencias,
                 child: ListView.builder(
-                  itemCount: widget.mv.ocorrencias.length,
+                  itemCount: mv.ocorrencias.length,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   itemBuilder: (context, index) {
                     return ItemOcorrencia(
-                      widget.mv,
+                      mv,
                       index,
                     );
                   },
