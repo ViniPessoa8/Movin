@@ -131,7 +131,12 @@ class ModelView extends Model {
   }
 
   void uploadImagem(File imagem) {
-    _fc.uploadFile(imagem);
+    _fc.uploadImagem(imagem);
+  }
+
+  Future<Image> downloadImagem() async {
+    String imagemURL = await _fc.downloadImagemURL();
+    return Image.network(imagemURL);
   }
 
   imgCamera() async {

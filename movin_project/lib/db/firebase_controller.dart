@@ -131,7 +131,7 @@ class FirebaseController extends Model {
     // notifyListeners();
   }
 
-  Future uploadFile(File imagem) async {
+  Future uploadImagem(File imagem) async {
     StorageReference storageReference = FirebaseStorage.instance
         .ref()
         .child('imagens/${Path.basename(imagem.path)}}');
@@ -141,6 +141,19 @@ class FirebaseController extends Model {
     storageReference.getDownloadURL().then((fileURL) {
       return fileURL;
     });
+  }
+
+  Future<String> downloadImagemURL() async {
+    String imagemURL;
+
+    imagemURL = await FirebaseStorage.instance
+        .ref()
+        .child('/imagens/scaled_image_picker5821537510131311109.jpg}')
+        .getDownloadURL();
+
+    print('IMAGEM: $imagemURL');
+
+    return imagemURL;
   }
 
   // escutaOcorrencias() async {
