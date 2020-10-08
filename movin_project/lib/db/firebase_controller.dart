@@ -132,15 +132,12 @@ class FirebaseController extends Model {
   }
 
   Future uploadImagem(File imagem) async {
-    StorageReference storageReference = FirebaseStorage.instance
-        .ref()
-        .child('imagens/${Path.basename(imagem.path)}}');
+    StorageReference storageReference =
+        FirebaseStorage.instance.ref().child('imagens/imagem_teste.jpg');
+    print('Basename: ${Path.basename(imagem.path)}\n path: ${imagem.path}');
     StorageUploadTask uploadTask = storageReference.putFile(imagem);
     await uploadTask.onComplete;
     print('File Uploaded');
-    storageReference.getDownloadURL().then((fileURL) {
-      return fileURL;
-    });
   }
 
   Future<String> downloadImagemURL() async {
@@ -148,7 +145,7 @@ class FirebaseController extends Model {
 
     imagemURL = await FirebaseStorage.instance
         .ref()
-        .child('/imagens/scaled_image_picker5821537510131311109.jpg}')
+        .child('/imagens/imagem_teste.jpg')
         .getDownloadURL();
 
     print('IMAGEM: $imagemURL');

@@ -1,12 +1,47 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:movin_project/model_view/model_view.dart';
 
-class ItemOcorrenciaInfo extends StatelessWidget {
+class ItemOcorrenciaInfo extends StatefulWidget {
   final Ocorrencia ocorrencia;
   final ModelView mv;
 
   ItemOcorrenciaInfo(this.mv, this.ocorrencia);
+
+  @override
+  _ItemOcorrenciaInfoState createState() => _ItemOcorrenciaInfoState();
+}
+
+class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
+  Image imagem;
+  bool imagemCarregada = false;
+
+  void downloadImagem() async {
+    Image img = await widget.mv.downloadImagem();
+    imagemCarregada = true;
+
+    setState(() {
+      imagem = img;
+    });
+  }
+
+  Widget _mostraImagem() {
+    if (imagemCarregada && imagem != null) {
+      return imagem;
+    } else if (imagemCarregada) {
+      return Center(
+        child: Text('(Sem Imagem)'),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    downloadImagem();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,23 +54,23 @@ class ItemOcorrenciaInfo extends StatelessWidget {
           bottom: 10,
         ),
         children: [
-          Image(
-            image: AssetImage('assets/media/google_logo.png'),
-            height: 200,
+          Container(
+            height: 350,
+            child: _mostraImagem(),
           ),
           Text(
-            ocorrencia.categoria,
+            widget.ocorrencia.categoria,
             style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 40),
             overflow: TextOverflow.fade,
             maxLines: 1,
             softWrap: false,
           ),
           Text(
-            mv.formatData(ocorrencia.data),
+            widget.mv.formatData(widget.ocorrencia.data),
             style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 18),
           ),
           Text(
-            ocorrencia.descricao,
+            widget.ocorrencia.descricao,
             style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 30),
             overflow: TextOverflow.fade,
             maxLines: 1,
@@ -56,7 +91,7 @@ class ItemOcorrenciaInfo extends StatelessWidget {
                   Container(
                     width: 260,
                     child: Text(
-                      mv.formatEndereco(ocorrencia.endereco),
+                      widget.mv.formatEndereco(widget.ocorrencia.endereco),
                       style: Theme.of(context).textTheme.bodyText2.copyWith(
                             fontSize: 20,
                             color: Colors.grey[600],

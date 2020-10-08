@@ -136,7 +136,17 @@ class ModelView extends Model {
 
   Future<Image> downloadImagem() async {
     String imagemURL = await _fc.downloadImagemURL();
-    return Image.network(imagemURL);
+    Image imagem = Image.network(
+      imagemURL,
+      height: 350,
+      loadingBuilder: (context, child, loadingProgress) {
+        return loadingProgress == null
+            ? child
+            : Center(child: Text("Carregando Imagem..."));
+      },
+    );
+
+    return imagem;
   }
 
   imgCamera() async {
