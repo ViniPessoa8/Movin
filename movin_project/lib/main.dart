@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/pages/pagina_login.dart';
 import 'package:movin_project/view/pages/pagina_principal.dart';
-import 'package:movin_project/view/widgets/painel_emergencia.dart';
-import 'package:movin_project/view/widgets/painel_login.dart';
-import 'package:movin_project/view/widgets/painel_config_conta.dart';
-import 'package:movin_project/view/widgets/painel_cadastro.dart';
+import 'package:movin_project/view/widgets/principal/painel_emergencia.dart';
+import 'package:movin_project/view/widgets/login/painel_login.dart';
+import 'package:movin_project/view/widgets/principal/painel_config_conta.dart';
+import 'package:movin_project/view/widgets/login/painel_cadastro.dart';
 
 final ModelView modelView = ModelView();
 

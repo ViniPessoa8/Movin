@@ -3,7 +3,7 @@ import 'package:geocoder/geocoder.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:intl/intl.dart';
 import 'package:movin_project/model_view/model_view.dart';
-import 'package:movin_project/view/widgets/item_ocorrencia_info.dart';
+import 'package:movin_project/view/widgets/principal/item_ocorrencia_info.dart';
 
 class ItemOcorrencia extends StatefulWidget {
   final int indexOcorrencia;

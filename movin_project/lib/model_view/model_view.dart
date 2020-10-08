@@ -19,7 +19,7 @@ class ModelView extends Model {
   bool _dbIniciado;
 
   ModelView() {
-    _usuarioLogado = true;
+    _usuarioLogado = false;
     indexPainelPrincipal = 1;
     iniciaDb();
     // ocorrencias = [];

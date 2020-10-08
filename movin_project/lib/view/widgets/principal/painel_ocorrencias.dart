@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:movin_project/model_view/model_view.dart';
-import 'package:movin_project/view/widgets/filter_box.dart';
-import 'package:movin_project/view/widgets/item_ocorrencia.dart';
+import 'package:movin_project/view/widgets/principal/filter_box.dart';
+import 'package:movin_project/view/widgets/principal/item_ocorrencia.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:loading/loading.dart';
 

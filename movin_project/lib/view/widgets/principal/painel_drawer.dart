@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movin_project/view/widgets/painel_emergencia.dart';
+import 'package:movin_project/view/widgets/principal/painel_emergencia.dart';
 
 class PainelDrawer extends StatelessWidget {
   Widget buildListTile(String title, IconData icon, Function tapHandler) {
