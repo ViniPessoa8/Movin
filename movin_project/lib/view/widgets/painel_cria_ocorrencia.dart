@@ -115,21 +115,24 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                                   : Container(
                                       width: 300,
                                       height: 100,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: widget.mv.imagens.length,
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            child: Image.file(
-                                              widget.mv.imagens[index],
-                                              height: 80,
-                                              width: 80,
-                                              fit: BoxFit.fitHeight,
-                                            ),
-                                          );
-                                        },
+                                      child: Center(
+                                        child: ListView.builder(
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: widget.mv.imagens.length,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 5),
+                                              child: Image.file(
+                                                widget.mv.imagens[index],
+                                                height: 80,
+                                                width: 80,
+                                                fit: BoxFit.fitHeight,
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                             );
