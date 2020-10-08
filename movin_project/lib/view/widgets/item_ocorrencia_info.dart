@@ -34,6 +34,8 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
       return Center(
         child: Text('(Sem Imagem)'),
       );
+    } else {
+      return Center(child: Text("Carregando Imagem..."));
     }
   }
 
@@ -45,7 +47,6 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
 
   @override
   Widget build(BuildContext context) {
-    print('Building ItemOcorrenciaInfo');
     return Container(
       child: SimpleDialog(
         contentPadding: EdgeInsets.only(
