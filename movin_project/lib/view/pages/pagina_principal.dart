@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:movin_project/db/firebase_controller.dart';
 import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/utils/dados_internos.dart';
-import 'package:movin_project/view/widgets/painel_drawer.dart';
-import 'package:movin_project/view/widgets/painel_mapa.dart';
-import 'package:movin_project/view/widgets/painel_ocorrencias.dart';
-import 'package:movin_project/view/widgets/painel_perfil.dart';
+import 'package:movin_project/view/widgets/principal/painel_drawer.dart';
+import 'package:movin_project/view/widgets/principal/painel_mapa.dart';
+import 'package:movin_project/view/widgets/principal/painel_ocorrencias.dart';
+import 'package:movin_project/view/widgets/principal/painel_perfil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:movin_project/view/widgets/painel_cria_ocorrencia.dart';
+import 'package:movin_project/view/widgets/principal/painel_cria_ocorrencia.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class PaginaPrincipal extends StatefulWidget {

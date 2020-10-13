@@ -1,12 +1,32 @@
 import 'package:flutter/material.dart';
 
-class PainelLogin extends StatelessWidget {
+class PainelLogin extends StatefulWidget {
   static final String nomeRota = '/Login';
   final Function _logar;
-  final AssetImage googleLogo = AssetImage('assets/media/google_logo.png');
-  final AssetImage facebookLogo = AssetImage('assets/media/facebook_logo.png');
 
   PainelLogin(this._logar);
+
+  @override
+  _PainelLoginState createState() => _PainelLoginState();
+}
+
+class _PainelLoginState extends State<PainelLogin> {
+  final AssetImage googleLogo = AssetImage('assets/media/google_logo.png');
+  final AssetImage facebookLogo = AssetImage('assets/media/facebook_logo.png');
+  final _formKey = GlobalKey<FormState>();
+  String _emailUsuario;
+  String _senhaUsuario;
+
+  _tentarLogar() {
+    final loginValido = _formKey.currentState.validate();
+    FocusScope.of(context).unfocus();
+
+    if (loginValido) {
+      _formKey.currentState.save();
+      print(_emailUsuario);
+      print(_senhaUsuario);
+    }
+  }
 
   Widget buildLoginAlternativo(
       BuildContext ctx, String titulo, AssetImage imagem) {
@@ -47,12 +67,30 @@ class PainelLogin extends StatelessWidget {
             Container(
               child: Column(
                 children: [
-                  TextField(
+                  TextFormField(
+                    validator: (value) {
+                      if (value.isEmpty || !value.contains('@')) {
+                        return 'Email inválido';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(labelText: 'Email'),
+                    onSaved: (newValue) {
+                      _emailUsuario = newValue;
+                    },
                   ),
-                  TextField(
+                  TextFormField(
+                    validator: (value) {
+                      if (value.isEmpty || value.length < 6) {
+                        return 'A senha deve conter ao menos 6 dígitos.';
+                      }
+                      return null;
+                    },
                     decoration: InputDecoration(labelText: 'Senha'),
                     obscureText: true,
+                    onSaved: (newValue) {
+                      _senhaUsuario = newValue;
+                    },
                   ),
                   Container(
                     padding: EdgeInsets.only(top: 10),
@@ -75,7 +113,7 @@ class PainelLogin extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 80),
                       child: Text('Login'),
                     ),
-                    onPressed: () => _logar(context),
+                    onPressed: () => _tentarLogar, //widget._logar(context),
                   )
                 ],
               ),
