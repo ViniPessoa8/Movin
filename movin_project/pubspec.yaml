@@ -25,8 +25,9 @@ dependencies:
     sdk: flutter
   firebase_image: ^0.2.0
   firebase_core: ^0.5.0
-  cloud_firestore: ^0.14.1+2
   firebase_storage: ^4.0.1
+  firebase_auth: ^0.18.1+2
+  cloud_firestore: ^0.14.1+2
   location: ^3.0.0
   mapbox_gl: ^0.8.0
   flutter_speed_dial: ^1.2.5
