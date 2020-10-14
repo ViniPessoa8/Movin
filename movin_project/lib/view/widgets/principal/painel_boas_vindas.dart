@@ -10,6 +10,7 @@ class PainelBoasVindas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FocusScope.of(context).unfocus();
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [

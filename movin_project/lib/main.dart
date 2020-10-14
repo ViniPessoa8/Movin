@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
         PaginaLogin.nomeRota: (ctx) => PaginaLogin(),
         // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
         PainelLogin.nomeRota: (ctx) => PainelLogin(logaUsuario),
-        PainelCadastro.nomeRota: (ctx) => PainelCadastro(),
+        PainelCadastro.nomeRota: (ctx) => PainelCadastro(modelView),
         PainelConfiguracoesConta.nomeRota: (ctx) => PainelConfiguracoesConta(),
         PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
       },

@@ -7,9 +7,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart' as mb;
+import 'package:movin_project/model/usuario.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:movin_project/db/firebase_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ModelView extends Model {
   List<Ocorrencia> ocorrencias;
@@ -39,6 +41,22 @@ class ModelView extends Model {
   get usuarioLogou => _usuarioLogado;
   get carregouOcorrencias => ocorrencias != null;
   get carregouLocalUsuario => localUsuario != null;
+
+  void criaUsuario(String email, String senha) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: senha);
+      print(userCredential.toString());
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('senha fraca');
+      } else if (e.code == 'email-already-in-use') {
+        print('A conta já existe para esse e-mail.');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void realizaLogin() {
     _usuarioLogado = true;
