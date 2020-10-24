@@ -19,33 +19,46 @@ class _PainelLoginState extends State<PainelLogin> {
   String _emailUsuario;
   String _senhaUsuario;
   bool _senhaInvalida = false;
+  bool _emailInvalido = false;
 
-  _tentarLogar() {
+  _tentarLogar() async {
     print('tenta logar');
     // Validação do formulário de Login
-    final loginValido = _formKey.currentState.validate();
+    final formLoginValido = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
 
-    if (loginValido) {
+    if (formLoginValido) {
+      var _resposta;
       print('form login válido');
       _formKey.currentState.save();
       print(_emailUsuario);
       print(_senhaUsuario);
       try {
-        widget.mv.realizaLogin(_emailUsuario, _senhaUsuario);
+        _resposta = await widget.mv.realizaLogin(
+          _emailUsuario,
+          _senhaUsuario,
+        );
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
-          print('Não há usuário cadastrado com este email.');
+          setState(() {
+            _senhaInvalida = false;
+            _emailInvalido = true;
+          });
         } else if (e.code == 'wrong-password') {
           setState(() {
+            _emailInvalido = false;
             _senhaInvalida = true;
           });
         }
-      } finally {
+      }
+      if (_resposta != null) {
+        print(_resposta);
         Navigator.pop(context);
+      } else {
+        print('LOGIN INVALIDOOO');
       }
     } else {
-      print('login invalido');
+      print('formulario login invalido');
     }
   }
 
@@ -122,13 +135,19 @@ class _PainelLoginState extends State<PainelLogin> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            _senhaInvalida
-                                ? Text('Senha incorreta',
+                            _emailInvalido
+                                ? Text('Email não cadastrado.',
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyText2
                                         .copyWith(color: Colors.red))
-                                : Text(''),
+                                : _senhaInvalida
+                                    ? Text('Senha incorreta',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText2
+                                            .copyWith(color: Colors.red))
+                                    : Text(''),
                             FlatButton(
                               onPressed: () {},
                               child: Text(

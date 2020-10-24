@@ -77,25 +77,33 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  void realizaLogin(String email, String senha) async {
-    _aguardandoResposta = true;
-    notifyListeners();
-    print('realiza login');
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: senha,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('Não há usuário cadastrado com este email.');
-      } else if (e.code == 'wrong-password') {
-        print('senha incorreta');
+  Future<UserCredential> realizaLogin(String email, String senha) async {
+    if (_dbIniciado) {
+      _aguardandoResposta = true;
+      notifyListeners();
+
+      UserCredential _userCredential;
+      print('realiza login');
+      try {
+        _userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: senha,
+        );
+        print('login completo');
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('Não há usuário cadastrado com este email.');
+          throw e;
+        } else if (e.code == 'wrong-password') {
+          print('senha incorreta');
+          throw e;
+        }
       }
+      _aguardandoResposta = false;
+      notifyListeners();
+      return _userCredential;
     }
-    _aguardandoResposta = false;
-    notifyListeners();
   }
 
   void escutaLogin(BuildContext context) {
