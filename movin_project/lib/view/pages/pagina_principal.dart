@@ -1,8 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:movin_project/db/firebase_controller.dart';
+import 'package:movin_project/main.dart';
 import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/utils/dados_internos.dart';
+import 'package:movin_project/view/widgets/login/painel_cadastro.dart';
+import 'package:movin_project/view/widgets/login/painel_carregamento.dart';
+import 'package:movin_project/view/widgets/login/painel_login.dart';
+import 'package:movin_project/view/widgets/principal/painel_boas_vindas.dart';
 import 'package:movin_project/view/widgets/principal/painel_drawer.dart';
 import 'package:movin_project/view/widgets/principal/painel_mapa.dart';
 import 'package:movin_project/view/widgets/principal/painel_ocorrencias.dart';
@@ -10,6 +16,8 @@ import 'package:movin_project/view/widgets/principal/painel_perfil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:movin_project/view/widgets/principal/painel_cria_ocorrencia.dart';
 import 'package:scoped_model/scoped_model.dart';
+
+// PRINCIPAL
 
 class PaginaPrincipal extends StatefulWidget {
   static final nomeRota = '/principal';
@@ -152,7 +160,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     Color primaryColor = Theme.of(context).primaryColor;
     Color accentColor = Theme.of(context).accentColor;
 
-    return ScopedModel<ModelView>(
+    final paginaPrincipal = ScopedModel<ModelView>(
       model: widget.mv,
       child: Scaffold(
         appBar: AppBar(
@@ -181,6 +189,30 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
           },
         ),
         floatingActionButton: _buildFloatingButton(),
+      ),
+    );
+
+    return ScopedModel<ModelView>(
+      model: widget.mv,
+      child: ScopedModelDescendant<ModelView>(
+        builder: (context, child, model) {
+          print('a');
+          if (model.dbIniciado) {
+            print('db iniciado');
+            return StreamBuilder(
+              initialData: PainelCarregamento(),
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                print('b');
+                if (!snapshot.hasData) {
+                  return PainelCarregamento();
+                }
+                return paginaPrincipal;
+              },
+            );
+          }
+          return PainelCarregamento();
+        },
       ),
     );
   }

@@ -8,10 +8,21 @@ import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart' as mb;
 import 'package:movin_project/model/usuario.dart';
+import 'package:movin_project/view/pages/pagina_principal.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:movin_project/db/firebase_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+/*
+*  INDEX DAS PAGINAS
+*  1 - BOAS VINDAS
+*  2 - CADASTRO
+*  3 - LOGIN
+*  4 - MAPA
+*  5 - OCORRENCIAS
+*  6 - PERFIL
+*/
 
 class ModelView extends Model {
   List<Ocorrencia> ocorrencias;
@@ -22,7 +33,8 @@ class ModelView extends Model {
 
   ModelView() {
     _usuarioLogado = false;
-    indexPainelPrincipal = 1;
+    _dbIniciado = false;
+    indexPainelPrincipal = 0;
     iniciaDb();
     // ocorrencias = [];
   }
@@ -32,13 +44,16 @@ class ModelView extends Model {
   iniciaDb() async {
     _fc = FirebaseController();
     _dbIniciado = await _fc.inicializaFirestore();
+    notifyListeners();
     carregaDados();
   }
+
+  get dbIniciado => _dbIniciado;
 
   /*** LOGIN ***/
   bool _usuarioLogado;
 
-  get usuarioLogou => _usuarioLogado;
+  get usuarioLogado => _usuarioLogado;
   get carregouOcorrencias => ocorrencias != null;
   get carregouLocalUsuario => localUsuario != null;
 
@@ -56,11 +71,39 @@ class ModelView extends Model {
     } catch (e) {
       print(e);
     }
+    notifyListeners();
   }
 
-  void realizaLogin() {
-    _usuarioLogado = true;
+  void realizaLogin(String email, String senha) async {
+    print('realiza login');
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: senha,
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('Não há usuário cadastrado com este email.');
+      } else if (e.code == 'wrong-password') {
+        print('senha incorreta');
+      }
+    }
     notifyListeners();
+  }
+
+  void escutaLogin(BuildContext context) {
+    print('escuta login.');
+    FirebaseAuth.instance.authStateChanges().listen((User user) {
+      if (user == null) {
+        print('Erro no login.');
+      } else {
+        print('Usuário logado com sucesso.');
+        Navigator.of(context).pushReplacementNamed(PaginaPrincipal.nomeRota);
+        // _usuarioLogado = true;
+      }
+    });
+    // modelView.realizaLogin();
   }
 
   /*** MAIN ***/
@@ -72,6 +115,7 @@ class ModelView extends Model {
   void carregaDados() {
     atualizaLocalUsuario();
     atualizaOcorrencias();
+    // escutaLogin();
   }
 
   //Atualizadores
