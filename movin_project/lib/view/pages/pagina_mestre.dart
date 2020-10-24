@@ -35,7 +35,9 @@ class _PaginaMestreState extends State<PaginaMestre> {
                     break;
                   case ConnectionState.active:
                     print('ConnectionState.active');
-                    if (snapshot.hasData) {
+                    if (widget.mv.aguardandoResposta) {
+                      return PainelCarregamento();
+                    } else if (snapshot.hasData) {
                       //LOGADO
                       print(snapshot.data);
                       return PaginaPrincipal(widget.mv);

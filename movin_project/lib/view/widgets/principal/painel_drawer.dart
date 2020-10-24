@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/widgets/principal/painel_emergencia.dart';
 
 class PainelDrawer extends StatelessWidget {
+  final ModelView mv;
+
+  PainelDrawer(this.mv);
+
   Widget buildListTile(String title, IconData icon, Function tapHandler) {
     return ListTile(
       leading: Icon(
@@ -47,6 +52,9 @@ class PainelDrawer extends StatelessWidget {
           buildListTile('Emergência', Icons.settings, () {
             Navigator.of(context).pushNamed(PainelEmergencia.nomeRota);
           }),
+          buildListTile('Sair', Icons.chevron_left, () {
+            mv.deslogar();
+          })
         ],
       ),
     );

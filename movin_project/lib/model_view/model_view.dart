@@ -30,10 +30,12 @@ class ModelView extends Model {
   Address enderecoUsuario;
   FirebaseController _fc;
   bool _dbIniciado;
+  bool _aguardandoResposta;
 
   ModelView() {
     _usuarioLogado = false;
     _dbIniciado = false;
+    _aguardandoResposta = false;
     indexPainelPrincipal = 0;
     iniciaDb();
     // ocorrencias = [];
@@ -49,6 +51,7 @@ class ModelView extends Model {
   }
 
   get dbIniciado => _dbIniciado;
+  get aguardandoResposta => _aguardandoResposta;
 
   /*** LOGIN ***/
   bool _usuarioLogado;
@@ -75,6 +78,8 @@ class ModelView extends Model {
   }
 
   void realizaLogin(String email, String senha) async {
+    _aguardandoResposta = true;
+    notifyListeners();
     print('realiza login');
     try {
       UserCredential userCredential =
@@ -89,6 +94,7 @@ class ModelView extends Model {
         print('senha incorreta');
       }
     }
+    _aguardandoResposta = false;
     notifyListeners();
   }
 
@@ -104,6 +110,11 @@ class ModelView extends Model {
       }
     });
     // modelView.realizaLogin();
+  }
+
+  void deslogar() {
+    FirebaseAuth.instance.signOut();
+    notifyListeners();
   }
 
   /*** MAIN ***/

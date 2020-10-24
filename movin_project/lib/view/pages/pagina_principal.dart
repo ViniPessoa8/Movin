@@ -170,7 +170,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
             ScopedModelDescendant<ModelView>(builder: (context, child, model) {
           return paginas[model.indexPainelPrincipal]['pagina'];
         }),
-        drawer: PainelDrawer(),
+        drawer: PainelDrawer(widget.mv),
         bottomNavigationBar: ScopedModelDescendant<ModelView>(
           builder: (context, child, model) {
             return BottomNavigationBar(
