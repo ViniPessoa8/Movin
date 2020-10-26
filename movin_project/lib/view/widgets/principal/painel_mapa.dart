@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
@@ -66,6 +69,20 @@ class _PainelMapaState extends State<PainelMapa> {
     );
   }
 
+  void addPonto(LatLng local) async {
+    print('add ponto( ${local.latitude}, ${local.longitude})');
+
+    final ByteData bytes = await rootBundle.load("assets/media/marker.png");
+    final Uint8List list = bytes.buffer.asUint8List();
+    _mapBoxController.addImage('marcador', list);
+    _mapBoxController.addSymbol(SymbolOptions(
+      geometry: local,
+      iconImage: 'marcador',
+      iconSize: 0.5,
+      iconOffset: Offset(0, -45),
+    ));
+  }
+
   Widget buildMapBox(
       {@required double latitude,
       @required double longitude,
@@ -87,12 +104,16 @@ class _PainelMapaState extends State<PainelMapa> {
         myLocationRenderMode: MyLocationRenderMode.NORMAL,
         // myLocationTrackingMode: MyLocationTrackingMode.Tracking,
         onMapCreated: onMapCreate,
+        onMapClick: (point, coordinates) => addPonto(coordinates),
       ),
     );
   }
 
   void onMapCreate(MapboxMapController controller) {
-    _mapBoxController = controller;
+    setState(() {
+      _mapBoxController = controller;
+    });
+    // addPonto(LatLng(_localizacao.latitude, _localizacao.longitude));
   }
 
   @override
