@@ -4,11 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:movin_project/model_view/model_view.dart';
 
 const String MAP_BOX_TOKEN =
     'pk.eyJ1IjoidmluaXBlc3NvYTgiLCJhIjoiY2tmNGN1d2Z2MGJzYjJ3bnNtOGtyMzM1eSJ9.7yJ8-KW8DYWRDBS-a8utzg';
 
 class PainelMapa extends StatefulWidget {
+  final ModelView mv;
+
+  PainelMapa(this.mv);
+
   @override
   _PainelMapaState createState() => _PainelMapaState();
 }
@@ -69,6 +74,13 @@ class _PainelMapaState extends State<PainelMapa> {
     );
   }
 
+  void addOcorrencias() {
+    widget.mv.ocorrencias.forEach((element) {
+      LatLng _local = LatLng(element.local.latitude, element.local.longitude);
+      addPonto(_local);
+    });
+  }
+
   void addPonto(LatLng local) async {
     print('add ponto( ${local.latitude}, ${local.longitude})');
 
@@ -113,6 +125,7 @@ class _PainelMapaState extends State<PainelMapa> {
     setState(() {
       _mapBoxController = controller;
     });
+    addOcorrencias();
     // addPonto(LatLng(_localizacao.latitude, _localizacao.longitude));
   }
 

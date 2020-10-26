@@ -36,7 +36,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
   void initState() {
     paginas = [
       {
-        'pagina': PainelMapa(),
+        'pagina': PainelMapa(widget.mv),
         'titulo': 'Mapa',
       },
       {
