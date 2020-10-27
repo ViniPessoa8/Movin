@@ -54,16 +54,8 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
   Widget build(BuildContext context) {
     return Container(
       child: SimpleDialog(
-        contentPadding: EdgeInsets.only(
-          right: 10,
-          left: 10,
-          bottom: 10,
-        ),
+        contentPadding: EdgeInsets.all(10),
         children: [
-          Container(
-            height: 350,
-            child: _mostraImagem(),
-          ),
           Text(
             widget.ocorrencia.categoria,
             style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 40),
@@ -75,11 +67,14 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
             widget.mv.formatData(widget.ocorrencia.data),
             style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 18),
           ),
+          SizedBox(
+            height: 15,
+          ),
           Text(
             widget.ocorrencia.descricao,
-            style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 30),
-            overflow: TextOverflow.fade,
-            maxLines: 1,
+            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 25),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 3,
             softWrap: false,
           ),
           widget.doMapa
@@ -116,12 +111,21 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
                     ),
                   ),
                 ),
+          SizedBox(
+            height: 15,
+          ),
           Text(
             'Autor: -',
             style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 20),
             overflow: TextOverflow.ellipsis,
             maxLines: 3,
             softWrap: false,
+          ),
+          SizedBox(height: 15),
+          Divider(thickness: 1, color: Colors.black),
+          Container(
+            height: 100,
+            child: _mostraImagem(),
           ),
         ],
       ),
