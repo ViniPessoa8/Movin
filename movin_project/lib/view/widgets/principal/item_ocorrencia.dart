@@ -45,7 +45,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
     return InkWell(
       onTap: () => showDialog(
         context: context,
-        builder: (context) => ItemOcorrenciaInfo(widget.mv, ocorrencia),
+        builder: (context) => ItemOcorrenciaInfo(widget.mv, ocorrencia, false),
       ),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10),

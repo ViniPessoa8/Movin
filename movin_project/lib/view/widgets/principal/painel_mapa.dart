@@ -167,6 +167,7 @@ class _PainelMapaState extends State<PainelMapa> {
               return ItemOcorrenciaInfo(
                 widget.mv,
                 ocorrencia.data['ocorrencia'],
+                true,
               );
             });
       });

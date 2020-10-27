@@ -7,8 +7,13 @@ import 'package:movin_project/model_view/model_view.dart';
 class ItemOcorrenciaInfo extends StatefulWidget {
   final Ocorrencia ocorrencia;
   final ModelView mv;
+  final bool doMapa;
 
-  ItemOcorrenciaInfo(this.mv, this.ocorrencia);
+  ItemOcorrenciaInfo(
+    this.mv,
+    this.ocorrencia,
+    this.doMapa,
+  );
 
   @override
   _ItemOcorrenciaInfoState createState() => _ItemOcorrenciaInfoState();
@@ -77,36 +82,40 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
             maxLines: 1,
             softWrap: false,
           ),
-          InkWell(
-            onTap: () => print('Mostrar local no mapa'),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.all(Radius.circular(25.0)),
-              ),
-              margin: EdgeInsets.symmetric(vertical: 10),
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 260,
-                    child: Text(
-                      widget.mv.formatEndereco(widget.ocorrencia.endereco),
-                      style: Theme.of(context).textTheme.bodyText2.copyWith(
-                            fontSize: 20,
-                            color: Colors.grey[600],
+          widget.doMapa
+              ? SizedBox()
+              : InkWell(
+                  onTap: () => print('Mostrar local no mapa'),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 10),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 260,
+                          child: Text(
+                            widget.mv
+                                .formatEndereco(widget.ocorrencia.endereco),
+                            style:
+                                Theme.of(context).textTheme.bodyText2.copyWith(
+                                      fontSize: 20,
+                                      color: Colors.grey[600],
+                                    ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                            softWrap: false,
                           ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
-                      softWrap: false,
+                        ),
+                        Icon(Icons.location_on),
+                      ],
                     ),
                   ),
-                  Icon(Icons.location_on),
-                ],
-              ),
-            ),
-          ),
+                ),
           Text(
             'Autor: -',
             style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 20),
