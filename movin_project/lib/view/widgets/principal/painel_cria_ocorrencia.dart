@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:movin_project/model/ocorrencia.dart';
@@ -22,6 +23,7 @@ class PainelCriaOcorrencia extends StatefulWidget {
 
 class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
   gp.GeoPoint local;
+  Address endereco;
   List<String> valores = DadosInternos.categorias;
   String categoria;
   CollectionReference ocorrencias =
@@ -36,6 +38,10 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
         latitude: localAtual.latitude,
         longitude: localAtual.longitude,
       );
+      endereco = await Geocoder.local
+          .findAddressesFromCoordinates(
+              Coordinates(local.latitude, local.longitude))
+          .then((value) => value.first);
     }
   }
 
@@ -173,6 +179,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                         data: DateTime.now(),
                         local: local,
                         idAutor: 0,
+                        endereco: endereco,
                       ));
                       widget.mv.atualizaOcorrencias();
                       Navigator.of(context).pop();
