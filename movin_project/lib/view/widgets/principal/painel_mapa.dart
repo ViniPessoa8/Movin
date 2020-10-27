@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:movin_project/model/ocorrencia.dart';
 import 'package:movin_project/model_view/model_view.dart';
+import 'package:movin_project/view/widgets/principal/item_ocorrencia_info.dart';
 
 const String MAP_BOX_TOKEN =
     'pk.eyJ1IjoidmluaXBlc3NvYTgiLCJhIjoiY2tmNGN1d2Z2MGJzYjJ3bnNtOGtyMzM1eSJ9.7yJ8-KW8DYWRDBS-a8utzg';
@@ -29,6 +31,35 @@ class _PainelMapaState extends State<PainelMapa> {
   void initState() {
     updateLocalizacao();
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _localizacao == null
+        ? Center(
+            child: Text('Carregando Mapa...'),
+          )
+        : Container(
+            child: Stack(
+              children: [
+                buildMapBox(
+                  latitude: _localizacao.latitude,
+                  longitude: _localizacao.longitude,
+                ),
+                Positioned(
+                  bottom: 15,
+                  child: FlatButton.icon(
+                    onPressed: moveUserLocation,
+                    icon: Icon(
+                      Icons.my_location,
+                      size: 40,
+                    ),
+                    label: Text(''),
+                  ),
+                )
+              ],
+            ),
+          );
   }
 
   Future<void> updateLocalizacao() async {
@@ -76,23 +107,28 @@ class _PainelMapaState extends State<PainelMapa> {
 
   void addOcorrencias() {
     widget.mv.ocorrencias.forEach((element) {
-      LatLng _local = LatLng(element.local.latitude, element.local.longitude);
-      addPonto(_local);
+      addOcorrencia(element);
     });
   }
 
-  void addPonto(LatLng local) async {
-    print('add ponto( ${local.latitude}, ${local.longitude})');
+  void addOcorrencia(Ocorrencia ocorrencia) async {
+    LatLng _local = LatLng(
+      ocorrencia.local.latitude,
+      ocorrencia.local.longitude,
+    );
+    print('add ponto( ${_local.latitude}, ${_local.longitude})');
 
     final ByteData bytes = await rootBundle.load("assets/media/marker.png");
     final Uint8List list = bytes.buffer.asUint8List();
     _mapBoxController.addImage('marcador', list);
-    _mapBoxController.addSymbol(SymbolOptions(
-      geometry: local,
-      iconImage: 'marcador',
-      iconSize: 0.5,
-      iconOffset: Offset(0, -45),
-    ));
+    _mapBoxController.addSymbol(
+        SymbolOptions(
+          geometry: _local,
+          iconImage: 'marcador',
+          iconSize: 0.5,
+          iconOffset: Offset(0, -45),
+        ),
+        {'ocorrencia': ocorrencia});
   }
 
   Widget buildMapBox(
@@ -116,7 +152,7 @@ class _PainelMapaState extends State<PainelMapa> {
         myLocationRenderMode: MyLocationRenderMode.NORMAL,
         // myLocationTrackingMode: MyLocationTrackingMode.Tracking,
         onMapCreated: onMapCreate,
-        onMapClick: (point, coordinates) => addPonto(coordinates),
+        // onMapClick: (point, coordinates) => addPonto(coordinates),
       ),
     );
   }
@@ -124,37 +160,17 @@ class _PainelMapaState extends State<PainelMapa> {
   void onMapCreate(MapboxMapController controller) {
     setState(() {
       _mapBoxController = controller;
+      _mapBoxController.onSymbolTapped.add((ocorrencia) {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return ItemOcorrenciaInfo(
+                widget.mv,
+                ocorrencia.data['ocorrencia'],
+              );
+            });
+      });
     });
     addOcorrencias();
-    // addPonto(LatLng(_localizacao.latitude, _localizacao.longitude));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _localizacao == null
-        ? Center(
-            child: Text('Carregando Mapa...'),
-          )
-        : Container(
-            child: Stack(
-              children: [
-                buildMapBox(
-                  latitude: _localizacao.latitude,
-                  longitude: _localizacao.longitude,
-                ),
-                Positioned(
-                  bottom: 15,
-                  child: FlatButton.icon(
-                    onPressed: moveUserLocation,
-                    icon: Icon(
-                      Icons.my_location,
-                      size: 40,
-                    ),
-                    label: Text(''),
-                  ),
-                )
-              ],
-            ),
-          );
   }
 }
