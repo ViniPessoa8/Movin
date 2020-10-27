@@ -116,7 +116,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
           ),
           Text(
             'Autor: -',
-            style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 20),
+            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 20),
             overflow: TextOverflow.ellipsis,
             maxLines: 3,
             softWrap: false,
