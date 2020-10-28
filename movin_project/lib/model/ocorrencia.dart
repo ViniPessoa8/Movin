@@ -4,8 +4,8 @@ import 'package:geopoint/geopoint.dart' as gp;
 import 'package:flutter/material.dart';
 
 class Ocorrencia {
-  final int idOcorrencia;
-  final String idAutor;
+  final String idOcorrencia;
+  final String idUsuario;
   final String descricao;
   final DateTime data;
   final String categoria;
@@ -15,7 +15,7 @@ class Ocorrencia {
   Ocorrencia({
     this.idOcorrencia,
     this.endereco,
-    @required this.idAutor,
+    @required this.idUsuario,
     @required this.descricao,
     @required this.data,
     @required this.categoria,
