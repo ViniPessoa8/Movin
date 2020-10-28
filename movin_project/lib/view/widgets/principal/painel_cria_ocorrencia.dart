@@ -46,7 +46,8 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
         longitude: localAtual.longitude,
       );
 
-      var _endereco = await widget.mv.getEnderecoBD(local.latitude, longitude);
+      var _endereco =
+          await widget.mv.getEnderecoBD(local.latitude, local.longitude);
       setState(() {
         endereco = _endereco;
       });
@@ -186,7 +187,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                         categoria: categoria,
                         data: DateTime.now(),
                         local: local,
-                        idAutor: FirebaseAuth.instance.currentUser.uid,
+                        idUsuario: FirebaseAuth.instance.currentUser.uid,
                         endereco: endereco,
                       ));
                       widget.mv.atualizaOcorrencias();

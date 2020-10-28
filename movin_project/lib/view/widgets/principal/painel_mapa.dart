@@ -23,8 +23,6 @@ class PainelMapa extends StatefulWidget {
 class _PainelMapaState extends State<PainelMapa> {
   LocationData _localizacao;
   MapboxMapController _mapBoxController;
-  double _mapLatitude = 0.0;
-  double _mapLongitude = 0.0;
   final double _userLocationZoom = 14.0;
 
   @override
@@ -90,8 +88,6 @@ class _PainelMapaState extends State<PainelMapa> {
 
     setState(() {
       _localizacao = _locationData;
-      _mapLatitude = _localizacao.latitude;
-      _mapLongitude = _localizacao.longitude;
     });
   }
 
