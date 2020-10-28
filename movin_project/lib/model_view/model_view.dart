@@ -127,13 +127,16 @@ class ModelView extends Model {
 
   /*** MAIN ***/
   int indexPainelPrincipal;
+  bool _dadosCarregados = false;
 
   get getOcorrencias => ocorrencias;
   get getEndereco => enderecoUsuario;
+  get carregouDados => _dadosCarregados;
 
-  void carregaDados() {
-    atualizaLocalUsuario();
-    atualizaOcorrencias();
+  void carregaDados() async {
+    await atualizaLocalUsuario();
+    await atualizaOcorrencias();
+    notifyListeners();
     // escutaLogin();
   }
 
@@ -146,14 +149,12 @@ class ModelView extends Model {
     } else {
       ocorrencias = [];
     }
-    notifyListeners();
   }
 
   Future<void> atualizaLocalUsuario() async {
     if (_dbIniciado) {
       localUsuario = await _fc.fetchLocalUsuario();
-      atualizaEnderecoUsuario();
-      notifyListeners();
+      await atualizaEnderecoUsuario();
     }
   }
 
@@ -163,7 +164,6 @@ class ModelView extends Model {
         localUsuario.latitude,
         localUsuario.longitude,
       );
-      notifyListeners();
     }
   }
 
@@ -250,6 +250,10 @@ class ModelView extends Model {
 
     imagens.add(File(img.path));
     notifyListeners();
+  }
+
+  deletaTodasOcorrencias() {
+    _fc.deletaTodasOcorrencias();
   }
 
   // Endereço
