@@ -46,7 +46,6 @@ class ModelView extends Model {
   iniciaDb() async {
     _fc = FirebaseController();
     _dbIniciado = await _fc.inicializaFirestore();
-    notifyListeners();
     carregaDados();
   }
 
@@ -120,6 +119,11 @@ class ModelView extends Model {
     // modelView.realizaLogin();
   }
 
+  Future<Usuario> getUsuario(String id) async {
+    Usuario _usuario = await _fc.fetchUsuario(id);
+    return _usuario;
+  }
+
   void deslogar() {
     FirebaseAuth.instance.signOut();
     notifyListeners();
@@ -152,6 +156,7 @@ class ModelView extends Model {
   }
 
   Future<void> atualizaLocalUsuario() async {
+    print('[DEBUG] atualizaLocalUsuario()');
     if (_dbIniciado) {
       localUsuario = await _fc.fetchLocalUsuario();
       await atualizaEnderecoUsuario();
@@ -183,7 +188,7 @@ class ModelView extends Model {
       categoria: ocorrencia.categoria,
       data: ocorrencia.data,
       local: ocorrencia.local,
-      idUsuario: ocorrencia.idAutor,
+      idUsuario: ocorrencia.idUsuario,
     );
 
     if (resp) {
