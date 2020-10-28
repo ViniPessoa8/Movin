@@ -63,43 +63,48 @@ class FirebaseController extends Model {
   Future<List<Ocorrencia>> fetchOcorrencias({String bairro}) async {
     List<Ocorrencia> listaOcorrencias = [];
     if (_dbIniciado) {
-      await FirebaseFirestore.instance.collection('ocorrencias').get().then(
-        (value) {
-          value.docs.forEach(
-            (element) {
-              //Tratamento do elemento
-              GeoPoint localBd = element.get('local');
-              gp.GeoPoint local = gp.GeoPoint(
-                latitude: localBd.latitude,
-                longitude: localBd.longitude,
-              );
+      try {
+        await FirebaseFirestore.instance.collection('ocorrencias').get().then(
+          (value) {
+            value.docs.forEach(
+              (element) {
+                //Tratamento do elemento
+                GeoPoint localBd = element.get('local');
+                gp.GeoPoint local = gp.GeoPoint(
+                  latitude: localBd.latitude,
+                  longitude: localBd.longitude,
+                );
 
-              Ocorrencia ocorrencia = Ocorrencia(
-                idOcorrencia: 0,
-                idAutor: 0,
-                descricao: element.get('descicao'),
-                data: element.get('data').toDate(),
-                categoria: element.get('categoria'),
-                local: local,
-                // endereco: value,
-              );
-              if (bairro != null) {
-                fetchEndereco(local.latitude, local.longitude).then((value) {
-                  print('SubLocality: ${value.subLocality} | bairro: $bairro');
-                  print(
-                      'value.subLocality == bairro: ${value.subLocality == bairro}');
-                  if (value.subLocality == bairro) {
-                    listaOcorrencias.add(ocorrencia);
-                    return;
-                  }
-                });
-              } else {
-                listaOcorrencias.add(ocorrencia);
-              }
-            },
-          );
-        },
-      );
+                Ocorrencia ocorrencia = Ocorrencia(
+                  idOcorrencia: 0,
+                  idAutor: element.get('idAutor'),
+                  descricao: element.get('descicao'),
+                  data: element.get('data').toDate(),
+                  categoria: element.get('categoria'),
+                  local: local,
+                  // endereco: value,
+                );
+                if (bairro != null) {
+                  fetchEndereco(local.latitude, local.longitude).then((value) {
+                    print(
+                        'SubLocality: ${value.subLocality} | bairro: $bairro');
+                    print(
+                        'value.subLocality == bairro: ${value.subLocality == bairro}');
+                    if (value.subLocality == bairro) {
+                      listaOcorrencias.add(ocorrencia);
+                      return;
+                    }
+                  });
+                } else {
+                  listaOcorrencias.add(ocorrencia);
+                }
+              },
+            );
+          },
+        );
+      } catch (e) {
+        print(e);
+      }
     }
     // this.ocorrencias = listaOcorrencias;
     // _carregouOcorrencias = true;
@@ -112,7 +117,7 @@ class FirebaseController extends Model {
     @required String categoria,
     @required DateTime data,
     @required gp.GeoPoint local,
-    @required int idUsuario,
+    @required String idUsuario,
   }) async {
     //GeoPoint(GeoPoint) -> GeoPoint(Firebase)
     GeoPoint localConvertido = GeoPoint(local.latitude, local.longitude);
@@ -130,6 +135,19 @@ class FirebaseController extends Model {
     return id != null;
     // notifyListeners();
   }
+
+  void deletaTodasOcorrencias() async {
+    if (_dbIniciado) {
+      await FirebaseFirestore.instance
+          .collection('ocorrencias')
+          .get()
+          .then((value) {
+        value.docs.removeRange(0, value.docs.length - 1);
+      });
+    }
+  }
+
+  void deletaOcorrencia(int id) {}
 
   Future uploadImagem(File imagem) async {
     StorageReference storageReference =
