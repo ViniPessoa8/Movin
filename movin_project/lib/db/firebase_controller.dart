@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:location/location.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:geopoint/geopoint.dart' as gp;
+import 'package:movin_project/model/usuario.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as Path;
@@ -15,6 +17,7 @@ import 'package:path/path.dart' as Path;
 class FirebaseController extends Model {
   bool _dbIniciado = false;
   CollectionReference ocorrenciasBD;
+  FirebaseFirestore _db;
 
   // FirebaseController() {
   //   inicializaFirestore();
@@ -30,12 +33,25 @@ class FirebaseController extends Model {
       // notifyListeners();
       // notifyListeners();
       print('Banco de dados carregado.');
-      ocorrenciasBD = FirebaseFirestore.instance.collection('ocorrencias');
+      ocorrenciasBD = _db.collection('ocorrencias');
       // FirebaseStorage.instance.;
     } catch (e) {
       print('Erro ao carregar Banco de Dados (Firebase):\n$e');
     }
+    _db = FirebaseFirestore.instance;
     return _dbIniciado;
+  }
+
+  Future<Usuario> fetchUsuario(String id) async {
+    print('fetchUsuario()');
+    Usuario _usuario;
+    if (_dbIniciado) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc()
+          .get()
+          .then((value) => print('USUARIO: ${value.data()}'));
+    }
   }
 
   Future<gp.GeoPoint> fetchLocalUsuario() async {
@@ -63,48 +79,44 @@ class FirebaseController extends Model {
   Future<List<Ocorrencia>> fetchOcorrencias({String bairro}) async {
     List<Ocorrencia> listaOcorrencias = [];
     if (_dbIniciado) {
-      try {
-        await FirebaseFirestore.instance.collection('ocorrencias').get().then(
-          (value) {
-            value.docs.forEach(
-              (element) {
-                //Tratamento do elemento
-                GeoPoint localBd = element.get('local');
-                gp.GeoPoint local = gp.GeoPoint(
-                  latitude: localBd.latitude,
-                  longitude: localBd.longitude,
-                );
+      await _db.collection('ocorrencias').get().then(
+        (value) {
+          value.docs.forEach(
+            (element) {
+              //Tratamento do elemento
+              GeoPoint localBd = element.get('local');
+              gp.GeoPoint local = gp.GeoPoint(
+                latitude: localBd.latitude,
+                longitude: localBd.longitude,
+              );
 
-                Ocorrencia ocorrencia = Ocorrencia(
-                  idOcorrencia: 0,
-                  idAutor: element.get('idAutor'),
-                  descricao: element.get('descicao'),
-                  data: element.get('data').toDate(),
-                  categoria: element.get('categoria'),
-                  local: local,
-                  // endereco: value,
-                );
-                if (bairro != null) {
-                  fetchEndereco(local.latitude, local.longitude).then((value) {
-                    print(
-                        'SubLocality: ${value.subLocality} | bairro: $bairro');
-                    print(
-                        'value.subLocality == bairro: ${value.subLocality == bairro}');
-                    if (value.subLocality == bairro) {
-                      listaOcorrencias.add(ocorrencia);
-                      return;
-                    }
-                  });
-                } else {
-                  listaOcorrencias.add(ocorrencia);
-                }
-              },
-            );
-          },
-        );
-      } catch (e) {
-        print(e);
-      }
+              Ocorrencia ocorrencia = Ocorrencia(
+                idOcorrencia: element.id,
+                idUsuario: element.get('idUsuario'),
+                descricao: element.get('descicao'),
+                data: element.get('data').toDate(),
+                categoria: element.get('categoria'),
+                local: local,
+                // endereco: value,
+              );
+              if (bairro != null) {
+                fetchEndereco(local.latitude, local.longitude).then((value) {
+                  print('SubLocality: ${value.subLocality} | bairro: $bairro');
+                  print(
+                      'value.subLocality == bairro: ${value.subLocality == bairro}');
+                  if (value.subLocality == bairro) {
+                    print(ocorrencia.categoria);
+                    listaOcorrencias.add(ocorrencia);
+                  }
+                });
+              } else {
+                print(ocorrencia.categoria);
+                listaOcorrencias.add(ocorrencia);
+              }
+            },
+          );
+        },
+      );
     }
     // this.ocorrencias = listaOcorrencias;
     // _carregouOcorrencias = true;
@@ -123,12 +135,12 @@ class FirebaseController extends Model {
     GeoPoint localConvertido = GeoPoint(local.latitude, local.longitude);
 
     //Criação da ocorrência no banco de dados
-    var id = await ocorrenciasBD.add({
+    var id = await _db.collection('ocorrencias').add({
       'descicao': descricao,
       'categoria': categoria,
       'data': data,
       'local': localConvertido,
-      'userId': idUsuario,
+      'idUsuario': idUsuario,
     });
 
     print(id);
@@ -137,17 +149,24 @@ class FirebaseController extends Model {
   }
 
   void deletaTodasOcorrencias() async {
+    print('deletaTodasOcorrencias()');
     if (_dbIniciado) {
-      await FirebaseFirestore.instance
-          .collection('ocorrencias')
-          .get()
-          .then((value) {
-        value.docs.removeRange(0, value.docs.length - 1);
-      });
+      try {
+        await _db
+            .collection('ocorrencias')
+            .snapshots()
+            .first
+            .then((value) => value.docs.forEach((element) {
+                  print(element.id);
+                  _db.collection('ocorrencias').doc(element.id).delete();
+                }));
+      } catch (e) {
+        print('[ERRO] deletaTodasOcorrencias(): $e');
+      }
     }
   }
 
-  void deletaOcorrencia(int id) {}
+  void deletaOcorrencia(String id) {}
 
   Future uploadImagem(File imagem) async {
     StorageReference storageReference =
@@ -172,7 +191,7 @@ class FirebaseController extends Model {
   }
 
   // escutaOcorrencias() async {
-  //   FirebaseFirestore.instance
+  //   _db
   //       .collection('ocorrencias')
   //       .snapshots()
   //       .listen((event) {
