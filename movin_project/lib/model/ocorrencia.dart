@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class Ocorrencia {
   final int idOcorrencia;
-  final int idAutor;
+  final String idAutor;
   final String descricao;
   final DateTime data;
   final String categoria;
