@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:image_picker/image_picker.dart';
@@ -31,6 +32,12 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
   TextEditingController tituloController = new TextEditingController();
   TextEditingController descricaoController = new TextEditingController();
 
+  @override
+  void initState() {
+    getLocal();
+    super.initState();
+  }
+
   getLocal({double latitude, double longitude}) async {
     LocationData localAtual = await Location().getLocation();
     if (latitude == null || longitude == null) {
@@ -38,16 +45,17 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
         latitude: localAtual.latitude,
         longitude: localAtual.longitude,
       );
-      endereco = await Geocoder.local
-          .findAddressesFromCoordinates(
-              Coordinates(local.latitude, local.longitude))
-          .then((value) => value.first);
+
+      var _endereco = await widget.mv.getEnderecoBD(local.latitude, longitude);
+      setState(() {
+        endereco = _endereco;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    getLocal();
+    // getLocal();
     return ScopedModel<ModelView>(
       model: widget.mv,
       child: SingleChildScrollView(
@@ -178,7 +186,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                         categoria: categoria,
                         data: DateTime.now(),
                         local: local,
-                        idAutor: 0,
+                        idAutor: FirebaseAuth.instance.currentUser.uid,
                         endereco: endereco,
                       ));
                       widget.mv.atualizaOcorrencias();

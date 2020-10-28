@@ -35,6 +35,8 @@ class _PainelMapaState extends State<PainelMapa> {
 
   @override
   Widget build(BuildContext context) {
+    // widget.mv.deletaTodasOcorrencias();
+
     return _localizacao == null
         ? Center(
             child: Text('Carregando Mapa...'),
@@ -106,9 +108,11 @@ class _PainelMapaState extends State<PainelMapa> {
   }
 
   void addOcorrencias() {
-    widget.mv.ocorrencias.forEach((element) {
-      addOcorrencia(element);
-    });
+    if (widget.mv.carregouDados) {
+      widget.mv.ocorrencias.forEach((element) {
+        addOcorrencia(element);
+      });
+    }
   }
 
   void addOcorrencia(Ocorrencia ocorrencia) async {

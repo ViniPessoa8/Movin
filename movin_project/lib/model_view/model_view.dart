@@ -78,11 +78,11 @@ class ModelView extends Model {
   }
 
   Future<UserCredential> realizaLogin(String email, String senha) async {
+    UserCredential _userCredential;
     if (_dbIniciado) {
       _aguardandoResposta = true;
       notifyListeners();
 
-      UserCredential _userCredential;
       print('realiza login');
       try {
         _userCredential =
@@ -102,8 +102,8 @@ class ModelView extends Model {
       }
       _aguardandoResposta = false;
       notifyListeners();
-      return _userCredential;
     }
+    return _userCredential;
   }
 
   void escutaLogin(BuildContext context) {
