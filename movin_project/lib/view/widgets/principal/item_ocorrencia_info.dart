@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:movin_project/model/ocorrencia.dart';
+import 'package:movin_project/model/usuario.dart';
 import 'package:movin_project/model_view/model_view.dart';
 
 class ItemOcorrenciaInfo extends StatefulWidget {
@@ -22,31 +23,12 @@ class ItemOcorrenciaInfo extends StatefulWidget {
 class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
   Image imagem;
   bool imagemCarregada = false;
-
-  void downloadImagem() async {
-    Image img = await widget.mv.downloadImagem();
-    imagemCarregada = true;
-
-    setState(() {
-      imagem = img;
-    });
-  }
-
-  Widget _mostraImagem() {
-    if (imagemCarregada && imagem != null) {
-      return imagem;
-    } else if (imagemCarregada) {
-      return Center(
-        child: Text('(Sem Imagem)'),
-      );
-    } else {
-      return Center(child: Text("Carregando Imagem..."));
-    }
-  }
+  String _nomeUsuario = '(sem nome)';
 
   @override
   void initState() {
     downloadImagem();
+    carregaUsuario();
     super.initState();
   }
 
@@ -115,7 +97,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
             height: 15,
           ),
           Text(
-            'Autor: -',
+            _nomeUsuario,
             style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 20),
             overflow: TextOverflow.ellipsis,
             maxLines: 3,
@@ -130,5 +112,41 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
         ],
       ),
     );
+  }
+
+  void downloadImagem() async {
+    Image img = await widget.mv.downloadImagem();
+    imagemCarregada = true;
+
+    setState(() {
+      imagem = img;
+    });
+  }
+
+  Widget _mostraImagem() {
+    if (imagemCarregada && imagem != null) {
+      return imagem;
+    } else if (imagemCarregada) {
+      return Center(
+        child: Text('(Sem Imagem)'),
+      );
+    } else {
+      return Center(child: Text("Carregando Imagem..."));
+    }
+  }
+
+  void getAutor(String id) async {
+    Usuario _usuario = await widget.mv.getUsuario(id);
+    if (_usuario == null) {
+      print('[ERRO] getAutor = NULL');
+    } else {
+      setState(() {
+        _nomeUsuario = _usuario.nome;
+      });
+    }
+  }
+
+  void carregaUsuario() {
+    getAutor('${widget.ocorrencia.idUsuario}');
   }
 }
