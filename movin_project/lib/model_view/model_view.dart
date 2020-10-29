@@ -60,8 +60,14 @@ class ModelView extends Model {
   get carregouLocalUsuario => localUsuario != null;
 
   void criaUsuario(Usuario usuario, String senha) async {
-    _fc.addUsuarioAuth(usuario.email, senha);
-    notifyListeners();
+    try {
+      UserCredential _uc = await _fc.addUsuarioAuth(usuario.email, senha);
+      print('[DEBUG] criaUsuario() _uc.user.uid: ${_uc.user.uid}');
+      _fc.addUsuarioBD(_uc.user.uid, usuario);
+      notifyListeners();
+    } catch (e) {
+      print('[ERRO] mv.criaUsuario(): $e');
+    }
   }
 
   Future<UserCredential> realizaLogin(String email, String senha) async {

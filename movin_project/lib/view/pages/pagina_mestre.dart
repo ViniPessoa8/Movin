@@ -17,6 +17,8 @@ class PaginaMestre extends StatefulWidget {
 }
 
 class _PaginaMestreState extends State<PaginaMestre> {
+  bool _deslogado = false;
+
   @override
   Widget build(BuildContext context) {
     return ScopedModel<ModelView>(
@@ -28,6 +30,7 @@ class _PaginaMestreState extends State<PaginaMestre> {
             return StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context, AsyncSnapshot<User> snapshot) {
+                print('[DEBUG] streambuilder');
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
                     print('ConnectionState.waiting');
@@ -39,9 +42,13 @@ class _PaginaMestreState extends State<PaginaMestre> {
                       return PainelCarregamento();
                     } else if (snapshot.hasData) {
                       //LOGADO
+                      print('LOGADO');
                       print(snapshot.data);
+                      if (_deslogado) Navigator.of(context).pop();
                       return PaginaPrincipal(widget.mv);
                     } else {
+                      _deslogado = true;
+                      print('DESLOGADO');
                       //DESLOGADO
                       return PaginaLogin();
                     }
