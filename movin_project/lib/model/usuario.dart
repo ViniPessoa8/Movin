@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Usuario {
-  final int idUsuario;
+  // final String idUsuario;
   String email;
   String nome;
   bool pcd; // Pessoa com Deficiência
@@ -10,7 +10,7 @@ class Usuario {
   // String senha; /* senha será verificada diretamente do banco de dadose não deve ser armazenada. */
 
   Usuario({
-    @required this.idUsuario,
+    // @required this.idUsuario,
     @required this.email,
     @required this.nome,
     @required this.pcd,

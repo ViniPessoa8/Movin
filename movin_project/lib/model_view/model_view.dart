@@ -59,20 +59,8 @@ class ModelView extends Model {
   get carregouOcorrencias => ocorrencias != null;
   get carregouLocalUsuario => localUsuario != null;
 
-  void criaUsuario(String email, String senha) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: senha);
-      print(userCredential.toString());
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('senha fraca');
-      } else if (e.code == 'email-already-in-use') {
-        print('A conta já existe para esse e-mail.');
-      }
-    } catch (e) {
-      print(e);
-    }
+  void criaUsuario(Usuario usuario, String senha) async {
+    _fc.addUsuarioAuth(usuario.email, senha);
     notifyListeners();
   }
 
@@ -268,12 +256,4 @@ class ModelView extends Model {
     result = await _fc.fetchEndereco(latitude, longitude);
     return result;
   }
-
-  // void logaUsuario(BuildContext context) {
-  //   print('loga usuario.');
-  //   setState(() {
-  //     widget.usuarioLogado = true;
-  //     Navigator.of(context).pushReplacementNamed(PaginaPrincipal.nomeRota);
-  //   });
-  // }
 }

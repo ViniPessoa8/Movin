@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movin_project/model/usuario.dart';
 import 'package:movin_project/model_view/model_view.dart';
 
 class PainelCadastro extends StatefulWidget {
@@ -14,16 +15,16 @@ class PainelCadastro extends StatefulWidget {
 class _PainelCadastroState extends State<PainelCadastro> {
   final AssetImage googleLogo = AssetImage('assets/media/google_logo.png');
   final AssetImage facebookLogo = AssetImage('assets/media/facebook_logo.png');
-  final _emailFormKey = GlobalKey<FormState>();
-  final _senhaFormKey = GlobalKey<FormState>();
-  final _confirmaSenhaFormKey = GlobalKey<FormState>();
   final _formKey = GlobalKey<FormState>();
-  String _emailUsuario;
-  String _senhaUsuario;
+  String _nomeUsuario = '';
+  String _emailUsuario = '';
+  String _senhaUsuario = '';
+  bool _pcdUsuario = false;
+  TextEditingController _controllerNome = TextEditingController();
   TextEditingController _controllerEmail = TextEditingController();
   TextEditingController _controllerSenha = TextEditingController();
   TextEditingController _controllerConfirmaSenha = TextEditingController();
-  bool termosDeUso = true;
+  bool _termosDeUso = false;
 
   @override
   void initState() {
@@ -47,25 +48,20 @@ class _PainelCadastroState extends State<PainelCadastro> {
     super.dispose();
   }
 
-  void tentarCadastro() {
-    // print('tentar cadastro');
-    // final emailValido = _emailFormKey.currentState.validate();
-    // print('email');
-    // final senhaValida = _senhaFormKey.currentState.validate();
-    // print('senha');
-    // final confirmaSenhaValida = _confirmaSenhaFormKey.currentState.validate();
-    // print('confirma Senha');
+  void _tentarCadastro() {
     final formValido = _formKey.currentState.validate();
     FocusScope.of(context).unfocus();
 
-    // if (emailValido && senhaValida && confirmaSenhaValida) {
     if (formValido) {
       print('usuario valido');
-      // _emailFormKey.currentState.save();
-      // _senhaFormKey.currentState.save();
-      // _confirmaSenhaFormKey.currentState.save();
+
+      Usuario _usuario = Usuario(
+        nome: _nomeUsuario,
+        email: _emailUsuario,
+        pcd: _pcdUsuario,
+      );
       _formKey.currentState.save();
-      widget.mv.criaUsuario(_emailUsuario, _senhaUsuario);
+      widget.mv.criaUsuario(_usuario, _senhaUsuario);
     }
   }
 
@@ -104,7 +100,7 @@ class _PainelCadastroState extends State<PainelCadastro> {
               // FORM CADASTRO
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               width: double.infinity,
-              height: 400,
+              height: 500,
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,6 +109,23 @@ class _PainelCadastroState extends State<PainelCadastro> {
                       key: _formKey,
                       child: Column(
                         children: [
+                          TextFormField(
+                            autofocus: true,
+                            autovalidate: true,
+                            controller: _controllerNome,
+                            validator: (value) {
+                              if (value.isEmpty || value.contains('\d')) {
+                                return 'Nome inválido';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(labelText: 'Nome'),
+                            onChanged: (newValue) {
+                              setState(() {
+                                _nomeUsuario = newValue;
+                              });
+                            },
+                          ),
                           TextFormField(
                             autofocus: true,
                             autovalidate: true,
@@ -172,10 +185,21 @@ class _PainelCadastroState extends State<PainelCadastro> {
                             height: 10,
                           ),
                           CheckboxListTile(
-                            value: termosDeUso,
+                            value: _termosDeUso,
                             title: Text('Li e aceito os termos de uso.'),
                             onChanged: (value) {
-                              termosDeUso = value;
+                              setState(() {
+                                _termosDeUso = value;
+                              });
+                            },
+                          ),
+                          SwitchListTile(
+                            value: _pcdUsuario,
+                            title: Text('PCD (Pessoa Com Deficiência)'),
+                            onChanged: (value) {
+                              setState(() {
+                                _pcdUsuario = value;
+                              });
                             },
                           ),
                         ],
@@ -187,8 +211,8 @@ class _PainelCadastroState extends State<PainelCadastro> {
                         child: Text('Cadastrar'),
                       ),
                       onPressed: () {
-                        if (termosDeUso) {
-                          tentarCadastro();
+                        if (_termosDeUso) {
+                          _tentarCadastro();
                         }
                       },
                     ),

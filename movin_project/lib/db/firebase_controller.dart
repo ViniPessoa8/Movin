@@ -19,22 +19,14 @@ class FirebaseController extends Model {
   CollectionReference ocorrenciasBD;
   FirebaseFirestore _db;
 
-  // FirebaseController() {
-  //   inicializaFirestore();
-  // }
-
   get dbIniciado => _dbIniciado;
 
   Future<bool> inicializaFirestore() async {
     try {
       await Firebase.initializeApp();
       _dbIniciado = true;
-      // carregaDados();
-      // notifyListeners();
-      // notifyListeners();
       print('Banco de dados carregado.');
       ocorrenciasBD = _db.collection('ocorrencias');
-      // FirebaseStorage.instance.;
     } catch (e) {
       print('Erro ao carregar Banco de Dados (Firebase):\n$e');
     }
@@ -42,11 +34,44 @@ class FirebaseController extends Model {
     return _dbIniciado;
   }
 
+  Future<UserCredential> addUsuarioAuth(String email, String senha) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: senha);
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('senha fraca');
+      } else if (e.code == 'email-already-in-use') {
+        print('A conta já existe para esse e-mail.');
+      }
+    } catch (e) {
+      print('[ERRO] addUsuarioAuth(): $e');
+    }
+  }
+
+  void addUsuarioBD(String id, Usuario usuario) async {
+    if (_dbIniciado) {
+      try {
+        await _db.collection('usuario').add({
+          'id': id,
+          'nome': usuario.nome,
+          'email': usuario.email,
+          'pcd': usuario.pcd,
+          'urlFotoPerfil': usuario.urlFotoPerfil,
+          // 'idRotasFavoritas' : usuario.idRotasFavoritas,
+        });
+      } catch (e) {
+        print('[ERRO] addUsuarioBD(): $e');
+      }
+    }
+  }
+
   Future<Usuario> fetchUsuario(String id) async {
     print('fetchUsuario()');
     Usuario _usuario;
     if (_dbIniciado) {
-      await FirebaseFirestore.instance
+      await _db
           .collection('users')
           .doc()
           .get()
@@ -59,10 +84,8 @@ class FirebaseController extends Model {
     await Location().getLocation().then((value) {
       print('[DEBUG fetchLocalUsuario] $value');
       local = gp.GeoPoint(latitude: value.latitude, longitude: value.longitude);
-      // fetchEndereco();
     });
     return local;
-    // notifyListeners();
   }
 
   Future<Address> fetchEndereco(double latitude, double longitude) async {
@@ -117,11 +140,8 @@ class FirebaseController extends Model {
           );
         },
       );
+      return listaOcorrencias;
     }
-    // this.ocorrencias = listaOcorrencias;
-    // _carregouOcorrencias = true;
-    // notifyListeners();
-    return listaOcorrencias;
   }
 
   Future<bool> addOcorrencia({
@@ -131,7 +151,6 @@ class FirebaseController extends Model {
     @required gp.GeoPoint local,
     @required String idUsuario,
   }) async {
-    //GeoPoint(GeoPoint) -> GeoPoint(Firebase)
     GeoPoint localConvertido = GeoPoint(local.latitude, local.longitude);
 
     //Criação da ocorrência no banco de dados
@@ -144,8 +163,8 @@ class FirebaseController extends Model {
     });
 
     print(id);
+    notifyListeners();
     return id != null;
-    // notifyListeners();
   }
 
   void deletaTodasOcorrencias() async {
@@ -189,13 +208,4 @@ class FirebaseController extends Model {
 
     return imagemURL;
   }
-
-  // escutaOcorrencias() async {
-  //   _db
-  //       .collection('ocorrencias')
-  //       .snapshots()
-  //       .listen((event) {
-  //     fetchOcorrencias();
-  //   });
-  // }
 }
