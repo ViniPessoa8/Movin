@@ -115,7 +115,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
 
   void carregaDados() {
     carregaUsuario();
-    carregaDados();
+    downloadImagem();
   }
 
   void downloadImagem() async {
