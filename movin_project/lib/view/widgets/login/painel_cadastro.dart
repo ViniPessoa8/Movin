@@ -111,10 +111,11 @@ class _PainelCadastroState extends State<PainelCadastro> {
                         children: [
                           TextFormField(
                             autofocus: true,
-                            autovalidate: true,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             controller: _controllerNome,
                             validator: (value) {
-                              if (value.isEmpty || value.contains('\d')) {
+                              if (value.isEmpty) {
                                 return 'Nome inválido';
                               }
                               return null;
@@ -128,7 +129,8 @@ class _PainelCadastroState extends State<PainelCadastro> {
                           ),
                           TextFormField(
                             autofocus: true,
-                            autovalidate: true,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             controller: _controllerEmail,
                             // initialValue: 'vini.pessoa7@gmail.com',
                             validator: (value) {
@@ -145,7 +147,8 @@ class _PainelCadastroState extends State<PainelCadastro> {
                             },
                           ),
                           TextFormField(
-                            autovalidate: true,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             controller: _controllerSenha,
                             // initialValue: '123456',
                             validator: (value) {
@@ -164,7 +167,8 @@ class _PainelCadastroState extends State<PainelCadastro> {
                           ),
                           TextFormField(
                             controller: _controllerConfirmaSenha,
-                            autovalidate: true,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                             // initialValue: '123456',
                             validator: (value) {
                               if (value != _controllerSenha.text) {
