@@ -79,23 +79,24 @@ class PainelOcorrencias extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<ModelView>(
-      builder: (context, child, model) {
-        return StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection('ocorrencias').snapshots(),
-          builder: (context, snapshot) {
-            // model.atualizaOcorrencias();
-            if (snapshot.hasData) {
-              return Center(
-                child: _imprimeOcorrencias(),
-              );
-            } else {
-              return Text('Carregado...');
-            }
-          },
-        );
+    return
+        // ScopedModelDescendant<ModelView>(
+        //   builder: (context, child, model) {
+        //     return
+        StreamBuilder(
+      stream: FirebaseFirestore.instance.collection('ocorrencias').snapshots(),
+      builder: (context, snapshot) {
+        // model.atualizaOcorrencias();
+        if (snapshot.hasData) {
+          return Center(
+            child: _imprimeOcorrencias(),
+          );
+        } else {
+          return Text('Carregado...');
+        }
       },
     );
+    // },
+    // );
   }
 }

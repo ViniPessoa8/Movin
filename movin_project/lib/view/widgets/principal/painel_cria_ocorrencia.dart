@@ -190,7 +190,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                         idUsuario: FirebaseAuth.instance.currentUser.uid,
                         endereco: endereco,
                       ));
-                      widget.mv.atualizaOcorrencias();
+                      // widget.mv.atualizaOcorrencias();
                       Navigator.of(context).pop();
                       showDialog(
                         context: context,
