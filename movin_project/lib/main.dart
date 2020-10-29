@@ -64,7 +64,8 @@ class _MyAppState extends State<MyApp> {
         // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
         PainelLogin.nomeRota: (ctx) => PainelLogin(modelView),
         PainelCadastro.nomeRota: (ctx) => PainelCadastro(modelView),
-        PainelConfiguracoesConta.nomeRota: (ctx) => PainelConfiguracoesConta(),
+        PainelConfiguracoesConta.nomeRota: (ctx) =>
+            PainelConfiguracoesConta(modelView),
         PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
       },
       debugShowCheckedModeBanner: false,

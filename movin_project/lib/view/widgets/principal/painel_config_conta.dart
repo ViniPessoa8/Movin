@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:movin_project/model_view/model_view.dart';
 
-class PainelConfiguracoesConta extends StatelessWidget {
+class PainelConfiguracoesConta extends StatefulWidget {
   static String nomeRota = '/perfil/config';
+  final ModelView mv;
 
+  PainelConfiguracoesConta(this.mv);
+
+  @override
+  _PainelConfiguracoesContaState createState() =>
+      _PainelConfiguracoesContaState();
+}
+
+class _PainelConfiguracoesContaState extends State<PainelConfiguracoesConta> {
   _buildFlatButton({
     @required BuildContext context,
     @required String titulo,
@@ -81,17 +91,17 @@ class PainelConfiguracoesConta extends StatelessWidget {
                   _buildFlatButton(
                     context: context,
                     titulo: 'ID',
-                    dados: 'SWEFOMQOM201W',
+                    dados: widget.mv.usuarioAtual.idUsuario,
                   ),
                   _buildFlatButton(
                     context: context,
                     titulo: 'Nome',
-                    dados: 'Nome Sobrenome Sobrenome Sobrenome',
+                    dados: widget.mv.usuarioAtual.nome,
                   ),
                   _buildFlatButton(
                     context: context,
                     titulo: 'E-mail',
-                    dados: 'emailemail@exemplo.com',
+                    dados: widget.mv.usuarioAtual.email,
                   ),
                   _buildFlatButton(
                     context: context,
