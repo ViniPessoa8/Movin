@@ -27,8 +27,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
 
   @override
   void initState() {
-    downloadImagem();
-    carregaUsuario();
+    carregaDados();
     super.initState();
   }
 
@@ -114,6 +113,11 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
     );
   }
 
+  void carregaDados() {
+    carregaUsuario();
+    carregaDados();
+  }
+
   void downloadImagem() async {
     Image img = await widget.mv.downloadImagem();
     imagemCarregada = true;
@@ -135,8 +139,9 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
     }
   }
 
-  void getAutor(String id) async {
-    Usuario _usuario = await widget.mv.getUsuario(id);
+  void carregaUsuario() async {
+    print('[DEBUG] carregaUsuario(${widget.ocorrencia.idUsuario})');
+    Usuario _usuario = await widget.mv.getUsuario(widget.ocorrencia.idUsuario);
     if (_usuario == null) {
       print('[ERRO] getAutor = NULL');
     } else {
@@ -144,9 +149,5 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
         _nomeUsuario = _usuario.nome;
       });
     }
-  }
-
-  void carregaUsuario() {
-    getAutor('${widget.ocorrencia.idUsuario}');
   }
 }
