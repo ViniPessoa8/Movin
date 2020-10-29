@@ -114,7 +114,7 @@ class ModelView extends Model {
     try {
       return await _fc.fetchUsuario(id);
     } catch (e) {
-      print('[ERRO]getUsuario($id): $e');
+      print('[ERRO] getUsuario($id): $e');
     }
   }
 
@@ -161,6 +161,7 @@ class ModelView extends Model {
     } else {
       ocorrencias = [];
     }
+    notifyListeners();
   }
 
   Future<void> atualizaLocalUsuario() async {
