@@ -133,6 +133,7 @@ class ModelView extends Model {
 
   void deslogar() {
     FirebaseAuth.instance.signOut();
+    usuarioAtual = null;
     notifyListeners();
   }
 
