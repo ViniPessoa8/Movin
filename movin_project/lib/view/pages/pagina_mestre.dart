@@ -45,6 +45,7 @@ class _PaginaMestreState extends State<PaginaMestre> {
                       print('LOGADO');
                       print(snapshot.data);
                       if (_deslogado) Navigator.of(context).pop();
+                      widget.mv.setUsuario(snapshot.data.uid);
                       return PaginaPrincipal(widget.mv);
                     } else {
                       _deslogado = true;

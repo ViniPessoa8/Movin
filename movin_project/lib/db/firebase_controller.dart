@@ -68,14 +68,30 @@ class FirebaseController extends Model {
   }
 
   Future<Usuario> fetchUsuario(String id) async {
-    print('fetchUsuario()');
+    print('fetchUsuario($id)');
     Usuario _usuario;
     if (_dbIniciado) {
-      await _db
-          .collection('users')
-          .doc()
-          .get()
-          .then((value) => print('USUARIO: ${value.data()}'));
+      print('[DEBUG] fetchUsuario(): dbIniciado');
+      try {
+        var _usuariosRef = _db.collection('usuario');
+
+        _usuariosRef.where('id', isEqualTo: id).get().then((value) {
+          value.docs.forEach((element) {
+            var _user = element.data();
+            _usuario = Usuario(
+              email: _user['email'],
+              nome: _user['nome'],
+              pcd: _user['pcd'],
+              urlFotoPerfil: _user['urlFotoPerfil'],
+              idUsuario: _user['id'],
+            );
+            print('[DEBUG] element: ${element.data()['email']}');
+            return _usuario;
+          });
+        });
+      } catch (e) {
+        print('[ERRO] fetchUsuario($id): $e');
+      }
     }
   }
 

@@ -53,7 +53,6 @@ class _PainelLoginState extends State<PainelLogin> {
       }
       if (_resposta != null) {
         print(_resposta);
-        Navigator.pop(context);
       } else {
         print('LOGIN INVALIDOOO');
       }

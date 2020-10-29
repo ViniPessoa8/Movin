@@ -31,6 +31,8 @@ class ModelView extends Model {
   FirebaseController _fc;
   bool _dbIniciado;
   bool _aguardandoResposta;
+  String _uidAtual;
+  Usuario _usuarioAtual;
 
   ModelView() {
     _usuarioLogado = false;
@@ -63,7 +65,8 @@ class ModelView extends Model {
     try {
       UserCredential _uc = await _fc.addUsuarioAuth(usuario.email, senha);
       print('[DEBUG] criaUsuario() _uc.user.uid: ${_uc.user.uid}');
-      _fc.addUsuarioBD(_uc.user.uid, usuario);
+      setUsuario(_uc.user.uid);
+      _fc.addUsuarioBD(_uidAtual, usuario);
       notifyListeners();
     } catch (e) {
       print('[ERRO] mv.criaUsuario(): $e');
@@ -71,18 +74,18 @@ class ModelView extends Model {
   }
 
   Future<UserCredential> realizaLogin(String email, String senha) async {
-    UserCredential _userCredential;
+    UserCredential _uc;
     if (_dbIniciado) {
       _aguardandoResposta = true;
       notifyListeners();
 
       print('realiza login');
       try {
-        _userCredential =
-            await FirebaseAuth.instance.signInWithEmailAndPassword(
+        _uc = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: senha,
         );
+        setUsuario(_uc.user.uid);
         print('login completo');
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -96,7 +99,34 @@ class ModelView extends Model {
       _aguardandoResposta = false;
       notifyListeners();
     }
-    return _userCredential;
+    return _uc;
+  }
+
+  void setUsuario(String id) async {
+    print('[DEBUG] setUsuario($id)');
+    _uidAtual = id;
+    if (await getUsuarioAtual() != null) {
+      print('[DEBUG] setUsuario(): _usuarioAtual.nome: ${_usuarioAtual.email}');
+    }
+  }
+
+  Future<Usuario> getUsuario(String id) async {
+    try {
+      return await _fc.fetchUsuario(id);
+    } catch (e) {
+      print('[ERRO]getUsuario($id): $e');
+    }
+  }
+
+  Future<Usuario> getUsuarioAtual() async {
+    print('[DEBUG] getUsuarioAtual(): _uidAtual = $_uidAtual');
+    try {
+      var _usuario = await _fc.fetchUsuario(_uidAtual);
+      _usuarioAtual = _usuario;
+      return _usuario;
+    } catch (e) {
+      print('[ERRO]getUsuarioAtual(): $e');
+    }
   }
 
   void escutaLogin(BuildContext context) {
@@ -111,11 +141,6 @@ class ModelView extends Model {
       }
     });
     // modelView.realizaLogin();
-  }
-
-  Future<Usuario> getUsuario(String id) async {
-    Usuario _usuario = await _fc.fetchUsuario(id);
-    return _usuario;
   }
 
   void deslogar() {
