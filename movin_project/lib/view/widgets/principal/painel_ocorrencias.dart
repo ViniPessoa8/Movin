@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:movin_project/model_view/model_view.dart';
@@ -80,8 +81,19 @@ class PainelOcorrencias extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<ModelView>(
       builder: (context, child, model) {
-        return Center(
-          child: _imprimeOcorrencias(),
+        return StreamBuilder(
+          stream:
+              FirebaseFirestore.instance.collection('ocorrencias').snapshots(),
+          builder: (context, snapshot) {
+            // model.atualizaOcorrencias();
+            if (snapshot.hasData) {
+              return Center(
+                child: _imprimeOcorrencias(),
+              );
+            } else {
+              return Text('Carregado...');
+            }
+          },
         );
       },
     );

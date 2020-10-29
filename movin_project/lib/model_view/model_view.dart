@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geopoint/geopoint.dart' as gp;
@@ -148,6 +149,7 @@ class ModelView extends Model {
   void carregaDados() async {
     await atualizaLocalUsuario();
     await atualizaOcorrencias();
+    escutaMudancaOcorrencias();
     notifyListeners();
     // escutaLogin();
   }
@@ -162,6 +164,24 @@ class ModelView extends Model {
       ocorrencias = [];
     }
     notifyListeners();
+  }
+
+  void escutaMudancaOcorrencias() {
+    FirebaseFirestore.instance
+        .collection('ocorrencias')
+        .snapshots()
+        .listen((event) {
+      atualizaOcorrencias();
+      print('\n[DEBUG] escutaMudancaOcorrencias()');
+
+      // });
+      // .on
+      // .asStream()
+      // .listen((event) {/
+      // atualizaOcorrencias();
+      // event.docs.forEach((element) {
+      // });
+    });
   }
 
   Future<void> atualizaLocalUsuario() async {
