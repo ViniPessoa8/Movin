@@ -44,9 +44,27 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
             maxLines: 1,
             softWrap: false,
           ),
-          Text(
-            widget.mv.formatData(widget.ocorrencia.data),
-            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 18),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.mv.formatData(widget.ocorrencia.data),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(fontSize: 18),
+              ),
+              Text(
+                'Autor: \n$_nomeUsuario',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(fontSize: 20),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+                softWrap: false,
+              ),
+            ],
           ),
           SizedBox(
             height: 15,
@@ -94,13 +112,6 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
                 ),
           SizedBox(
             height: 15,
-          ),
-          Text(
-            _nomeUsuario,
-            style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 20),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 3,
-            softWrap: false,
           ),
           SizedBox(height: 15),
           Divider(thickness: 1, color: Colors.black),
