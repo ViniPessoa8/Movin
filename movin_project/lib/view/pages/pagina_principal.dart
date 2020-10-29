@@ -44,7 +44,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
         'titulo': 'Ocorrências',
       },
       {
-        'pagina': PainelPerfil(),
+        'pagina': PainelPerfil(widget.mv),
         'titulo': 'Perfil',
       },
     ];
@@ -196,14 +196,11 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
       model: widget.mv,
       child: ScopedModelDescendant<ModelView>(
         builder: (context, child, model) {
-          print('a');
           if (model.dbIniciado) {
-            print('db iniciado');
             return StreamBuilder(
               initialData: PainelCarregamento(),
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context, snapshot) {
-                print('b');
                 if (!snapshot.hasData) {
                   return PainelCarregamento();
                 }

@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/widgets/principal/painel_config_conta.dart';
 import 'package:movin_project/view/widgets/principal/painel_cria_ocorrencia.dart';
 
-class PainelPerfil extends StatelessWidget {
+class PainelPerfil extends StatefulWidget {
+  final ModelView mv;
+
+  PainelPerfil(this.mv);
+
+  @override
+  _PainelPerfilState createState() => _PainelPerfilState();
+}
+
+class _PainelPerfilState extends State<PainelPerfil> {
   Widget _buildBotaoConfig(
       {@required BuildContext context,
       @required String titulo,
@@ -49,11 +59,15 @@ class PainelPerfil extends StatelessWidget {
                   size: 120,
                 ),
                 Text(
-                  'Nome',
+                  widget.mv.usuarioCarregado
+                      ? widget.mv.usuarioAtual.nome
+                      : '(Carregando...)',
                   style: Theme.of(context).textTheme.headline6,
                 ),
                 Text(
-                  'Email',
+                  widget.mv.usuarioCarregado
+                      ? widget.mv.usuarioAtual.email
+                      : '(Carregando...)',
                   style: Theme.of(context).textTheme.headline5,
                 ),
               ],

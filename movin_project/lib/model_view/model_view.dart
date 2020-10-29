@@ -32,7 +32,7 @@ class ModelView extends Model {
   bool _dbIniciado;
   bool _aguardandoResposta;
   String _uidAtual;
-  Usuario _usuarioAtual;
+  Usuario usuarioAtual;
 
   ModelView() {
     _usuarioLogado = false;
@@ -60,6 +60,7 @@ class ModelView extends Model {
   get usuarioLogado => _usuarioLogado;
   get carregouOcorrencias => ocorrencias != null;
   get carregouLocalUsuario => localUsuario != null;
+  get usuarioCarregado => usuarioAtual != null;
 
   void criaUsuario(Usuario usuario, String senha) async {
     try {
@@ -74,12 +75,12 @@ class ModelView extends Model {
   }
 
   Future<UserCredential> realizaLogin(String email, String senha) async {
+    print('[DEBUG] realizaLogin($email, $senha)');
     UserCredential _uc;
     if (_dbIniciado) {
       _aguardandoResposta = true;
-      notifyListeners();
+      // notifyListeners();
 
-      print('realiza login');
       try {
         _uc = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
@@ -105,9 +106,8 @@ class ModelView extends Model {
   void setUsuario(String id) async {
     print('[DEBUG] setUsuario($id)');
     _uidAtual = id;
-    if (await getUsuarioAtual() != null) {
-      print('[DEBUG] setUsuario(): _usuarioAtual.nome: ${_usuarioAtual.email}');
-    }
+    if (await getUsuarioAtual() != null) {}
+    // notifyListeners();
   }
 
   Future<Usuario> getUsuario(String id) async {
@@ -121,26 +121,14 @@ class ModelView extends Model {
   Future<Usuario> getUsuarioAtual() async {
     print('[DEBUG] getUsuarioAtual(): _uidAtual = $_uidAtual');
     try {
-      var _usuario = await _fc.fetchUsuario(_uidAtual);
-      _usuarioAtual = _usuario;
-      return _usuario;
+      Usuario _user = await _fc.fetchUsuario(_uidAtual);
+      await _fc.fetchUsuario(_uidAtual).then((value) {
+        usuarioAtual = value;
+        return value;
+      });
     } catch (e) {
       print('[ERRO]getUsuarioAtual(): $e');
     }
-  }
-
-  void escutaLogin(BuildContext context) {
-    print('escuta login.');
-    FirebaseAuth.instance.authStateChanges().listen((User user) {
-      if (user == null) {
-        print('Erro no login.');
-      } else {
-        print('Usuário logado com sucesso.');
-        Navigator.of(context).pushReplacementNamed(PaginaPrincipal.nomeRota);
-        // _usuarioLogado = true;
-      }
-    });
-    // modelView.realizaLogin();
   }
 
   void deslogar() {
