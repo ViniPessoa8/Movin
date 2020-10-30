@@ -8,7 +8,7 @@ import 'package:movin_project/utils/dados_internos.dart';
 import 'package:movin_project/view/widgets/login/painel_cadastro.dart';
 import 'package:movin_project/view/widgets/login/painel_carregamento.dart';
 import 'package:movin_project/view/widgets/login/painel_login.dart';
-import 'package:movin_project/view/widgets/principal/painel_boas_vindas.dart';
+import 'package:movin_project/view/widgets/login/painel_boas_vindas.dart';
 import 'package:movin_project/view/widgets/principal/painel_drawer.dart';
 import 'package:movin_project/view/widgets/principal/painel_mapa.dart';
 import 'package:movin_project/view/widgets/principal/painel_ocorrencias.dart';
