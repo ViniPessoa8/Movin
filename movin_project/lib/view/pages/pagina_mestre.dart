@@ -17,8 +17,6 @@ class PaginaMestre extends StatefulWidget {
 }
 
 class _PaginaMestreState extends State<PaginaMestre> {
-  bool _deslogado = false;
-
   @override
   Widget build(BuildContext context) {
     return ScopedModel<ModelView>(
@@ -44,11 +42,11 @@ class _PaginaMestreState extends State<PaginaMestre> {
                       //LOGADO
                       print('LOGADO');
                       print(snapshot.data);
-                      if (_deslogado) Navigator.of(context).pop();
+
                       widget.mv.setUsuario(snapshot.data.uid);
                       return PaginaPrincipal(widget.mv);
                     } else {
-                      _deslogado = true;
+                      widget.mv.deslogado = true;
                       print('DESLOGADO');
                       //DESLOGADO
                       return PaginaLogin();

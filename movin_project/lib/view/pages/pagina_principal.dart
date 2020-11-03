@@ -160,6 +160,15 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     Color primaryColor = Theme.of(context).primaryColor;
     Color accentColor = Theme.of(context).accentColor;
 
+    // popTelaLogin();
+    print('[DEBUG] widget.mv.deslogado = ${widget.mv.deslogado}');
+    if (widget.mv.deslogado) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pop();
+        widget.mv.deslogado = false;
+      });
+    }
+
     final paginaPrincipal = ScopedModel<ModelView>(
       model: widget.mv,
       child: Scaffold(

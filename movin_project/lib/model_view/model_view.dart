@@ -34,12 +34,14 @@ class ModelView extends Model {
   bool _aguardandoResposta;
   String _uidAtual;
   Usuario usuarioAtual;
+  bool deslogado;
 
   ModelView() {
     _usuarioLogado = false;
     _dbIniciado = false;
     _aguardandoResposta = false;
     indexPainelPrincipal = 0;
+    deslogado = false;
     iniciaDb();
     // ocorrencias = [];
   }
