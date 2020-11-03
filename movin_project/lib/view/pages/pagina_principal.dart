@@ -76,7 +76,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
         icone,
         size: 35,
       ),
-      title: Text(titulo),
+      label: titulo,
     );
   }
 
