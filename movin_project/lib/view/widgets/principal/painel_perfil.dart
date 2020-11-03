@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/widgets/principal/painel_config_conta.dart';
 import 'package:movin_project/view/widgets/principal/painel_cria_ocorrencia.dart';
@@ -13,6 +14,9 @@ class PainelPerfil extends StatefulWidget {
 }
 
 class _PainelPerfilState extends State<PainelPerfil> {
+  String _nomeUsuario;
+  String _emailUsuario;
+
   Widget _buildBotaoConfig(
       {@required BuildContext context,
       @required String titulo,
@@ -44,6 +48,20 @@ class _PainelPerfilState extends State<PainelPerfil> {
     );
   }
 
+  void carregaDados() async {
+    if (widget.mv.dbIniciado && widget.mv.usuarioCarregado) {
+      setState(() {
+        _nomeUsuario = widget.mv.usuarioAtual.nome;
+        _emailUsuario = widget.mv.usuarioAtual.email;
+      });
+    } else {
+      setState(() {
+        _nomeUsuario = '(Carregando...)';
+        _emailUsuario = '(Carregando...)';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -59,15 +77,11 @@ class _PainelPerfilState extends State<PainelPerfil> {
                   size: 120,
                 ),
                 Text(
-                  widget.mv.usuarioCarregado
-                      ? widget.mv.usuarioAtual.nome
-                      : '(Carregando...)',
+                  _nomeUsuario,
                   style: Theme.of(context).textTheme.headline6,
                 ),
                 Text(
-                  widget.mv.usuarioCarregado
-                      ? widget.mv.usuarioAtual.email
-                      : '(Carregando...)',
+                  _emailUsuario,
                   style: Theme.of(context).textTheme.headline5,
                 ),
               ],
