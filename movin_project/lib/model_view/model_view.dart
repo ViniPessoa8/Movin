@@ -142,11 +142,9 @@ class ModelView extends Model {
 
   /*** MAIN ***/
   int indexPainelPrincipal;
-  bool _dadosCarregados = false;
 
   get getOcorrencias => ocorrencias;
   get getEndereco => enderecoUsuario;
-  get carregouDados => _dadosCarregados;
 
   void carregaDados() async {
     await atualizaLocalUsuario();

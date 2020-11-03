@@ -54,16 +54,16 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
                     .bodyText1
                     .copyWith(fontSize: 18),
               ),
-              Text(
-                'Autor: \n$_nomeUsuario',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .copyWith(fontSize: 20),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
-                softWrap: false,
-              ),
+              // Text(
+              //   'Autor: \n$_nomeUsuario',
+              //   style: Theme.of(context)
+              //       .textTheme
+              //       .bodyText1
+              //       .copyWith(fontSize: 20),
+              //   overflow: TextOverflow.ellipsis,
+              //   maxLines: 3,
+              //   softWrap: false,
+              // ),
             ],
           ),
           SizedBox(

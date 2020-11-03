@@ -104,8 +104,11 @@ class _PainelMapaState extends State<PainelMapa> {
   }
 
   void addOcorrencias() {
-    if (widget.mv.carregouDados) {
+    print('[DEBUG] addOcorrencias()');
+    if (widget.mv.carregouOcorrencias) {
+      print('[DEBUG] addOcorrencias() carregouDados');
       widget.mv.ocorrencias.forEach((element) {
+        print('[DEBUG] addOcorrencia(${element.idOcorrencia})');
         addOcorrencia(element);
       });
     }
