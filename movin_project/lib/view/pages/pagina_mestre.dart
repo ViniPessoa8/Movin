@@ -66,7 +66,7 @@ class _PaginaMestreState extends State<PaginaMestre> {
               },
             );
           }
-          return Center(child: CircularProgressIndicator());
+          return PainelCarregamento();
         },
       ),
     );
