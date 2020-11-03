@@ -34,6 +34,7 @@ class _PainelMapaState extends State<PainelMapa> {
   @override
   Widget build(BuildContext context) {
     // widget.mv.deletaTodasOcorrencias();
+    addOcorrencias();
 
     return _localizacao == null
         ? Center(
@@ -175,6 +176,5 @@ class _PainelMapaState extends State<PainelMapa> {
             });
       });
     });
-    addOcorrencias();
   }
 }
