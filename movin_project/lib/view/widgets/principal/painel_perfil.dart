@@ -17,6 +17,12 @@ class _PainelPerfilState extends State<PainelPerfil> {
   String _nomeUsuario;
   String _emailUsuario;
 
+  @override
+  initState() {
+    carregaDados();
+    super.initState();
+  }
+
   Widget _buildBotaoConfig(
       {@required BuildContext context,
       @required String titulo,
@@ -28,7 +34,7 @@ class _PainelPerfilState extends State<PainelPerfil> {
         vertical: 20,
       ),
       child: FlatButton(
-        onPressed: onPressed,
+        onPressed: () => onPressed,
         child: Column(
           children: [
             Icon(icone, size: 80),
