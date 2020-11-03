@@ -38,6 +38,7 @@ class _PainelLoginState extends State<PainelLogin> {
           _emailUsuario,
           _senhaUsuario,
         );
+        widget.mv.getUsuarioAtual();
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           setState(() {
