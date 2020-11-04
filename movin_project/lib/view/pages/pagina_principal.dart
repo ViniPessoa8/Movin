@@ -34,11 +34,13 @@ class PaginaPrincipal extends StatefulWidget {
 
 class _PaginaPrincipalState extends State<PaginaPrincipal> {
   List<Map<String, Object>> paginas;
-  ValueNotifier<LatLng> _localApontado;
+  // ValueNotifier<LatLng> _localApontado;
+  ValueNotifier<Address> _enderecoApontado;
 
   @override
   void initState() {
-    _localApontado = widget.mv.localApontadoListenable;
+    // _localApontado = widget.mv.lo;
+    _enderecoApontado = widget.mv.enderecoApontadoListenable;
     paginas = [
       {
         'pagina': PainelMapa(widget.mv),
@@ -167,9 +169,17 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
   //   widget.mv.localApontadoListenable.value = a;
   // }
 
-  void updateLocalApontado() {
-    print('UPDATE LOCAL APONTADO');
-    _localApontado.value = widget.mv.localApontado;
+  // void updateLocalApontado() {
+  //   print('UPDATE LOCAL APONTADO');
+  //   _localApontado.value = widget.mv.localApontado;
+  // }
+
+  void getEndereco(LatLng local) async {
+    _enderecoApontado.value = await widget.mv.getEnderecoBD(
+      local.latitude,
+      local.longitude,
+    );
+    // Address _endereco = model.enderecoApontado;
   }
 
   @override
@@ -195,25 +205,22 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
               ),
               body: ScopedModelDescendant<ModelView>(
                   builder: (context, child, model) {
-                updateLocalApontado();
+                // updateLocalApontado();
                 return Column(
                   children: [
                     paginas[model.indexPainelPrincipal]['pagina'],
                     Container(
                       child: Column(
                         children: [
-                          ValueListenableBuilder<LatLng>(
-                            valueListenable: _localApontado,
+                          ValueListenableBuilder<Address>(
+                            valueListenable: _enderecoApontado,
                             child: Text('(Carregando...)'),
                             builder: (context, value, child) {
                               print('[DEBUG] ValueListenableBuilder');
                               if (value != null &&
                                   model.enderecoApontado != null) {
-                                model.getEnderecoBD(
-                                    value.latitude, value.longitude);
-                                Address _endereco = model.enderecoApontado;
-                                return Text(
-                                    '${model.formatEndereco(_endereco)}');
+                                // getEndereco(value);
+                                return Text('${model.formatEndereco(value)}');
                               }
                               return Text('(Carregando)');
                             },

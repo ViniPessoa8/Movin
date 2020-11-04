@@ -39,10 +39,10 @@ class ModelView extends Model {
   bool modoSelecao;
   mb.LatLng localApontado;
   Address enderecoApontado;
-  ValueNotifier<mb.LatLng> localApontadoListenable;
+  ValueNotifier<Address> enderecoApontadoListenable;
 
   ModelView() {
-    localApontadoListenable = ValueNotifier<mb.LatLng>(null);
+    enderecoApontadoListenable = ValueNotifier<Address>(null);
     _usuarioLogado = false;
     _dbIniciado = false;
     _aguardandoResposta = false;
@@ -167,10 +167,13 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  void updateLocalApontado(mb.LatLng local) {
+  void updateLocalApontado(mb.LatLng local) async {
     print('[DEBUG] updateLocalApontado($local)');
     localApontado = local;
-    localApontadoListenable.value = local;
+    enderecoApontadoListenable.value = await getEnderecoBD(
+      local.latitude,
+      local.longitude,
+    );
     // localApontadoListenable.value = local;
     // notifyListeners();
   }

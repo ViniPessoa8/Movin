@@ -192,10 +192,10 @@ class _PainelMapaState extends State<PainelMapa> {
       LatLng _local = _mapBoxController.cameraPosition.target;
       debugPrint('add ponto( ${_local.latitude}, ${_local.longitude})');
 
-      final ByteData bytes = await rootBundle.load("assets/media/marker.png");
-      final Uint8List list = bytes.buffer.asUint8List();
-      _mapBoxController.addImage('marcador', list);
       if (marcador == null) {
+        final ByteData bytes = await rootBundle.load("assets/media/marker.png");
+        final Uint8List list = bytes.buffer.asUint8List();
+        _mapBoxController.addImage('marcador', list);
         var _symbol = await _mapBoxController.addSymbol(
           SymbolOptions(
             geometry: _centroMapa,
@@ -210,30 +210,41 @@ class _PainelMapaState extends State<PainelMapa> {
       }
       _mapBoxController.addListener(() {
         print('_mapBoxController LISTENED');
-        updateCentroMapa();
+        _mapBoxController.isCameraMoving
+            ? updateMarcadorCentral()
+            : updateLocalCentro();
       });
     }
   }
 
-  void updateCentroMapa() async {
+  void updateMarcadorCentral() {
+    print('[DEBUG] UpdateMarcadorCentral()');
     if (_mapBoxController != null) {
       LatLng posCamera = _mapBoxController.cameraPosition.target;
       if (posCamera != _centroMapa) {
         _centroMapa = _mapBoxController.cameraPosition.target;
-        SymbolOptions mudancas = marcador.options.copyWith(
+        SymbolOptions _mudancas = marcador.options.copyWith(
           SymbolOptions(
             geometry: _centroMapa,
           ),
         );
-        print('[DEBUG] updateCentroMapa updateLocalApontado($_centroMapa)');
-        widget.mv.updateLocalApontado(LatLng(
-          _centroMapa.latitude,
-          _centroMapa.longitude,
-        ));
-        _mapBoxController.updateSymbol(marcador, mudancas);
-        debugPrint(
-            'add ponto( ${_centroMapa.latitude}, ${_centroMapa.longitude})');
+        _mapBoxController.updateSymbol(marcador, _mudancas);
       }
+    }
+  }
+
+  void updateLocalCentro() {
+    print('[DEBUG] UpdateLocalCentro()');
+    if (_mapBoxController != null) {
+      LatLng posCamera = _mapBoxController.cameraPosition.target;
+      _centroMapa = _mapBoxController.cameraPosition.target;
+      print('[DEBUG] updateCentroMapa updateLocalApontado($_centroMapa)');
+      widget.mv.updateLocalApontado(LatLng(
+        _centroMapa.latitude,
+        _centroMapa.longitude,
+      ));
+      debugPrint(
+          'add ponto( ${_centroMapa.latitude}, ${_centroMapa.longitude})');
     }
   }
 
