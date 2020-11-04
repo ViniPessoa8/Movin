@@ -25,6 +25,9 @@ class _PainelMapaState extends State<PainelMapa> {
   MapboxMapController _mapBoxController;
   final double _userLocationZoom = 14.0;
 
+  LatLng _centroMapa;
+  Symbol marcador;
+
   @override
   void initState() {
     updateLocalizacao();
@@ -33,8 +36,15 @@ class _PainelMapaState extends State<PainelMapa> {
 
   @override
   Widget build(BuildContext context) {
-    // widget.mv.deletaTodasOcorrencias();
-    addOcorrencias();
+    if (widget.mv.modoSelecao) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        marcadorCentralizado();
+      });
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        addOcorrencias();
+      });
+    }
 
     return _localizacao == null
         ? Center(
@@ -63,6 +73,43 @@ class _PainelMapaState extends State<PainelMapa> {
           );
   }
 
+  Widget buildMapBox(
+      {@required double latitude,
+      @required double longitude,
+      double zoom,
+      double height = 700.0}) {
+    return Container(
+      height: widget.mv.modoSelecao ? 550.0 : height,
+      child: widget.mv.modoSelecao
+          ? new MapboxMap(
+              initialCameraPosition: new CameraPosition(
+                  target: LatLng(
+                    latitude,
+                    longitude,
+                  ),
+                  zoom: _userLocationZoom),
+              accessToken: MAP_BOX_TOKEN,
+              zoomGesturesEnabled: true,
+              trackCameraPosition: true,
+              myLocationTrackingMode: MyLocationTrackingMode.Tracking,
+              onMapCreated: (controller) => onMapCreate(controller),
+            )
+          : new MapboxMap(
+              initialCameraPosition: new CameraPosition(
+                  target: LatLng(
+                    latitude,
+                    longitude,
+                  ),
+                  zoom: _userLocationZoom),
+              accessToken: MAP_BOX_TOKEN,
+              myLocationEnabled: true,
+              zoomGesturesEnabled: true,
+              myLocationRenderMode: MyLocationRenderMode.NORMAL,
+              onMapCreated: (controller) => onMapCreate(controller),
+            ),
+    );
+  }
+
   Future<void> updateLocalizacao() async {
     Location location = new Location();
     bool _serviceEnabled;
@@ -89,6 +136,7 @@ class _PainelMapaState extends State<PainelMapa> {
 
     setState(() {
       _localizacao = _locationData;
+      _centroMapa = LatLng(_localizacao.latitude, _localizacao.longitude);
     });
   }
 
@@ -116,65 +164,83 @@ class _PainelMapaState extends State<PainelMapa> {
   }
 
   void addOcorrencia(Ocorrencia ocorrencia) async {
-    LatLng _local = LatLng(
-      ocorrencia.local.latitude,
-      ocorrencia.local.longitude,
-    );
-    print('add ponto( ${_local.latitude}, ${_local.longitude})');
+    if (_mapBoxController != null) {
+      LatLng _local = LatLng(
+        ocorrencia.local.latitude,
+        ocorrencia.local.longitude,
+      );
+      print('add ponto( ${_local.latitude}, ${_local.longitude})');
 
-    final ByteData bytes = await rootBundle.load("assets/media/marker.png");
-    final Uint8List list = bytes.buffer.asUint8List();
-    _mapBoxController.addImage('marcador', list);
-    _mapBoxController.addSymbol(
-        SymbolOptions(
-          geometry: _local,
-          iconImage: 'marcador',
-          iconSize: 0.5,
-          iconOffset: Offset(0, -45),
-        ),
-        {'ocorrencia': ocorrencia});
+      final ByteData bytes = await rootBundle.load("assets/media/marker.png");
+      final Uint8List list = bytes.buffer.asUint8List();
+      _mapBoxController.addImage('marcador', list);
+      _mapBoxController.addSymbol(
+          SymbolOptions(
+            geometry: _local,
+            iconImage: 'marcador',
+            iconSize: 0.5,
+            iconOffset: Offset(0, -45),
+          ),
+          {'ocorrencia': ocorrencia});
+    }
   }
 
-  Widget buildMapBox(
-      {@required double latitude,
-      @required double longitude,
-      double zoom,
-      double height = 700.0}) {
-    return Container(
-      height: height,
-      child: new MapboxMap(
-        // trackCameraPosition: true,
-        initialCameraPosition: new CameraPosition(
-            target: LatLng(
-              latitude,
-              longitude,
-            ),
-            zoom: _userLocationZoom),
-        accessToken: MAP_BOX_TOKEN,
-        myLocationEnabled: true,
-        zoomGesturesEnabled: true,
-        myLocationRenderMode: MyLocationRenderMode.NORMAL,
-        // myLocationTrackingMode: MyLocationTrackingMode.Tracking,
-        onMapCreated: onMapCreate,
-        // onMapClick: (point, coordinates) => addPonto(coordinates),
-      ),
-    );
+  void marcadorCentralizado() async {
+    if (_mapBoxController != null) {
+      // _mapBoxController.isCameraMoving.
+
+      LatLng _local = _mapBoxController.cameraPosition.target;
+      debugPrint('add ponto( ${_local.latitude}, ${_local.longitude})');
+
+      final ByteData bytes = await rootBundle.load("assets/media/marker.png");
+      final Uint8List list = bytes.buffer.asUint8List();
+      _mapBoxController.addImage('marcador', list);
+      if (marcador == null) {
+        var _symbol = await _mapBoxController.addSymbol(
+          SymbolOptions(
+            geometry: _centroMapa,
+            iconImage: 'marcador',
+            iconSize: 0.5,
+            iconOffset: Offset(0, -45),
+          ),
+        );
+        setState(() {
+          marcador = _symbol;
+        });
+      }
+      _mapBoxController.addListener(() {
+        print('_mapBoxController LISTENED');
+        updateCentroMapa();
+      });
+    }
+  }
+
+  void updateCentroMapa() async {
+    if (_mapBoxController != null) {
+      LatLng posCamera = _mapBoxController.cameraPosition.target;
+      if (posCamera != _centroMapa) {
+        _centroMapa = _mapBoxController.cameraPosition.target;
+        SymbolOptions mudancas = marcador.options.copyWith(
+          SymbolOptions(
+            geometry: _centroMapa,
+          ),
+        );
+        print('[DEBUG] updateCentroMapa updateLocalApontado($_centroMapa)');
+        widget.mv.updateLocalApontado(LatLng(
+          _centroMapa.latitude,
+          _centroMapa.longitude,
+        ));
+        _mapBoxController.updateSymbol(marcador, mudancas);
+        debugPrint(
+            'add ponto( ${_centroMapa.latitude}, ${_centroMapa.longitude})');
+      }
+    }
   }
 
   void onMapCreate(MapboxMapController controller) {
+    print('[DEBUG] onMapCreate() controller = $controller');
     setState(() {
       _mapBoxController = controller;
-      _mapBoxController.onSymbolTapped.add((ocorrencia) {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return ItemOcorrenciaInfo(
-                widget.mv,
-                ocorrencia.data['ocorrencia'],
-                true,
-              );
-            });
-      });
     });
   }
 }

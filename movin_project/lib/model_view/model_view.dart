@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geopoint/geopoint.dart' as gp;
@@ -35,13 +36,20 @@ class ModelView extends Model {
   String _uidAtual;
   Usuario usuarioAtual;
   bool deslogado;
+  bool modoSelecao;
+  mb.LatLng localApontado;
+  Address enderecoApontado;
+  ValueNotifier<mb.LatLng> localApontadoListenable;
 
   ModelView() {
+    localApontadoListenable = ValueNotifier<mb.LatLng>(null);
     _usuarioLogado = false;
     _dbIniciado = false;
     _aguardandoResposta = false;
     indexPainelPrincipal = 0;
     deslogado = false;
+    modoSelecao = false;
+    atualizaOcorrencias();
     iniciaDb();
     // ocorrencias = [];
   }
@@ -154,6 +162,19 @@ class ModelView extends Model {
     // escutaLogin();
   }
 
+  void mudaModo() {
+    modoSelecao = !modoSelecao;
+    notifyListeners();
+  }
+
+  void updateLocalApontado(mb.LatLng local) {
+    print('[DEBUG] updateLocalApontado($local)');
+    localApontado = local;
+    localApontadoListenable.value = local;
+    // localApontadoListenable.value = local;
+    // notifyListeners();
+  }
+
   //Atualizadores
 
   Future<void> atualizaOcorrencias({String bairro}) async {
@@ -161,7 +182,7 @@ class ModelView extends Model {
     if (_dbIniciado) {
       ocorrencias = await _fc.fetchOcorrencias(bairro: bairro);
     } else {
-      ocorrencias = [];
+      ocorrencias = null;
     }
     notifyListeners();
   }
@@ -295,6 +316,7 @@ class ModelView extends Model {
   Future<Address> getEnderecoBD(double latitude, double longitude) async {
     Address result;
     result = await _fc.fetchEndereco(latitude, longitude);
+    enderecoApontado = result;
     return result;
   }
 }

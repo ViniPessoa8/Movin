@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:movin_project/db/firebase_controller.dart';
 import 'package:movin_project/main.dart';
 import 'package:movin_project/model_view/model_view.dart';
@@ -31,9 +34,11 @@ class PaginaPrincipal extends StatefulWidget {
 
 class _PaginaPrincipalState extends State<PaginaPrincipal> {
   List<Map<String, Object>> paginas;
+  ValueNotifier<LatLng> _localApontado;
 
   @override
   void initState() {
+    _localApontado = widget.mv.localApontadoListenable;
     paginas = [
       {
         'pagina': PainelMapa(widget.mv),
@@ -102,11 +107,12 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
         ),
         SpeedDialChild(
           child: Icon(
-            Icons.filter,
+            Icons.warning,
             color: Colors.white,
           ),
-          label: 'Filtro',
+          label: 'Teste',
           backgroundColor: Colors.purple,
+          onTap: widget.mv.mudaModo,
         ),
       ],
     );
@@ -136,23 +142,34 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
 
   Widget _buildTituloAppbar() {
     String texto;
-
-    switch (widget.mv.indexPainelPrincipal) {
-      case 0:
-        texto = 'Home';
-        break;
-      case 1:
-        texto = 'Ocorrências';
-        break;
-      case 2:
-        texto = 'Perfil';
-        break;
-      default:
-        texto = 'Movin';
-        break;
+    if (widget.mv.modoSelecao) {
+      return Text('Escolha um local');
+    } else {
+      switch (widget.mv.indexPainelPrincipal) {
+        case 0:
+          texto = 'Home';
+          break;
+        case 1:
+          texto = 'Ocorrências';
+          break;
+        case 2:
+          texto = 'Perfil';
+          break;
+        default:
+          texto = 'Movin';
+          break;
+      }
     }
-
     return Text(texto);
+  }
+
+  // void teste() {
+  //   widget.mv.localApontadoListenable.value = a;
+  // }
+
+  void updateLocalApontado() {
+    print('UPDATE LOCAL APONTADO');
+    _localApontado.value = widget.mv.localApontado;
   }
 
   @override
@@ -171,34 +188,83 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
 
     final paginaPrincipal = ScopedModel<ModelView>(
       model: widget.mv,
-      child: Scaffold(
-        appBar: AppBar(
-          title: _buildTituloAppbar(),
-        ),
-        body:
-            ScopedModelDescendant<ModelView>(builder: (context, child, model) {
-          return paginas[model.indexPainelPrincipal]['pagina'];
-        }),
-        drawer: PainelDrawer(widget.mv),
-        bottomNavigationBar: ScopedModelDescendant<ModelView>(
-          builder: (context, child, model) {
-            return BottomNavigationBar(
-              onTap: model.selecionaPagina,
-              backgroundColor: primaryColor,
-              unselectedItemColor: Colors.white,
-              selectedItemColor: accentColor,
-              currentIndex: model.indexPainelPrincipal,
-              type: BottomNavigationBarType.fixed,
-              items: [
-                _buildNavBarItem('Mapa', Icons.map),
-                _buildNavBarItem('Ocorrências', Icons.warning),
-                _buildNavBarItem('Perfil', Icons.person),
-              ],
-            );
-          },
-        ),
-        floatingActionButton: _buildFloatingButton(),
-      ),
+      child: widget.mv.modoSelecao
+          ? Scaffold(
+              appBar: AppBar(
+                title: _buildTituloAppbar(),
+              ),
+              body: ScopedModelDescendant<ModelView>(
+                  builder: (context, child, model) {
+                updateLocalApontado();
+                return Column(
+                  children: [
+                    paginas[model.indexPainelPrincipal]['pagina'],
+                    Container(
+                      child: Column(
+                        children: [
+                          ValueListenableBuilder<LatLng>(
+                            valueListenable: _localApontado,
+                            child: Text('(Carregando...)'),
+                            builder: (context, value, child) {
+                              print('[DEBUG] ValueListenableBuilder');
+                              if (value != null &&
+                                  model.enderecoApontado != null) {
+                                model.getEnderecoBD(
+                                    value.latitude, value.longitude);
+                                Address _endereco = model.enderecoApontado;
+                                return Text(
+                                    '${model.formatEndereco(_endereco)}');
+                              }
+                              return Text('(Carregando)');
+                            },
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FlatButton(
+                                  onPressed: model.mudaModo,
+                                  child: Text('Cancelar')),
+                              RaisedButton(
+                                onPressed: () => print('aceitar'),
+                                child: Text('Aceitar'),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              }),
+            )
+          : Scaffold(
+              appBar: AppBar(
+                title: _buildTituloAppbar(),
+              ),
+              body: ScopedModelDescendant<ModelView>(
+                  builder: (context, child, model) {
+                return paginas[model.indexPainelPrincipal]['pagina'];
+              }),
+              drawer: PainelDrawer(widget.mv),
+              bottomNavigationBar: ScopedModelDescendant<ModelView>(
+                builder: (context, child, model) {
+                  return BottomNavigationBar(
+                    onTap: model.selecionaPagina,
+                    backgroundColor: primaryColor,
+                    unselectedItemColor: Colors.white,
+                    selectedItemColor: accentColor,
+                    currentIndex: model.indexPainelPrincipal,
+                    type: BottomNavigationBarType.fixed,
+                    items: [
+                      _buildNavBarItem('Mapa', Icons.map),
+                      _buildNavBarItem('Ocorrências', Icons.warning),
+                      _buildNavBarItem('Perfil', Icons.person),
+                    ],
+                  );
+                },
+              ),
+              floatingActionButton: _buildFloatingButton(),
+            ),
     );
 
     return ScopedModel<ModelView>(
