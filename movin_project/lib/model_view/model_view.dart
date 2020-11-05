@@ -40,6 +40,7 @@ class ModelView extends Model {
   mb.LatLng localApontado;
   Address enderecoApontado;
   ValueNotifier<Address> enderecoApontadoListenable;
+  Ocorrencia ocorrenciaSelecionada;
 
   ModelView() {
     enderecoApontadoListenable = ValueNotifier<Address>(null);

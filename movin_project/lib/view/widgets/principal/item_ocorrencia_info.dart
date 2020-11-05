@@ -79,7 +79,14 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
           widget.doMapa
               ? SizedBox()
               : InkWell(
-                  onTap: () => print('Mostrar local no mapa'),
+                  onTap: () {
+                    widget.mv.selecionaPagina(0);
+                    widget.mv.ocorrenciaSelecionada = widget.ocorrencia;
+                    print(widget.ocorrencia.idOcorrencia);
+                    Navigator.of(context).canPop()
+                        ? Navigator.of(context).pop()
+                        : null;
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(),

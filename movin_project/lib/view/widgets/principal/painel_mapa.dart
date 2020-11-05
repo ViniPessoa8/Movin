@@ -24,9 +24,11 @@ class _PainelMapaState extends State<PainelMapa> {
   LocationData _localizacao;
   MapboxMapController _mapBoxController;
   final double _userLocationZoom = 14.0;
+  final double _ocorrenciaSelecionadaZoom = 16.0;
 
   LatLng _centroMapa;
   Symbol marcador;
+  Symbol marcadorSelecionado;
 
   @override
   void initState() {
@@ -78,6 +80,16 @@ class _PainelMapaState extends State<PainelMapa> {
       @required double longitude,
       double zoom,
       double height = 700.0}) {
+    if (widget.mv.ocorrenciaSelecionada != null &&
+        _mapBoxController != null &&
+        _mapBoxController.symbols.isNotEmpty) {
+      print(
+          '[DEBUG] _mapBoxController.symbols = ${_mapBoxController.symbols.toString()}');
+      marcadorSelecionado = _mapBoxController.symbols.firstWhere((element) {
+        print('[DEBUG] element = $element');
+        return element.id == widget.mv.ocorrenciaSelecionada.idOcorrencia;
+      });
+    }
     return Container(
       height: widget.mv.modoSelecao ? 550.0 : height,
       child: widget.mv.modoSelecao
@@ -95,12 +107,19 @@ class _PainelMapaState extends State<PainelMapa> {
               onMapCreated: (controller) => onMapCreate(controller),
             )
           : new MapboxMap(
-              initialCameraPosition: new CameraPosition(
-                  target: LatLng(
-                    latitude,
-                    longitude,
-                  ),
-                  zoom: _userLocationZoom),
+              initialCameraPosition: widget.mv.ocorrenciaSelecionada != null
+                  ? new CameraPosition(
+                      target: LatLng(
+                        widget.mv.ocorrenciaSelecionada.local.latitude,
+                        widget.mv.ocorrenciaSelecionada.local.longitude,
+                      ),
+                      zoom: _ocorrenciaSelecionadaZoom)
+                  : new CameraPosition(
+                      target: LatLng(
+                        latitude,
+                        longitude,
+                      ),
+                      zoom: _userLocationZoom),
               accessToken: MAP_BOX_TOKEN,
               myLocationEnabled: true,
               zoomGesturesEnabled: true,
@@ -140,6 +159,22 @@ class _PainelMapaState extends State<PainelMapa> {
     });
   }
 
+  void moveOcorrenciaselecionada() {
+    LatLng _local = LatLng(
+      widget.mv.ocorrenciaSelecionada.local.latitude,
+      widget.mv.ocorrenciaSelecionada.local.longitude,
+    );
+    _mapBoxController.animateCamera(
+      CameraUpdate.newLatLngZoom(
+        LatLng(
+          _local.latitude,
+          _local.longitude,
+        ),
+        _ocorrenciaSelecionadaZoom,
+      ),
+    );
+  }
+
   void moveUserLocation() {
     _mapBoxController.animateCamera(
       CameraUpdate.newLatLngZoom(
@@ -174,7 +209,7 @@ class _PainelMapaState extends State<PainelMapa> {
       final ByteData bytes = await rootBundle.load("assets/media/marker.png");
       final Uint8List list = bytes.buffer.asUint8List();
       _mapBoxController.addImage('marcador', list);
-      _mapBoxController.addSymbol(
+      await _mapBoxController.addSymbol(
           SymbolOptions(
             geometry: _local,
             iconImage: 'marcador',
@@ -187,8 +222,6 @@ class _PainelMapaState extends State<PainelMapa> {
 
   void marcadorCentralizado() async {
     if (_mapBoxController != null) {
-      // _mapBoxController.isCameraMoving.
-
       LatLng _local = _mapBoxController.cameraPosition.target;
       debugPrint('add ponto( ${_local.latitude}, ${_local.longitude})');
 
@@ -250,6 +283,19 @@ class _PainelMapaState extends State<PainelMapa> {
 
   void onMapCreate(MapboxMapController controller) {
     print('[DEBUG] onMapCreate() controller = $controller');
+    controller.onSymbolTapped.add((argument) {
+      var _map = argument.data.cast();
+      Ocorrencia _ocorrencia = _map['ocorrencia'];
+      widget.mv.ocorrenciaSelecionada = _ocorrencia;
+      moveOcorrenciaselecionada();
+      showDialog(
+        context: context,
+        builder: (context) {
+          return ItemOcorrenciaInfo(widget.mv, _ocorrencia, true);
+        },
+      );
+      widget.mv.ocorrenciaSelecionada = null;
+    });
     setState(() {
       _mapBoxController = controller;
     });
