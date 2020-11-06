@@ -81,52 +81,54 @@ class _PainelMapaState extends State<PainelMapa> {
       @required double longitude,
       double zoom,
       double height = 700.0}) {
+    // Mapa de seleção de um local
+    MapboxMap _mapSelecao = new MapboxMap(
+      initialCameraPosition: new CameraPosition(
+          target: LatLng(
+            latitude,
+            longitude,
+          ),
+          zoom: _userLocationZoom),
+      accessToken: MAP_BOX_TOKEN,
+      zoomGesturesEnabled: true,
+      trackCameraPosition: true,
+      myLocationTrackingMode: MyLocationTrackingMode.Tracking,
+      onMapCreated: (controller) => onMapCreate(controller),
+    );
+
+    // Mapa normal da tela inicial
+    MapboxMap _mapNormal = new MapboxMap(
+      initialCameraPosition: widget.mv.ocorrenciaSelecionada != null
+          ? new CameraPosition(
+              target: LatLng(
+                widget.mv.ocorrenciaSelecionada.local.latitude,
+                widget.mv.ocorrenciaSelecionada.local.longitude,
+              ),
+              zoom: _ocorrenciaSelecionadaZoom)
+          : new CameraPosition(
+              target: LatLng(
+                latitude,
+                longitude,
+              ),
+              zoom: _userLocationZoom),
+      accessToken: MAP_BOX_TOKEN,
+      myLocationEnabled: true,
+      zoomGesturesEnabled: true,
+      myLocationRenderMode: MyLocationRenderMode.NORMAL,
+      onMapCreated: (controller) => onMapCreate(controller),
+    );
+
     if (widget.mv.ocorrenciaSelecionada != null &&
         _mapBoxController != null &&
         _mapBoxController.symbols.isNotEmpty) {
-      print(
-          '[DEBUG] _mapBoxController.symbols = ${_mapBoxController.symbols.toString()}');
       marcadorSelecionado = _mapBoxController.symbols.firstWhere((element) {
-        print('[DEBUG] element = $element');
         return element.id == widget.mv.ocorrenciaSelecionada.idOcorrencia;
       });
     }
+
     return Container(
       height: widget.mv.modoSelecao ? 550.0 : height,
-      child: widget.mv.modoSelecao
-          ? new MapboxMap(
-              initialCameraPosition: new CameraPosition(
-                  target: LatLng(
-                    latitude,
-                    longitude,
-                  ),
-                  zoom: _userLocationZoom),
-              accessToken: MAP_BOX_TOKEN,
-              zoomGesturesEnabled: true,
-              trackCameraPosition: true,
-              myLocationTrackingMode: MyLocationTrackingMode.Tracking,
-              onMapCreated: (controller) => onMapCreate(controller),
-            )
-          : new MapboxMap(
-              initialCameraPosition: widget.mv.ocorrenciaSelecionada != null
-                  ? new CameraPosition(
-                      target: LatLng(
-                        widget.mv.ocorrenciaSelecionada.local.latitude,
-                        widget.mv.ocorrenciaSelecionada.local.longitude,
-                      ),
-                      zoom: _ocorrenciaSelecionadaZoom)
-                  : new CameraPosition(
-                      target: LatLng(
-                        latitude,
-                        longitude,
-                      ),
-                      zoom: _userLocationZoom),
-              accessToken: MAP_BOX_TOKEN,
-              myLocationEnabled: true,
-              zoomGesturesEnabled: true,
-              myLocationRenderMode: MyLocationRenderMode.NORMAL,
-              onMapCreated: (controller) => onMapCreate(controller),
-            ),
+      child: widget.mv.modoSelecao ? _mapSelecao : _mapNormal,
     );
   }
 
