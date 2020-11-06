@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:movin_project/model_view/model_view.dart';
 
 class SelecaoLocalBox extends StatelessWidget {
@@ -30,7 +31,15 @@ class SelecaoLocalBox extends StatelessWidget {
             children: [
               FlatButton(onPressed: mv.mudaModo, child: Text('Cancelar')),
               RaisedButton(
-                onPressed: () => print('aceitar'),
+                onPressed: () {
+                  mv.enderecoApontado = _enderecoApontado.value;
+                  mv.localApontado = LatLng(
+                      mv.enderecoApontado.coordinates.latitude,
+                      mv.enderecoApontado.coordinates.longitude);
+                  print('${mv.enderecoApontado.addressLine}');
+                  print('${mv.localApontado.toString()}');
+                  mv.mudaModo();
+                },
                 child: Text('Aceitar'),
               ),
             ],
