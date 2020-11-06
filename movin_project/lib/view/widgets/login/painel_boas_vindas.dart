@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movin_project/view/widgets/login/painel_login.dart';
 
 class PainelBoasVindas extends StatelessWidget {
   static final String nomeRota = '/BoasVindas';

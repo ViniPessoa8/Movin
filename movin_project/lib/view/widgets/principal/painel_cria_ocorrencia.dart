@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:movin_project/model_view/model_view.dart';
@@ -38,22 +36,6 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
     super.initState();
   }
 
-  getLocal({double latitude, double longitude}) async {
-    LocationData localAtual = await Location().getLocation();
-    if (latitude == null || longitude == null) {
-      local = gp.GeoPoint(
-        latitude: localAtual.latitude,
-        longitude: localAtual.longitude,
-      );
-
-      var _endereco =
-          await widget.mv.getEnderecoBD(local.latitude, local.longitude);
-      setState(() {
-        endereco = _endereco;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     // getLocal();
@@ -80,6 +62,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            // Categoria
                             DropdownButton<String>(
                               autofocus: true,
                               hint: Text('Selecione a Categoria'),
@@ -98,6 +81,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                             ),
                           ],
                         ),
+                        // Descrição
                         TextField(
                           controller: descricaoController,
                           decoration: InputDecoration(
@@ -108,6 +92,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                                     ),
                           ),
                         ),
+                        // Localização
                         FlatButton(
                           onPressed: null,
                           child: Row(
@@ -121,7 +106,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                           builder: (context, child, model) {
                             return Container(
                               margin: EdgeInsets.symmetric(vertical: 20),
-                              child: widget.mv.imagens.isEmpty
+                              child: model.imagens.isEmpty
                                   ? Text(
                                       '(Sem imagens)',
                                       style:
@@ -134,13 +119,13 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                                         child: ListView.builder(
                                           shrinkWrap: true,
                                           scrollDirection: Axis.horizontal,
-                                          itemCount: widget.mv.imagens.length,
+                                          itemCount: model.imagens.length,
                                           itemBuilder: (context, index) {
                                             return Container(
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 5),
                                               child: Image.file(
-                                                widget.mv.imagens[index],
+                                                model.imagens[index],
                                                 height: 80,
                                                 width: 80,
                                                 fit: BoxFit.fitHeight,
@@ -218,5 +203,22 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
         ),
       ),
     );
+  }
+
+  /* Functions */
+  getLocal({double latitude, double longitude}) async {
+    LocationData localAtual = await Location().getLocation();
+    if (latitude == null || longitude == null) {
+      local = gp.GeoPoint(
+        latitude: localAtual.latitude,
+        longitude: localAtual.longitude,
+      );
+
+      var _endereco =
+          await widget.mv.getEnderecoBD(local.latitude, local.longitude);
+      setState(() {
+        endereco = _endereco;
+      });
+    }
   }
 }

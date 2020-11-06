@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/widgets/principal/painel_config_conta.dart';
-import 'package:movin_project/view/widgets/principal/painel_cria_ocorrencia.dart';
 
 class PainelPerfil extends StatefulWidget {
   final ModelView mv;
@@ -21,51 +19,6 @@ class _PainelPerfilState extends State<PainelPerfil> {
   initState() {
     carregaDados();
     super.initState();
-  }
-
-  Widget _buildBotaoConfig(
-      {@required BuildContext context,
-      @required String titulo,
-      Function onPressed,
-      IconData icone = Icons.settings}) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 20,
-      ),
-      child: FlatButton(
-        onPressed: () => onPressed,
-        child: Column(
-          children: [
-            Icon(icone, size: 80),
-            Container(
-              alignment: Alignment.center,
-              width: 150,
-              height: 50,
-              child: Text(
-                titulo,
-                style: Theme.of(context).textTheme.bodyText2,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void carregaDados() async {
-    if (widget.mv.dbIniciado && widget.mv.usuarioCarregado) {
-      setState(() {
-        _nomeUsuario = widget.mv.usuarioAtual.nome;
-        _emailUsuario = widget.mv.usuarioAtual.email;
-      });
-    } else {
-      setState(() {
-        _nomeUsuario = '(Carregando...)';
-        _emailUsuario = '(Carregando...)';
-      });
-    }
   }
 
   @override
@@ -133,5 +86,54 @@ class _PainelPerfilState extends State<PainelPerfil> {
         ],
       ),
     );
+  }
+
+  /* Builders */
+
+  Widget _buildBotaoConfig(
+      {@required BuildContext context,
+      @required String titulo,
+      Function onPressed,
+      IconData icone = Icons.settings}) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 20,
+      ),
+      child: FlatButton(
+        onPressed: () => onPressed,
+        child: Column(
+          children: [
+            Icon(icone, size: 80),
+            Container(
+              alignment: Alignment.center,
+              width: 150,
+              height: 50,
+              child: Text(
+                titulo,
+                style: Theme.of(context).textTheme.bodyText2,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /* Functions */
+
+  void carregaDados() async {
+    if (widget.mv.dbIniciado && widget.mv.usuarioCarregado) {
+      setState(() {
+        _nomeUsuario = widget.mv.usuarioAtual.nome;
+        _emailUsuario = widget.mv.usuarioAtual.email;
+      });
+    } else {
+      setState(() {
+        _nomeUsuario = '(Carregando...)';
+        _emailUsuario = '(Carregando...)';
+      });
+    }
   }
 }

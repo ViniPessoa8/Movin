@@ -12,7 +12,10 @@ class FilterBox extends StatelessWidget {
     return Container(
       child: MultiSelectFormField(
         dataSource: [
-          {'display': 'Meu bairro', 'value': 'Bairro'}
+          {
+            'display': 'Meu bairro',
+            'value': 'Bairro',
+          }
         ],
         textField: 'display',
         valueField: 'value',

@@ -7,24 +7,6 @@ class PainelDrawer extends StatelessWidget {
 
   PainelDrawer(this.mv);
 
-  Widget buildListTile(String title, IconData icon, Function tapHandler) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        size: 26,
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontFamily: 'RobotoCondensed',
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      onTap: tapHandler,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -57,6 +39,26 @@ class PainelDrawer extends StatelessWidget {
           })
         ],
       ),
+    );
+  }
+
+  /* Builders */
+
+  Widget buildListTile(String title, IconData icon, Function tapHandler) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        size: 26,
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontFamily: 'RobotoCondensed',
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      onTap: tapHandler,
     );
   }
 }

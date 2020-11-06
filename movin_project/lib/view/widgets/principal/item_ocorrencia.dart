@@ -17,7 +17,6 @@ class ItemOcorrencia extends StatefulWidget {
 
 class _ItemOcorrenciaState extends State<ItemOcorrencia> {
   final DateFormat formatadorData = DateFormat('dd/MM/yyyy');
-
   Address endereco;
   Ocorrencia ocorrencia;
 
@@ -26,18 +25,6 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
     ocorrencia = widget.mv.ocorrencias[widget.indexOcorrencia];
     carregaEndereco();
     super.initState();
-  }
-
-  carregaEndereco() async {
-    print('carregaEndereco()');
-    double latitude = ocorrencia.local.latitude;
-    double longitude = ocorrencia.local.longitude;
-
-    Address localEnd = await widget.mv.getEnderecoBD(latitude, longitude);
-    setState(() {
-      endereco = localEnd;
-      ocorrencia.endereco = endereco;
-    });
   }
 
   @override
@@ -56,6 +43,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
           color: Theme.of(context).accentColor,
         ),
         child: Row(
+          // Ícone
           children: [
             Icon(
               Icons.warning,
@@ -77,6 +65,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          // Categoria
                           Container(
                             width: 190,
                             child: Text(
@@ -92,6 +81,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                               softWrap: false,
                             ),
                           ),
+                          //Data
                           Container(
                             child: Text(
                               widget.mv.formatData(ocorrencia.data),
@@ -110,6 +100,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                         ],
                       ),
                     ),
+                    // Descrição
                     Container(
                       padding: EdgeInsets.only(bottom: 5),
                       child: Text(
@@ -122,6 +113,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                         softWrap: false,
                       ),
                     ),
+                    // Endereço
                     Text(
                       endereco == null
                           ? '(Sem Endereço)'
@@ -141,5 +133,19 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
         ),
       ),
     );
+  }
+
+  /* Functions */
+
+  carregaEndereco() async {
+    print('carregaEndereco()');
+    double latitude = ocorrencia.local.latitude;
+    double longitude = ocorrencia.local.longitude;
+
+    Address localEnd = await widget.mv.getEnderecoBD(latitude, longitude);
+    setState(() {
+      endereco = localEnd;
+      ocorrencia.endereco = endereco;
+    });
   }
 }

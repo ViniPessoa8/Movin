@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:movin_project/model/ocorrencia.dart';
-import 'package:movin_project/model/usuario.dart';
 import 'package:movin_project/model_view/model_view.dart';
 
 class ItemOcorrenciaInfo extends StatefulWidget {
   final Ocorrencia ocorrencia;
   final ModelView mv;
+  // Se a ocorrência foi selecionada no mapa ou não. Se sim, não é mostrado
   final bool doMapa;
 
   ItemOcorrenciaInfo(
@@ -21,9 +19,10 @@ class ItemOcorrenciaInfo extends StatefulWidget {
 }
 
 class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
+  // Imagem
   Image imagem;
+  // Util
   bool imagemCarregada = false;
-  String _nomeUsuario = '(sem nome)';
 
   @override
   void initState() {
@@ -37,6 +36,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
       child: SimpleDialog(
         contentPadding: EdgeInsets.all(10),
         children: [
+          // Categoria
           Text(
             widget.ocorrencia.categoria,
             style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 40),
@@ -47,6 +47,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Data
               Text(
                 widget.mv.formatData(widget.ocorrencia.data),
                 style: Theme.of(context)
@@ -54,21 +55,12 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
                     .bodyText1
                     .copyWith(fontSize: 18),
               ),
-              // Text(
-              //   'Autor: \n$_nomeUsuario',
-              //   style: Theme.of(context)
-              //       .textTheme
-              //       .bodyText1
-              //       .copyWith(fontSize: 20),
-              //   overflow: TextOverflow.ellipsis,
-              //   maxLines: 3,
-              //   softWrap: false,
-              // ),
             ],
           ),
           SizedBox(
             height: 15,
           ),
+          // Descrição
           Text(
             widget.ocorrencia.descricao,
             style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 25),
@@ -76,52 +68,52 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
             maxLines: 3,
             softWrap: false,
           ),
-          widget.doMapa
-              ? SizedBox()
-              : InkWell(
-                  onTap: () {
-                    widget.mv.selecionaPagina(0);
-                    widget.mv.ocorrenciaSelecionada = widget.ocorrencia;
-                    print(widget.ocorrencia.idOcorrencia);
-                    Navigator.of(context).canPop()
-                        ? Navigator.of(context).pop()
-                        : null;
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                    ),
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 260,
-                          child: Text(
-                            widget.mv
-                                .formatEndereco(widget.ocorrencia.endereco),
-                            style:
-                                Theme.of(context).textTheme.bodyText2.copyWith(
-                                      fontSize: 20,
-                                      color: Colors.grey[600],
-                                    ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
-                            softWrap: false,
+          InkWell(
+            onTap: () {
+              if (!widget.doMapa) {
+                widget.mv.selecionaPagina(0);
+                widget.mv.ocorrenciaSelecionada = widget.ocorrencia;
+                print(widget.ocorrencia.idOcorrencia);
+              }
+              Navigator.of(context).canPop()
+                  ? Navigator.of(context).pop()
+                  : null;
+            },
+            // Endereço
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(),
+                borderRadius: BorderRadius.all(Radius.circular(25.0)),
+              ),
+              margin: EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 260,
+                    child: Text(
+                      widget.mv.formatEndereco(widget.ocorrencia.endereco),
+                      style: Theme.of(context).textTheme.bodyText2.copyWith(
+                            fontSize: 20,
+                            color: Colors.grey[600],
                           ),
-                        ),
-                        Icon(Icons.location_on),
-                      ],
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
+                      softWrap: false,
                     ),
                   ),
-                ),
+                  Icon(Icons.location_on),
+                ],
+              ),
+            ),
+          ),
           SizedBox(
             height: 15,
           ),
           SizedBox(height: 15),
           Divider(thickness: 1, color: Colors.black),
+          // Imagens da ocorrencia
           Container(
             height: 100,
             child: _mostraImagem(),
@@ -131,11 +123,13 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
     );
   }
 
+  /* Functions */
+
   void carregaDados() {
-    carregaUsuario();
     downloadImagem();
   }
 
+  // Carrega a imagem da ocorrencia
   void downloadImagem() async {
     Image img = await widget.mv.downloadImagem();
     imagemCarregada = true;
@@ -145,6 +139,9 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
     });
   }
 
+  /* Builders */
+
+  // Retorna a imagem carregada
   Widget _mostraImagem() {
     if (imagemCarregada && imagem != null) {
       return imagem;
@@ -154,18 +151,6 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
       );
     } else {
       return Center(child: Text("Carregando Imagem..."));
-    }
-  }
-
-  void carregaUsuario() async {
-    print('[DEBUG] carregaUsuario(${widget.ocorrencia.idUsuario})');
-    Usuario _usuario = await widget.mv.getUsuario(widget.ocorrencia.idUsuario);
-    if (_usuario == null) {
-      print('[ERRO] getAutor = NULL');
-    } else {
-      setState(() {
-        _nomeUsuario = _usuario.nome;
-      });
     }
   }
 }

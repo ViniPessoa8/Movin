@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/pages/pagina_login.dart';
@@ -13,18 +12,17 @@ import 'package:movin_project/view/widgets/login/painel_cadastro.dart';
 final ModelView modelView = ModelView();
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MovinApp(modelView));
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
+class MovinApp extends StatelessWidget {
+  final ModelView mv;
 
-class _MyAppState extends State<MyApp> {
+  MovinApp(this.mv);
+
   @override
   Widget build(BuildContext context) {
-    // escutaLogin();
     return MaterialApp(
       title: 'Movin',
       theme: ThemeData(
@@ -59,13 +57,12 @@ class _MyAppState extends State<MyApp> {
       ),
       initialRoute: PaginaMestre.nomeRota,
       routes: {
-        PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(modelView),
-        PaginaMestre.nomeRota: (ctx) => PaginaMestre(modelView),
+        PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(mv),
+        PaginaMestre.nomeRota: (ctx) => PaginaMestre(mv),
         PaginaLogin.nomeRota: (ctx) => PaginaLogin(),
         PainelCarregamento.nomeRota: (ctx) => PainelCarregamento(),
-        // PainelBoasVindas.nomeRota: (ctx) => PainelBoasVindas(),
-        PainelLogin.nomeRota: (ctx) => PainelLogin(modelView),
-        PainelCadastro.nomeRota: (ctx) => PainelCadastro(modelView),
+        PainelLogin.nomeRota: (ctx) => PainelLogin(mv),
+        PainelCadastro.nomeRota: (ctx) => PainelCadastro(mv),
         PainelConfiguracoesConta.nomeRota: (ctx) =>
             PainelConfiguracoesConta(modelView),
         PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),

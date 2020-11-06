@@ -13,77 +13,17 @@ class PainelLogin extends StatefulWidget {
 }
 
 class _PainelLoginState extends State<PainelLogin> {
+  // Imagens
   final AssetImage googleLogo = AssetImage('assets/media/google_logo.png');
   final AssetImage facebookLogo = AssetImage('assets/media/facebook_logo.png');
+  // Formulário
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // Informações do usuario
   String _emailUsuario;
   String _senhaUsuario;
+  // Util
   bool _senhaInvalida = false;
   bool _emailInvalido = false;
-
-  _tentarLogar() async {
-    print('tenta logar');
-    // Validação do formulário de Login
-    final formLoginValido = _formKey.currentState.validate();
-    FocusScope.of(context).unfocus();
-
-    if (formLoginValido) {
-      var _resposta;
-      print('form login válido');
-      _formKey.currentState.save();
-      print(_emailUsuario);
-      print(_senhaUsuario);
-      try {
-        _resposta = await widget.mv.realizaLogin(
-          _emailUsuario,
-          _senhaUsuario,
-        );
-        widget.mv.getUsuarioAtual();
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          setState(() {
-            _senhaInvalida = false;
-            _emailInvalido = true;
-          });
-        } else if (e.code == 'wrong-password') {
-          setState(() {
-            _emailInvalido = false;
-            _senhaInvalida = true;
-          });
-        }
-      }
-      if (_resposta != null) {
-        print(_resposta);
-      } else {
-        print('LOGIN INVALIDOOO');
-      }
-    } else {
-      print('formulario login invalido');
-    }
-  }
-
-  Widget buildLoginAlternativo(
-      BuildContext ctx, String titulo, AssetImage imagem) {
-    return Container(
-      // decoration: BoxDecoration(border: Border.all()),
-      padding: EdgeInsets.all(10),
-      child: Row(
-        children: [
-          Container(
-            margin: EdgeInsets.only(right: 10.0),
-            child: Image(
-              image: imagem,
-              width: 30,
-            ),
-          ),
-          Text(
-            titulo,
-            style: Theme.of(ctx).textTheme.headline6,
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +38,7 @@ class _PainelLoginState extends State<PainelLogin> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // FORMULARIO LOGIN
+              // Formulário de Login
               Container(
                 child: Form(
                   key: _formKey,
@@ -176,11 +116,11 @@ class _PainelLoginState extends State<PainelLogin> {
                     ],
                   ),
                 ),
-              ), // FORMULARIO LOGIN
+              ),
+              // Login alternativo
               Container(
                 width: double.infinity,
                 height: 200,
-                // LOGIN ALTERNATIVO
                 child: Column(
                   children: [
                     Text(
@@ -202,10 +142,78 @@ class _PainelLoginState extends State<PainelLogin> {
                     ),
                   ],
                 ),
-              ), // LOGIN ALTERNATIVO
+              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /* Functions */
+  _tentarLogar() async {
+    final formLoginValido = _formKey.currentState.validate();
+    FocusScope.of(context).unfocus();
+
+    // Validação do formulário de Login
+    if (formLoginValido) {
+      var _resposta;
+      print('form login válido');
+      _formKey.currentState.save();
+      print(_emailUsuario);
+      print(_senhaUsuario);
+      // Realiza o login
+      try {
+        _resposta = await widget.mv.realizaLogin(
+          _emailUsuario,
+          _senhaUsuario,
+        );
+        widget.mv.getUsuarioAtual(); // Carrega informações do usuário que logou
+      } on FirebaseAuthException catch (e) {
+        // Usuario não encontrado
+        if (e.code == 'user-not-found') {
+          setState(() {
+            _senhaInvalida = false;
+            _emailInvalido = true;
+          });
+          // Senha incorreta
+        } else if (e.code == 'wrong-password') {
+          setState(() {
+            _emailInvalido = false;
+            _senhaInvalida = true;
+          });
+        }
+      }
+      if (_resposta != null) {
+        print(_resposta);
+      } else {
+        print('LOGIN INVALIDOOO');
+      }
+    } else {
+      print('formulario login invalido');
+    }
+  }
+
+  /* Builders */
+  Widget buildLoginAlternativo(
+      BuildContext ctx, String titulo, AssetImage imagem) {
+    return Container(
+      // decoration: BoxDecoration(border: Border.all()),
+      padding: EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Container(
+            margin: EdgeInsets.only(right: 10.0),
+            child: Image(
+              image: imagem,
+              width: 30,
+            ),
+          ),
+          Text(
+            titulo,
+            style: Theme.of(ctx).textTheme.headline6,
+          ),
+        ],
       ),
     );
   }

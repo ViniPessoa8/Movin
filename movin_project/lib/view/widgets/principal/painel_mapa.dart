@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
@@ -75,6 +74,8 @@ class _PainelMapaState extends State<PainelMapa> {
           );
   }
 
+  // Builders
+
   Widget buildMapBox(
       {@required double latitude,
       @required double longitude,
@@ -129,6 +130,9 @@ class _PainelMapaState extends State<PainelMapa> {
     );
   }
 
+  // Functions */
+
+  // Carrega a localização do usuario
   Future<void> updateLocalizacao() async {
     Location location = new Location();
     bool _serviceEnabled;
@@ -159,7 +163,8 @@ class _PainelMapaState extends State<PainelMapa> {
     });
   }
 
-  void moveOcorrenciaselecionada() {
+  // Move o foco do mapa para o local da ocorrência selecionada
+  void moveOcorrenciaSelecionada() {
     LatLng _local = LatLng(
       widget.mv.ocorrenciaSelecionada.local.latitude,
       widget.mv.ocorrenciaSelecionada.local.longitude,
@@ -175,6 +180,7 @@ class _PainelMapaState extends State<PainelMapa> {
     );
   }
 
+  // Move o foco do mapa para o local atual do usuário
   void moveUserLocation() {
     _mapBoxController.animateCamera(
       CameraUpdate.newLatLngZoom(
@@ -187,6 +193,7 @@ class _PainelMapaState extends State<PainelMapa> {
     );
   }
 
+  // Adiciona as ocorrências do banco de dados no mapa
   void addOcorrencias() {
     print('[DEBUG] addOcorrencias()');
     if (widget.mv.carregouOcorrencias) {
@@ -198,6 +205,7 @@ class _PainelMapaState extends State<PainelMapa> {
     }
   }
 
+  // Adiciona uma ocorrência individual no mapa
   void addOcorrencia(Ocorrencia ocorrencia) async {
     if (_mapBoxController != null) {
       LatLng _local = LatLng(
@@ -208,7 +216,7 @@ class _PainelMapaState extends State<PainelMapa> {
 
       final ByteData bytes = await rootBundle.load("assets/media/marker.png");
       final Uint8List list = bytes.buffer.asUint8List();
-      _mapBoxController.addImage('marcador', list);
+      await _mapBoxController.addImage('marcador', list);
       await _mapBoxController.addSymbol(
           SymbolOptions(
             geometry: _local,
@@ -220,6 +228,7 @@ class _PainelMapaState extends State<PainelMapa> {
     }
   }
 
+  // Mostra um marcador no meio do mapa
   void marcadorCentralizado() async {
     if (_mapBoxController != null) {
       LatLng _local = _mapBoxController.cameraPosition.target;
@@ -250,6 +259,7 @@ class _PainelMapaState extends State<PainelMapa> {
     }
   }
 
+  // Atualiza a posição do marcador central
   void updateMarcadorCentral() {
     print('[DEBUG] UpdateMarcadorCentral()');
     if (_mapBoxController != null) {
@@ -266,6 +276,7 @@ class _PainelMapaState extends State<PainelMapa> {
     }
   }
 
+  // Atualiza o local selecionado pelo usuario
   void updateLocalCentro() {
     print('[DEBUG] UpdateLocalCentro()');
     if (_mapBoxController != null) {
@@ -281,13 +292,17 @@ class _PainelMapaState extends State<PainelMapa> {
     }
   }
 
+  // Função passada na criação do mapa
   void onMapCreate(MapboxMapController controller) {
     print('[DEBUG] onMapCreate() controller = $controller');
     controller.onSymbolTapped.add((argument) {
       var _map = argument.data.cast();
+      // Carrega a ocorrência
       Ocorrencia _ocorrencia = _map['ocorrencia'];
       widget.mv.ocorrenciaSelecionada = _ocorrencia;
-      moveOcorrenciaselecionada();
+      // Move o foco para a ocorrência
+      moveOcorrenciaSelecionada();
+      // Mostra o painel de informações da ocorrência
       showDialog(
         context: context,
         builder: (context) {

@@ -50,7 +50,6 @@ class ModelView extends Model {
     indexPainelPrincipal = 0;
     deslogado = false;
     modoSelecao = false;
-    atualizaOcorrencias();
     iniciaDb();
     // ocorrencias = [];
   }
@@ -63,7 +62,7 @@ class ModelView extends Model {
     carregaDados();
   }
 
-  get dbIniciado => _dbIniciado;
+  get dbIniciado => _fc.dbIniciado;
   get aguardandoResposta => _aguardandoResposta;
 
   /*** LOGIN ***/

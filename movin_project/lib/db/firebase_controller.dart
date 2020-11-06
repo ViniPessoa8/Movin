@@ -16,21 +16,21 @@ import 'package:path/path.dart' as Path;
 /*** FIREBASE ***/
 class FirebaseController extends Model {
   bool _dbIniciado = false;
+  get dbIniciado => _dbIniciado;
+
   CollectionReference ocorrenciasBD;
   FirebaseFirestore _db;
-
-  get dbIniciado => _dbIniciado;
 
   Future<bool> inicializaFirestore() async {
     try {
       await Firebase.initializeApp();
+      _db = FirebaseFirestore.instance;
       _dbIniciado = true;
       print('Banco de dados carregado.');
       ocorrenciasBD = _db.collection('ocorrencias');
     } catch (e) {
-      print('Erro ao carregar Banco de Dados (Firebase):\n$e');
+      print('[ERRO]Erro ao carregar Banco de Dados (Firebase): $e');
     }
-    _db = FirebaseFirestore.instance;
     return _dbIniciado;
   }
 

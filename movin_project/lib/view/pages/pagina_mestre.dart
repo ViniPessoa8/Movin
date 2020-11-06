@@ -24,12 +24,17 @@ class _PaginaMestreState extends State<PaginaMestre> {
       child: ScopedModelDescendant<ModelView>(
         builder: (context, child, model) {
           if (model.dbIniciado) {
-            // FirebaseAuth.instance.signOut();
             return StreamBuilder(
+              // Verifica o estado do usuário (Logado/Deslogado)
               stream: FirebaseAuth.instance.authStateChanges(),
               builder: (context, AsyncSnapshot<User> snapshot) {
-                print('[DEBUG] streambuilder');
                 switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    print('ConnectionState.none');
+                    break;
+                  case ConnectionState.done:
+                    print('ConnectionState.done');
+                    break;
                   case ConnectionState.waiting:
                     print('ConnectionState.waiting');
                     return PainelCarregamento();
@@ -37,32 +42,28 @@ class _PaginaMestreState extends State<PaginaMestre> {
                   case ConnectionState.active:
                     print('ConnectionState.active');
                     if (widget.mv.aguardandoResposta) {
+                      // Buscando informações do Banco de Dados
                       return PainelCarregamento();
                     } else if (snapshot.hasData) {
-                      //LOGADO
+                      // Usuario Logado
                       print('LOGADO');
                       print(snapshot.data);
 
                       widget.mv.setUsuario(snapshot.data.uid);
                       return PaginaPrincipal(widget.mv);
                     } else {
+                      // Usuario Deslogado
                       widget.mv.deslogado = true;
                       print('DESLOGADO');
-                      //DESLOGADO
                       return PaginaLogin();
                     }
                     break;
-                  case ConnectionState.done:
-                    print('ConnectionState.done');
-                    break;
-                  case ConnectionState.none:
-                    print('ConnectionState.none');
-                    return PainelCarregamento();
-                    break;
                   default:
                     print('default');
+                    return PainelCarregamento();
                     break;
                 }
+                return PainelCarregamento();
               },
             );
           }
