@@ -19,7 +19,8 @@ class PainelMapa extends StatefulWidget {
   _PainelMapaState createState() => _PainelMapaState();
 }
 
-class _PainelMapaState extends State<PainelMapa> {
+class _PainelMapaState extends State<PainelMapa>
+    with AutomaticKeepAliveClientMixin<PainelMapa> {
   LocationData _localizacao;
   MapboxMapController _mapBoxController;
   final double _userLocationZoom = 14.0;
@@ -34,6 +35,10 @@ class _PainelMapaState extends State<PainelMapa> {
     updateLocalizacao();
     super.initState();
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {

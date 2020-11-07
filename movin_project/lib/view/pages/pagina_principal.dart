@@ -29,11 +29,23 @@ class PaginaPrincipal extends StatefulWidget {
   _PaginaPrincipalState createState() => _PaginaPrincipalState();
 }
 
-class _PaginaPrincipalState extends State<PaginaPrincipal> {
+class _PaginaPrincipalState extends State<PaginaPrincipal>
+    with TickerProviderStateMixin {
   // List<Map<String, Object>> paineisPrincipais;
   ValueNotifier<Address> _enderecoApontado;
   Color primaryColor;
   Color accentColor;
+
+  TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = new TabController(
+        length: widget.mv.paineisPrincipais.length,
+        vsync: this,
+        initialIndex: widget.mv.indexPainelPrincipal);
+  }
 
   @override
   void didChangeDependencies() {
@@ -79,6 +91,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
         drawer: PainelDrawer(widget.mv),
         body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
+          controller: _tabController,
           children: widget.mv.paineisPrincipais.map((tab) {
             return Container(
               height: 300,
@@ -93,6 +106,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
           child: TabBar(
             // physics: NeverScrollableScrollPhysics(),
             dragStartBehavior: DragStartBehavior.down,
+            controller: _tabController,
             onTap: (value) {
               widget.mv.selecionaPagina(value);
               print(

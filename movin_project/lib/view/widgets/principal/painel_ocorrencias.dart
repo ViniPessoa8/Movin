@@ -5,11 +5,22 @@ import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/widgets/principal/item_ocorrencia.dart';
 import 'package:loading/loading.dart';
 
-class PainelOcorrencias extends StatelessWidget {
+class PainelOcorrencias extends StatefulWidget {
   final ModelView mv;
   final BuildContext context;
 
   PainelOcorrencias(this.context, this.mv);
+
+  @override
+  _PainelOcorrenciasState createState() => _PainelOcorrenciasState();
+}
+
+class _PainelOcorrenciasState extends State<PainelOcorrencias>
+    with AutomaticKeepAliveClientMixin<PainelOcorrencias> {
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -26,18 +37,15 @@ class PainelOcorrencias extends StatelessWidget {
     );
   }
 
-  /* Builders */
-
-  // Retorna um ListView das ocorrências existentes
   Widget _buildListaOcorrencias() {
-    if (mv.carregouOcorrencias && mv.carregouLocalUsuario) {
-      if (mv.ocorrencias == null) {
+    if (widget.mv.carregouOcorrencias && widget.mv.carregouLocalUsuario) {
+      if (widget.mv.ocorrencias == null) {
         return Text('ocorrencias null');
-      } else if (mv.ocorrencias.isEmpty) {
+      } else if (widget.mv.ocorrencias.isEmpty) {
         return Container(
           alignment: Alignment.center,
           child: RefreshIndicator(
-            onRefresh: mv.atualizaOcorrencias,
+            onRefresh: widget.mv.atualizaOcorrencias,
             child: ListView.builder(
               itemCount: 1,
               itemBuilder: (ctx, index) {
@@ -60,13 +68,13 @@ class PainelOcorrencias extends StatelessWidget {
           children: [
             Container(
               child: RefreshIndicator(
-                onRefresh: mv.atualizaOcorrencias,
+                onRefresh: widget.mv.atualizaOcorrencias,
                 child: ListView.builder(
-                  itemCount: mv.ocorrencias.length,
+                  itemCount: widget.mv.ocorrencias.length,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   itemBuilder: (context, index) {
                     return ItemOcorrencia(
-                      mv,
+                      widget.mv,
                       index,
                     );
                   },
@@ -84,7 +92,7 @@ class PainelOcorrencias extends StatelessWidget {
             Loading(
               indicator: BallPulseIndicator(),
               size: 50.0,
-              color: Theme.of(context).accentColor,
+              color: Theme.of(widget.context).accentColor,
             ),
             Text('Carregando ocorrêncais...'),
           ],
