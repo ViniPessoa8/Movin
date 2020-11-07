@@ -102,15 +102,18 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
             unselectedLabelColor: Colors.black,
             tabs: [
               Tab(
-                icon: Icon(Icons.map),
+                icon: Icon(Icons.map, size: 40),
+                iconMargin: EdgeInsets.all(0),
                 text: 'Mapa',
               ),
               Tab(
-                icon: Icon(Icons.warning),
+                icon: Icon(Icons.warning, size: 40),
+                iconMargin: EdgeInsets.all(0),
                 text: 'Ocorrências',
               ),
               Tab(
                 icon: Icon(Icons.person, size: 40),
+                iconMargin: EdgeInsets.all(0),
                 text: 'Perfil',
               ),
             ],
