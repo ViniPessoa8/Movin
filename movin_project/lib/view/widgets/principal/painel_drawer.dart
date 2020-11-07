@@ -29,6 +29,8 @@ class PainelDrawer extends StatelessWidget {
           ),
           SizedBox(height: 20),
           buildListTile('Home', Icons.home, () {
+            mv.selecionaPagina(0);
+            mv.rebuild();
             Navigator.of(context).pop();
           }),
           buildListTile('Emergência', Icons.settings, () {

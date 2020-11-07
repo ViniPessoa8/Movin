@@ -331,4 +331,8 @@ class ModelView extends Model {
     }
     return saida;
   }
+
+  void rebuild() {
+    notifyListeners();
+  }
 }
