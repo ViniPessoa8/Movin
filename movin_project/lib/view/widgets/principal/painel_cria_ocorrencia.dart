@@ -131,7 +131,9 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                                       Container(
                                         width: 300,
                                         child: Text(
-                                          '${endereco.addressLine}',
+                                          endereco == null
+                                              ? '(Carregando endereço)'
+                                              : '${endereco.addressLine}',
                                           overflow: TextOverflow.clip,
                                           maxLines: 2,
                                           softWrap: true,

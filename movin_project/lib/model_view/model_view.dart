@@ -50,6 +50,7 @@ class ModelView extends Model {
     _dbIniciado = false;
     _aguardandoResposta = false;
     indexPainelPrincipal = 0;
+    indexPainelPrincipalListenable.value = 0;
     deslogado = false;
     modoSelecao = false;
     iniciaDb();
@@ -154,6 +155,7 @@ class ModelView extends Model {
 
   /*** MAIN ***/
   int indexPainelPrincipal;
+  ValueNotifier<int> indexPainelPrincipalListenable = ValueNotifier<int>(null);
   int _indexPaginaOrigemEscolha;
   List<Map<String, Object>> paineisPrincipais;
   bool _escolhendoLocalOcorrencia = false;
@@ -225,8 +227,8 @@ class ModelView extends Model {
   }
 
   void selecionaPagina(int index) {
+    indexPainelPrincipalListenable.value = index;
     indexPainelPrincipal = index;
-    notifyListeners();
   }
 
   /* Ocorrencia */

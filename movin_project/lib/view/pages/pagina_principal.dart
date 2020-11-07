@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -71,40 +72,90 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
       });
     }
 
-    final paginaPrincipal = ScopedModel<ModelView>(
-      model: widget.mv,
+    final paginaPrincipal = DefaultTabController(
+      length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: _buildTituloAppbar(),
-        ),
-        body:
-            ScopedModelDescendant<ModelView>(builder: (context, child, model) {
-          // Painel
-          return widget.mv.paineisPrincipais[model.indexPainelPrincipal]
-              ['pagina'];
-        }),
-        drawer: PainelDrawer(widget.mv),
-        bottomNavigationBar: ScopedModelDescendant<ModelView>(
-          builder: (context, child, model) {
-            // Barra de navegação inferior
-            return BottomNavigationBar(
-              onTap: model.selecionaPagina,
-              backgroundColor: primaryColor,
-              unselectedItemColor: Colors.white,
-              selectedItemColor: accentColor,
-              currentIndex: model.indexPainelPrincipal,
-              type: BottomNavigationBarType.fixed,
-              items: [
-                _buildNavBarItem('Mapa', Icons.map),
-                _buildNavBarItem('Ocorrências', Icons.warning),
-                _buildNavBarItem('Perfil', Icons.person),
-              ],
+        appBar: AppBar(title: _buildTituloAppbar()),
+        body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          children: widget.mv.paineisPrincipais.map((tab) {
+            return Container(
+              height: 300,
+              child: Center(
+                child: tab['pagina'],
+              ),
             );
-          },
+          }).toList(),
+        ),
+        bottomNavigationBar: Container(
+          color: Theme.of(context).primaryColor,
+          child: TabBar(
+            // physics: NeverScrollableScrollPhysics(),
+            dragStartBehavior: DragStartBehavior.down,
+            onTap: (value) {
+              widget.mv.selecionaPagina(value);
+              print(
+                  '[DEBUG] widget.mv.indexPainelPrincipal = ${widget.mv.indexPainelPrincipal}');
+            },
+            labelColor: Theme.of(context).accentColor,
+            unselectedLabelColor: Colors.black,
+            tabs: [
+              Tab(
+                icon: Icon(Icons.map),
+                text: 'Mapa',
+              ),
+              Tab(
+                icon: Icon(Icons.warning),
+                text: 'Ocorrências',
+              ),
+              Tab(
+                icon: Icon(Icons.person, size: 40),
+                text: 'Perfil',
+              ),
+            ],
+            labelStyle:
+                Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 17),
+          ),
         ),
         floatingActionButton: _buildFloatingButton(),
       ),
+      initialIndex: 0,
     );
+
+    // final paginaPrincipal = ScopedModel<ModelView>(
+    //   model: widget.mv,
+    //   child: Scaffold(
+    //     appBar: AppBar(
+    //       title: _buildTituloAppbar(),
+    //     ),
+    //     body:
+    //         ScopedModelDescendant<ModelView>(builder: (context, child, model) {
+    //       // Painel
+    //       return widget.mv.paineisPrincipais[model.indexPainelPrincipal]
+    //           ['pagina'];
+    //     }),
+    //     drawer: PainelDrawer(widget.mv),
+    //     bottomNavigationBar: ScopedModelDescendant<ModelView>(
+    //       builder: (context, child, model) {
+    //         // Barra de navegação inferior
+    //         return BottomNavigationBar(
+    //           onTap: model.selecionaPagina,
+    //           backgroundColor: primaryColor,
+    //           unselectedItemColor: Colors.white,
+    //           selectedItemColor: accentColor,
+    //           currentIndex: model.indexPainelPrincipal,
+    //           type: BottomNavigationBarType.fixed,
+    //           items: [
+    //             _buildNavBarItem('Mapa', Icons.map),
+    //             _buildNavBarItem('Ocorrências', Icons.warning),
+    //             _buildNavBarItem('Perfil', Icons.person),
+    //           ],
+    //         );
+    //       },
+    //     ),
+    //     floatingActionButton: _buildFloatingButton(),
+    //   ),
+    // );
 
     return ScopedModel<ModelView>(
       model: widget.mv,
@@ -249,11 +300,24 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
 
   // Retorna o botão flutuante
   Widget _buildFloatingButton() {
-    if (widget.mv.indexPainelPrincipal == 0) return _buildBotaoMapa();
-    if (widget.mv.indexPainelPrincipal == 1) return _buildBotaoOcorrencias();
-    return SpeedDial(
-      visible: false,
+    return ValueListenableBuilder(
+      valueListenable: widget.mv.indexPainelPrincipalListenable,
+      child: SpeedDial(
+        visible: false,
+      ),
+      builder: (context, value, child) {
+        if (value == 0) return _buildBotaoMapa();
+        if (value == 1) return _buildBotaoOcorrencias();
+        return SpeedDial(
+          visible: false,
+        );
+      },
     );
+    // if (widget.mv.indexPainelPrincipal == 0) return _buildBotaoMapa();
+    // if (widget.mv.indexPainelPrincipal == 1) return _buildBotaoOcorrencias();
+    // return SpeedDial(
+    //   visible: false,
+    // );
   }
 
   // Retorna o título a ser usado no AppBar
