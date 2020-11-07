@@ -100,6 +100,7 @@ class ModelView extends Model {
           password: senha,
         );
         setUsuario(_uc.user.uid);
+        carregaDados();
         print('login completo');
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
@@ -147,10 +148,21 @@ class ModelView extends Model {
     _fc.uploadImagem(imagem);
   }
 
-  void deslogar() {
+  void deslogar() async {
     FirebaseAuth.instance.signOut();
     usuarioAtual = null;
-    notifyListeners();
+    ocorrencias = null;
+    localUsuario = null;
+    _uidAtual = null;
+    enderecoApontadoListenable = ValueNotifier<Address>(null);
+    _usuarioLogado = false;
+    _dbIniciado = false;
+    _aguardandoResposta = false;
+    indexPainelPrincipal = 0;
+    indexPainelPrincipalListenable.value = 0;
+    deslogado = true;
+    modoSelecao = false;
+    await iniciaDb();
   }
 
   /*** MAIN ***/
