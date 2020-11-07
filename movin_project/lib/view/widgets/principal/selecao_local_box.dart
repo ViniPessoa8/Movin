@@ -29,16 +29,29 @@ class SelecaoLocalBox extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              FlatButton(onPressed: mv.mudaModo, child: Text('Cancelar')),
+              FlatButton(
+                  onPressed: () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: Text('Cancelar')),
               RaisedButton(
                 onPressed: () {
+                  print(
+                      '[DEBUG] mv.escolhendoLocalOcorrencia = ${mv.escolhendoLocalOcorrencia}');
                   mv.enderecoApontado = _enderecoApontado.value;
-                  mv.localApontado = LatLng(
+                  mv.updateLocalApontado(LatLng(
                       mv.enderecoApontado.coordinates.latitude,
-                      mv.enderecoApontado.coordinates.longitude);
+                      mv.enderecoApontado.coordinates.longitude));
                   print('${mv.enderecoApontado.addressLine}');
                   print('${mv.localApontado.toString()}');
-                  mv.mudaModo();
+                  // mv.escolhendoLocalOcorrencia
+                  //     ? mv.mudaModo(indexPagina: 1)
+                  //     : mv.mudaModo(indexPagina: 0);
+                  if (Navigator.of(context).canPop()) {
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: Text('Aceitar'),
               ),

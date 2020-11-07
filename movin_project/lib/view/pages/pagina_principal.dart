@@ -73,57 +73,37 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
 
     final paginaPrincipal = ScopedModel<ModelView>(
       model: widget.mv,
-      child: widget.mv.modoSelecao
-          // Modo Seleção
-          ? Scaffold(
-              appBar: AppBar(
-                title: _buildTituloAppbar(),
-              ),
-              body: ScopedModelDescendant<ModelView>(
-                  builder: (context, child, model) {
-                return Column(
-                  children: [
-                    //Painel
-                    widget.mv.paineisPrincipais[model.indexPainelPrincipal]
-                        ['pagina'],
-                    // Caixa de opções
-                    SelecaoLocalBox(_enderecoApontado, model),
-                  ],
-                );
-              }),
-            )
-          // Modo Normal
-          : Scaffold(
-              appBar: AppBar(
-                title: _buildTituloAppbar(),
-              ),
-              body: ScopedModelDescendant<ModelView>(
-                  builder: (context, child, model) {
-                // Painel
-                return widget.mv.paineisPrincipais[model.indexPainelPrincipal]
-                    ['pagina'];
-              }),
-              drawer: PainelDrawer(widget.mv),
-              bottomNavigationBar: ScopedModelDescendant<ModelView>(
-                builder: (context, child, model) {
-                  // Barra de navegação inferior
-                  return BottomNavigationBar(
-                    onTap: model.selecionaPagina,
-                    backgroundColor: primaryColor,
-                    unselectedItemColor: Colors.white,
-                    selectedItemColor: accentColor,
-                    currentIndex: model.indexPainelPrincipal,
-                    type: BottomNavigationBarType.fixed,
-                    items: [
-                      _buildNavBarItem('Mapa', Icons.map),
-                      _buildNavBarItem('Ocorrências', Icons.warning),
-                      _buildNavBarItem('Perfil', Icons.person),
-                    ],
-                  );
-                },
-              ),
-              floatingActionButton: _buildFloatingButton(),
-            ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: _buildTituloAppbar(),
+        ),
+        body:
+            ScopedModelDescendant<ModelView>(builder: (context, child, model) {
+          // Painel
+          return widget.mv.paineisPrincipais[model.indexPainelPrincipal]
+              ['pagina'];
+        }),
+        drawer: PainelDrawer(widget.mv),
+        bottomNavigationBar: ScopedModelDescendant<ModelView>(
+          builder: (context, child, model) {
+            // Barra de navegação inferior
+            return BottomNavigationBar(
+              onTap: model.selecionaPagina,
+              backgroundColor: primaryColor,
+              unselectedItemColor: Colors.white,
+              selectedItemColor: accentColor,
+              currentIndex: model.indexPainelPrincipal,
+              type: BottomNavigationBarType.fixed,
+              items: [
+                _buildNavBarItem('Mapa', Icons.map),
+                _buildNavBarItem('Ocorrências', Icons.warning),
+                _buildNavBarItem('Perfil', Icons.person),
+              ],
+            );
+          },
+        ),
+        floatingActionButton: _buildFloatingButton(),
+      ),
     );
 
     return ScopedModel<ModelView>(
@@ -153,16 +133,25 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
 
   // Carrega o endereço de determinado local em LatLng na variavel _enderecoApontado
   void getEndereco(LatLng local) async {
-    _enderecoApontado.value = await widget.mv.getEnderecoBD(
+    Address _retorno = await widget.mv.getEnderecoBD(
       local.latitude,
       local.longitude,
     );
+    setState(() {
+      _enderecoApontado.value = _retorno;
+    });
   }
 
   /* Showers */
 
   // Mostra pagina de seleção de local
   void _showPaginaSelecao() {
+    print('[DEBUG] _showPaginaSelecao()');
+    print(
+        '[DEBUG] _showPaginaSelecao() widget.mv.enderecoApontadoListenable = ${widget.mv.enderecoApontadoListenable}');
+    print(
+        '[DEBUG] _showPaginaSelecao() widget.mv.enderecoApontadoListenable.value = ${widget.mv.enderecoApontadoListenable.value}');
+
     Navigator.of(context).pushNamed(
       PaginaSelecaoLocal.nomeRota,
       arguments: PaginaSelecaoArgumentos(
@@ -270,23 +259,19 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
   // Retorna o título a ser usado no AppBar
   Widget _buildTituloAppbar() {
     String texto;
-    if (widget.mv.modoSelecao) {
-      return Text('Escolha um local');
-    } else {
-      switch (widget.mv.indexPainelPrincipal) {
-        case 0:
-          texto = 'Home';
-          break;
-        case 1:
-          texto = 'Ocorrências';
-          break;
-        case 2:
-          texto = 'Perfil';
-          break;
-        default:
-          texto = 'Movin';
-          break;
-      }
+    switch (widget.mv.indexPainelPrincipal) {
+      case 0:
+        texto = 'Home';
+        break;
+      case 1:
+        texto = 'Ocorrências';
+        break;
+      case 2:
+        texto = 'Perfil';
+        break;
+      default:
+        texto = 'Movin';
+        break;
     }
     return Text(texto);
   }

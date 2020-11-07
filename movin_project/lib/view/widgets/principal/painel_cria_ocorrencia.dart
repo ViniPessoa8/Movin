@@ -8,6 +8,7 @@ import 'package:movin_project/model/ocorrencia.dart';
 import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/utils/dados_internos.dart';
 import 'package:geopoint/geopoint.dart' as gp;
+import 'package:movin_project/view/pages/pagina_selecao_local.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class PainelCriaOcorrencia extends StatefulWidget {
@@ -38,7 +39,6 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
 
   @override
   Widget build(BuildContext context) {
-    // getLocal();
     return ScopedModel<ModelView>(
       model: widget.mv,
       child: SingleChildScrollView(
@@ -94,13 +94,53 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                         ),
                         // Localização
                         FlatButton(
-                          onPressed: null,
-                          child: Row(
-                            children: [
-                              Icon(Icons.add_location),
-                              Text('Adicionar Localização'),
-                            ],
-                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return PaginaSelecaoLocal(
+                                    widget.mv,
+                                    widget.mv.enderecoApontadoListenable,
+                                    widget.mv.paineisPrincipais);
+                              },
+                            );
+                          },
+                          child: ValueListenableBuilder<Address>(
+                              valueListenable:
+                                  widget.mv.enderecoApontadoListenable,
+                              builder: (context, value, child) {
+                                if (widget
+                                        .mv.enderecoApontadoListenable.value !=
+                                    null) {
+                                  getLocal(
+                                    latitude: value.coordinates.latitude,
+                                    longitude: value.coordinates.longitude,
+                                  );
+                                } else {
+                                  getLocal();
+                                }
+
+                                return Container(
+                                  margin: EdgeInsets.all(10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                          margin: EdgeInsets.all(5),
+                                          child: Icon(Icons.add_location)),
+                                      Container(
+                                        width: 300,
+                                        child: Text(
+                                          '${endereco.addressLine}',
+                                          overflow: TextOverflow.clip,
+                                          maxLines: 2,
+                                          softWrap: true,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }),
                         ),
                         ScopedModelDescendant<ModelView>(
                           builder: (context, child, model) {
@@ -175,7 +215,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                         idUsuario: FirebaseAuth.instance.currentUser.uid,
                         endereco: endereco,
                       ));
-                      // widget.mv.atualizaOcorrencias();
+                      widget.mv.removeLocalApontado();
                       Navigator.of(context).pop();
                       showDialog(
                         context: context,
@@ -207,18 +247,23 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
 
   /* Functions */
   getLocal({double latitude, double longitude}) async {
-    LocationData localAtual = await Location().getLocation();
     if (latitude == null || longitude == null) {
+      LocationData localAtual = await Location().getLocation();
       local = gp.GeoPoint(
         latitude: localAtual.latitude,
         longitude: localAtual.longitude,
       );
-
-      var _endereco =
-          await widget.mv.getEnderecoBD(local.latitude, local.longitude);
-      setState(() {
-        endereco = _endereco;
-      });
+    } else {
+      local = gp.GeoPoint(
+        latitude: latitude,
+        longitude: longitude,
+      );
     }
+
+    var _endereco =
+        await widget.mv.getEnderecoBD(local.latitude, local.longitude);
+    setState(() {
+      endereco = _endereco;
+    });
   }
 }

@@ -169,12 +169,6 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  void mudaModo({int indexPagina = 1}) {
-    if (modoSelecao == true) indexPainelPrincipal = indexPagina;
-    modoSelecao = !modoSelecao;
-    notifyListeners();
-  }
-
   void updateLocalApontado(mb.LatLng local) async {
     print('[DEBUG] updateLocalApontado($local)');
     localApontado = local;
@@ -182,13 +176,13 @@ class ModelView extends Model {
       local.latitude,
       local.longitude,
     );
+    print(
+        '[DEBUG] enderecoApontadoListenable.value = ${enderecoApontadoListenable.value}');
   }
 
-  void escolheLocalOcorrencia() {
-    _indexPaginaOrigemEscolha = indexPainelPrincipal;
-    print('[DEBUG] escolheLocalOcorrencia()');
-    _escolhendoLocalOcorrencia = true;
-    mudaModo();
+  void removeLocalApontado() {
+    localApontado = null;
+    enderecoApontadoListenable.value = null;
   }
 
   /* Atualizadores */

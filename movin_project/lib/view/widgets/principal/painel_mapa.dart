@@ -37,15 +37,9 @@ class _PainelMapaState extends State<PainelMapa> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.mv.modoSelecao) {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        marcadorCentralizado();
-      });
-    } else {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        addOcorrencias();
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      addOcorrencias();
+    });
 
     return _localizacao == null
         ? Center(
@@ -81,21 +75,6 @@ class _PainelMapaState extends State<PainelMapa> {
       @required double longitude,
       double zoom,
       double height = 700.0}) {
-    // Mapa de seleção de um local
-    MapboxMap _mapSelecao = new MapboxMap(
-      initialCameraPosition: new CameraPosition(
-          target: LatLng(
-            latitude,
-            longitude,
-          ),
-          zoom: _userLocationZoom),
-      accessToken: MAP_BOX_TOKEN,
-      zoomGesturesEnabled: true,
-      trackCameraPosition: true,
-      myLocationTrackingMode: MyLocationTrackingMode.Tracking,
-      onMapCreated: (controller) => onMapCreate(controller),
-    );
-
     // Mapa normal da tela inicial
     MapboxMap _mapNormal = new MapboxMap(
       initialCameraPosition: widget.mv.ocorrenciaSelecionada != null
@@ -127,8 +106,8 @@ class _PainelMapaState extends State<PainelMapa> {
     }
 
     return Container(
-      height: widget.mv.modoSelecao ? 550.0 : height,
-      child: widget.mv.modoSelecao ? _mapSelecao : _mapNormal,
+      height: height,
+      child: _mapNormal,
     );
   }
 
@@ -227,54 +206,6 @@ class _PainelMapaState extends State<PainelMapa> {
             iconOffset: Offset(0, -45),
           ),
           {'ocorrencia': ocorrencia});
-    }
-  }
-
-  // Mostra um marcador no meio do mapa
-  void marcadorCentralizado() async {
-    if (_mapBoxController != null) {
-      LatLng _local = _mapBoxController.cameraPosition.target;
-      debugPrint('add ponto( ${_local.latitude}, ${_local.longitude})');
-
-      if (marcador == null) {
-        final ByteData bytes = await rootBundle.load("assets/media/marker.png");
-        final Uint8List list = bytes.buffer.asUint8List();
-        _mapBoxController.addImage('marcador', list);
-        var _symbol = await _mapBoxController.addSymbol(
-          SymbolOptions(
-            geometry: _centroMapa,
-            iconImage: 'marcador',
-            iconSize: 0.5,
-            iconOffset: Offset(0, -45),
-          ),
-        );
-        setState(() {
-          marcador = _symbol;
-        });
-      }
-      _mapBoxController.addListener(() {
-        print('_mapBoxController LISTENED');
-        _mapBoxController.isCameraMoving
-            ? updateMarcadorCentral()
-            : updateLocalCentro();
-      });
-    }
-  }
-
-  // Atualiza a posição do marcador central
-  void updateMarcadorCentral() {
-    print('[DEBUG] UpdateMarcadorCentral()');
-    if (_mapBoxController != null) {
-      LatLng posCamera = _mapBoxController.cameraPosition.target;
-      if (posCamera != _centroMapa) {
-        _centroMapa = _mapBoxController.cameraPosition.target;
-        SymbolOptions _mudancas = marcador.options.copyWith(
-          SymbolOptions(
-            geometry: _centroMapa,
-          ),
-        );
-        _mapBoxController.updateSymbol(marcador, _mudancas);
-      }
     }
   }
 
