@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:movin_project/model_view/model_view.dart';
+import 'package:movin_project/utils/pagina_selecao_argumentos.dart';
+import 'package:movin_project/view/pages/pagina_selecao_local.dart';
 import 'package:movin_project/view/widgets/login/painel_carregamento.dart';
 import 'package:movin_project/view/widgets/principal/painel_drawer.dart';
 import 'package:movin_project/view/widgets/principal/painel_mapa.dart';
@@ -27,7 +29,7 @@ class PaginaPrincipal extends StatefulWidget {
 }
 
 class _PaginaPrincipalState extends State<PaginaPrincipal> {
-  List<Map<String, Object>> paginas;
+  // List<Map<String, Object>> paineisPrincipais;
   ValueNotifier<Address> _enderecoApontado;
   Color primaryColor;
   Color accentColor;
@@ -42,7 +44,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
     _enderecoApontado = widget.mv.enderecoApontadoListenable;
 
     // Paineis da página principal (Mapa, Ocorrencias e Perfil)
-    paginas = [
+    widget.mv.paineisPrincipais = [
       {
         'pagina': PainelMapa(widget.mv),
         'titulo': 'Mapa',
@@ -82,7 +84,8 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
                 return Column(
                   children: [
                     //Painel
-                    paginas[model.indexPainelPrincipal]['pagina'],
+                    widget.mv.paineisPrincipais[model.indexPainelPrincipal]
+                        ['pagina'],
                     // Caixa de opções
                     SelecaoLocalBox(_enderecoApontado, model),
                   ],
@@ -97,7 +100,8 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
               body: ScopedModelDescendant<ModelView>(
                   builder: (context, child, model) {
                 // Painel
-                return paginas[model.indexPainelPrincipal]['pagina'];
+                return widget.mv.paineisPrincipais[model.indexPainelPrincipal]
+                    ['pagina'];
               }),
               drawer: PainelDrawer(widget.mv),
               bottomNavigationBar: ScopedModelDescendant<ModelView>(
@@ -156,6 +160,20 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
   }
 
   /* Showers */
+
+  // Mostra pagina de seleção de local
+  void _showPaginaSelecao() {
+    Navigator.of(context).pushNamed(
+      PaginaSelecaoLocal.nomeRota,
+      arguments: PaginaSelecaoArgumentos(
+        widget.mv,
+        widget.mv.enderecoApontadoListenable,
+        widget.mv.paineisPrincipais,
+      ),
+    );
+    PaginaSelecaoLocal(
+        widget.mv, _enderecoApontado, widget.mv.paineisPrincipais);
+  }
 
   // Mostra o diálogo de criação de ocorrência
   void _showCriaOcorrencia(BuildContext context) {
@@ -219,7 +237,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
           ),
           label: 'Teste',
           backgroundColor: Colors.purple,
-          onTap: widget.mv.mudaModo,
+          onTap: _showPaginaSelecao, //widget.mv.mudaModo,
         ),
       ],
     );

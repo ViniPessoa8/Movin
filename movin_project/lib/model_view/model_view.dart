@@ -27,20 +27,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 */
 
 class ModelView extends Model {
-  List<Ocorrencia> ocorrencias;
+  // Usuário
   gp.GeoPoint localUsuario;
   Address enderecoUsuario;
+  Usuario usuarioAtual;
+  String _uidAtual;
+  bool deslogado;
+  mb.LatLng localApontado;
+  Address enderecoApontado;
+  Ocorrencia ocorrenciaSelecionada;
+  // Util
+  List<Ocorrencia> ocorrencias;
   FirebaseController _fc;
   bool _dbIniciado;
   bool _aguardandoResposta;
-  String _uidAtual;
-  Usuario usuarioAtual;
-  bool deslogado;
   bool modoSelecao;
-  mb.LatLng localApontado;
-  Address enderecoApontado;
   ValueNotifier<Address> enderecoApontadoListenable;
-  Ocorrencia ocorrenciaSelecionada;
 
   ModelView() {
     enderecoApontadoListenable = ValueNotifier<Address>(null);
@@ -51,10 +53,9 @@ class ModelView extends Model {
     deslogado = false;
     modoSelecao = false;
     iniciaDb();
-    // ocorrencias = [];
   }
 
-  // Firebase
+  /* FIREBASE */
 
   iniciaDb() async {
     _fc = FirebaseController();
@@ -65,7 +66,8 @@ class ModelView extends Model {
   get dbIniciado => _fc.dbIniciado;
   get aguardandoResposta => _aguardandoResposta;
 
-  /*** LOGIN ***/
+  /* LOGIN */
+
   bool _usuarioLogado;
 
   get usuarioLogado => _usuarioLogado;
@@ -90,7 +92,6 @@ class ModelView extends Model {
     UserCredential _uc;
     if (_dbIniciado) {
       _aguardandoResposta = true;
-      // notifyListeners();
 
       try {
         _uc = await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -118,10 +119,9 @@ class ModelView extends Model {
     print('[DEBUG] setUsuario($id)');
     _uidAtual = id;
     if (await getUsuarioAtual() != null) {}
-    // notifyListeners();
   }
 
-  Future<Usuario> getUsuario(String id) async {
+  Future<Usuario> getUsuarioId(String id) async {
     try {
       return await _fc.fetchUsuario(id);
     } catch (e) {
@@ -138,8 +138,12 @@ class ModelView extends Model {
         return value;
       });
     } catch (e) {
-      print('[ERRO]getUsuarioAtual(): $e');
+      print('[ERRO] getUsuarioAtual(): $e');
     }
+  }
+
+  void uploadImagem(File imagem) {
+    _fc.uploadImagem(imagem);
   }
 
   void deslogar() {
@@ -150,19 +154,23 @@ class ModelView extends Model {
 
   /*** MAIN ***/
   int indexPainelPrincipal;
+  int _indexPaginaOrigemEscolha;
+  List<Map<String, Object>> paineisPrincipais;
+  bool _escolhendoLocalOcorrencia = false;
 
   get getOcorrencias => ocorrencias;
   get getEndereco => enderecoUsuario;
+  get escolhendoLocalOcorrencia => _escolhendoLocalOcorrencia;
 
   void carregaDados() async {
     await atualizaLocalUsuario();
     await atualizaOcorrencias();
     escutaMudancaOcorrencias();
     notifyListeners();
-    // escutaLogin();
   }
 
-  void mudaModo() {
+  void mudaModo({int indexPagina = 1}) {
+    if (modoSelecao == true) indexPainelPrincipal = indexPagina;
     modoSelecao = !modoSelecao;
     notifyListeners();
   }
@@ -174,11 +182,16 @@ class ModelView extends Model {
       local.latitude,
       local.longitude,
     );
-    // localApontadoListenable.value = local;
-    // notifyListeners();
   }
 
-  //Atualizadores
+  void escolheLocalOcorrencia() {
+    _indexPaginaOrigemEscolha = indexPainelPrincipal;
+    print('[DEBUG] escolheLocalOcorrencia()');
+    _escolhendoLocalOcorrencia = true;
+    mudaModo();
+  }
+
+  /* Atualizadores */
 
   Future<void> atualizaOcorrencias({String bairro}) async {
     print('[DEBUG] atualizaOcorrencias($bairro)');
@@ -197,14 +210,6 @@ class ModelView extends Model {
         .listen((event) {
       atualizaOcorrencias();
       print('\n[DEBUG] escutaMudancaOcorrencias()');
-
-      // });
-      // .on
-      // .asStream()
-      // .listen((event) {/
-      // atualizaOcorrencias();
-      // event.docs.forEach((element) {
-      // });
     });
   }
 
@@ -230,7 +235,7 @@ class ModelView extends Model {
     notifyListeners();
   }
 
-  // Ocorrencia
+  /* Ocorrencia */
 
   List<File> imagens = [];
   ImagePicker _imgPicker = new ImagePicker();
@@ -251,26 +256,9 @@ class ModelView extends Model {
     }
   }
 
-  String formatEndereco(Address endereco) {
-    String saida = '';
-    print('endereço: $endereco');
-    if (endereco != null) {
-      if (endereco.thoroughfare != null && endereco.subLocality != null) {
-        saida += '${endereco.thoroughfare}, ${endereco.subLocality}. ';
-      }
-      saida += '${endereco.subAdminArea}, ${endereco.adminArea}, ' +
-          '${endereco.countryName}';
-    }
-    return saida;
-  }
-
   String formatData(DateTime data) {
     final DateFormat formatadorData = DateFormat('dd/MM/yyyy\nHH:mm');
     return formatadorData.format(data);
-  }
-
-  void uploadImagem(File imagem) {
-    _fc.uploadImagem(imagem);
   }
 
   Future<Image> downloadImagem() async {
@@ -314,12 +302,25 @@ class ModelView extends Model {
     _fc.deletaTodasOcorrencias();
   }
 
-  // Endereço
+  /* Endereço */
 
   Future<Address> getEnderecoBD(double latitude, double longitude) async {
     Address result;
     result = await _fc.fetchEndereco(latitude, longitude);
     enderecoApontado = result;
     return result;
+  }
+
+  String formatEndereco(Address endereco) {
+    String saida = '';
+    print('endereço: $endereco');
+    if (endereco != null) {
+      if (endereco.thoroughfare != null && endereco.subLocality != null) {
+        saida += '${endereco.thoroughfare}, ${endereco.subLocality}. ';
+      }
+      saida += '${endereco.subAdminArea}, ${endereco.adminArea}, ' +
+          '${endereco.countryName}';
+    }
+    return saida;
   }
 }

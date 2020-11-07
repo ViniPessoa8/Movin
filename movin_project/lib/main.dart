@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:movin_project/model_view/model_view.dart';
+import 'package:movin_project/utils/pagina_selecao_argumentos.dart';
 import 'package:movin_project/view/pages/pagina_login.dart';
 import 'package:movin_project/view/pages/pagina_mestre.dart';
 import 'package:movin_project/view/pages/pagina_principal.dart';
+import 'package:movin_project/view/pages/pagina_selecao_local.dart';
 import 'package:movin_project/view/widgets/login/painel_carregamento.dart';
 import 'package:movin_project/view/widgets/principal/painel_emergencia.dart';
 import 'package:movin_project/view/widgets/login/painel_login.dart';
@@ -23,6 +25,8 @@ class MovinApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final PaginaSelecaoArgumentos args =
+    //     ModalRoute.of(context).settings.arguments;
     return MaterialApp(
       title: 'Movin',
       theme: ThemeData(
@@ -66,6 +70,8 @@ class MovinApp extends StatelessWidget {
         PainelConfiguracoesConta.nomeRota: (ctx) =>
             PainelConfiguracoesConta(modelView),
         PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
+        PaginaSelecaoLocal.nomeRota: (ctx) => PaginaSelecaoLocal(
+            mv, mv.enderecoApontadoListenable, mv.paineisPrincipais),
       },
       debugShowCheckedModeBanner: false,
     );
