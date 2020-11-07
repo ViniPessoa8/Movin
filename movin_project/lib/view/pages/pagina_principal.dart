@@ -126,41 +126,6 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
       initialIndex: 0,
     );
 
-    // final paginaPrincipal = ScopedModel<ModelView>(
-    //   model: widget.mv,
-    //   child: Scaffold(
-    //     appBar: AppBar(
-    //       title: _buildTituloAppbar(),
-    //     ),
-    //     body:
-    //         ScopedModelDescendant<ModelView>(builder: (context, child, model) {
-    //       // Painel
-    //       return widget.mv.paineisPrincipais[model.indexPainelPrincipal]
-    //           ['pagina'];
-    //     }),
-    //     drawer: PainelDrawer(widget.mv),
-    //     bottomNavigationBar: ScopedModelDescendant<ModelView>(
-    //       builder: (context, child, model) {
-    //         // Barra de navegação inferior
-    //         return BottomNavigationBar(
-    //           onTap: model.selecionaPagina,
-    //           backgroundColor: primaryColor,
-    //           unselectedItemColor: Colors.white,
-    //           selectedItemColor: accentColor,
-    //           currentIndex: model.indexPainelPrincipal,
-    //           type: BottomNavigationBarType.fixed,
-    //           items: [
-    //             _buildNavBarItem('Mapa', Icons.map),
-    //             _buildNavBarItem('Ocorrências', Icons.warning),
-    //             _buildNavBarItem('Perfil', Icons.person),
-    //           ],
-    //         );
-    //       },
-    //     ),
-    //     floatingActionButton: _buildFloatingButton(),
-    //   ),
-    // );
-
     return ScopedModel<ModelView>(
       model: widget.mv,
       child: ScopedModelDescendant<ModelView>(
