@@ -76,6 +76,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(title: _buildTituloAppbar()),
+        drawer: PainelDrawer(widget.mv),
         body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: widget.mv.paineisPrincipais.map((tab) {
@@ -313,11 +314,6 @@ class _PaginaPrincipalState extends State<PaginaPrincipal> {
         );
       },
     );
-    // if (widget.mv.indexPainelPrincipal == 0) return _buildBotaoMapa();
-    // if (widget.mv.indexPainelPrincipal == 1) return _buildBotaoOcorrencias();
-    // return SpeedDial(
-    //   visible: false,
-    // );
   }
 
   // Retorna o título a ser usado no AppBar
