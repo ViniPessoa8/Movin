@@ -39,15 +39,6 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
   TabController _tabController;
 
   @override
-  void initState() {
-    super.initState();
-    _tabController = new TabController(
-        length: widget.mv.paineisPrincipais.length,
-        vsync: this,
-        initialIndex: widget.mv.indexPainelPrincipal);
-  }
-
-  @override
   void didChangeDependencies() {
     // Cores
     primaryColor = Theme.of(context).primaryColor;
@@ -71,6 +62,12 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
         'titulo': 'Perfil',
       },
     ];
+
+    _tabController = new TabController(
+        length: widget.mv.paineisPrincipais.length,
+        vsync: this,
+        initialIndex: widget.mv.indexPainelPrincipal);
+
     super.didChangeDependencies();
   }
 
