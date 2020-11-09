@@ -65,7 +65,15 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                             // Categoria
                             DropdownButton<String>(
                               autofocus: true,
-                              hint: Text('Selecione a Categoria'),
+                              hint: Text(
+                                'Selecione a Categoria',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(
+                                      fontSize: 20,
+                                    ),
+                              ),
                               value: categoria,
                               items: valores.map((elemento) {
                                 return DropdownMenuItem(
@@ -89,6 +97,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                             labelStyle:
                                 Theme.of(context).textTheme.bodyText1.copyWith(
                                       color: Colors.black54,
+                                      fontSize: 20,
                                     ),
                           ),
                         ),
@@ -121,15 +130,20 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                                 }
 
                                 return Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(),
+                                  ),
                                   margin: EdgeInsets.all(10),
+                                  padding: EdgeInsets.all(10),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Container(
-                                          margin: EdgeInsets.all(5),
-                                          child: Icon(Icons.add_location)),
+                                        child: Icon(Icons.add_location),
+                                      ),
                                       Container(
-                                        width: 300,
+                                        width: 260,
                                         child: Text(
                                           endereco == null
                                               ? '(Carregando endereço)'
@@ -137,12 +151,22 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                                           overflow: TextOverflow.clip,
                                           maxLines: 2,
                                           softWrap: true,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(
+                                                fontSize: 20,
+                                              ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 );
                               }),
+                        ),
+                        Divider(
+                          height: 1,
+                          color: Colors.black,
                         ),
                         ScopedModelDescendant<ModelView>(
                           builder: (context, child, model) {
@@ -196,7 +220,8 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                         FlatButton(
                           onPressed: () {
                             for (File imagem in widget.mv.imagens) {
-                              widget.mv.uploadImagem(imagem);
+                              widget.mv.uploadImagem(imagem,
+                                  'imagens/ocorrencias/${imagem.hashCode}.jpg');
                             }
                           },
                           child: Text('Enviar imagem'),
@@ -204,19 +229,25 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                       ],
                     ),
                   ),
+                  Divider(
+                    height: 1,
+                    color: Colors.black,
+                  ),
                   SizedBox(
                     height: 20,
                   ),
                   RaisedButton(
                     onPressed: () {
-                      widget.mv.addOcorrencia(Ocorrencia(
-                        descricao: descricaoController.text,
-                        categoria: categoria,
-                        data: DateTime.now(),
-                        local: local,
-                        idUsuario: FirebaseAuth.instance.currentUser.uid,
-                        endereco: endereco,
-                      ));
+                      widget.mv.addOcorrencia(
+                        Ocorrencia(
+                          descricao: descricaoController.text,
+                          categoria: categoria,
+                          data: DateTime.now(),
+                          local: local,
+                          idUsuario: FirebaseAuth.instance.currentUser.uid,
+                          endereco: endereco,
+                        ),
+                      );
                       widget.mv.removeLocalApontado();
                       Navigator.of(context).pop();
                       showDialog(
@@ -236,7 +267,25 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                         },
                       );
                     },
-                    child: Text('Criar Ocorrência'),
+                    child: Text(
+                      'Criar Ocorrência',
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(
+                            fontSize: 25,
+                          ),
+                    ),
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      if (Navigator.of(context).canPop())
+                        Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Cancelar',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: Colors.red[200]),
+                    ),
                   ),
                 ],
               ),
@@ -267,5 +316,11 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
     setState(() {
       endereco = _endereco;
     });
+  }
+
+  @override
+  void dispose() {
+    widget.mv.imagens = [];
+    super.dispose();
   }
 }
