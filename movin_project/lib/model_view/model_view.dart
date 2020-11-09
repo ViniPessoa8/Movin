@@ -7,10 +7,8 @@ import 'package:geocoder/geocoder.dart';
 import 'package:geopoint/geopoint.dart' as gp;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
 import 'package:mapbox_gl/mapbox_gl.dart' as mb;
 import 'package:movin_project/model/usuario.dart';
-import 'package:movin_project/view/pages/pagina_principal.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:movin_project/model/ocorrencia.dart';
 import 'package:movin_project/db/firebase_controller.dart';
@@ -62,6 +60,7 @@ class ModelView extends Model {
     _fc = FirebaseController();
     _dbIniciado = await _fc.inicializaFirestore();
     carregaDados();
+    // notifyListeners();
   }
 
   get dbIniciado => _fc.dbIniciado;
@@ -120,7 +119,10 @@ class ModelView extends Model {
   void setUsuario(String id) async {
     print('[DEBUG] setUsuario($id)');
     _uidAtual = id;
-    if (await getUsuarioAtual() != null) {}
+    Usuario _usuario = await getUsuarioAtual();
+    if (_usuario != null) {
+      usuarioAtual = _usuario;
+    }
   }
 
   Future<Usuario> getUsuarioId(String id) async {
@@ -269,8 +271,8 @@ class ModelView extends Model {
     return formatadorData.format(data);
   }
 
-  Future<Image> downloadImagem() async {
-    String imagemURL = await _fc.downloadImagemURL();
+  Future<Image> downloadImagem(String url) async {
+    String imagemURL = await _fc.downloadImagemURL(url);
     Image imagem = Image.network(
       imagemURL,
       height: 350,

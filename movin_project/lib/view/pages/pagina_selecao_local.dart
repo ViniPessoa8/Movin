@@ -39,7 +39,7 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
 
   @override
   void initState() {
-    carregaDados();
+    updateLocalizacao();
     super.initState();
   }
 
@@ -79,10 +79,6 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
       @required double longitude,
       double zoom,
       double height = 550.0}) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      marcadorCentralizado();
-    });
-
     // Mapa de seleção de um local
     MapboxMap _mapSelecao = new MapboxMap(
       initialCameraPosition: new CameraPosition(
@@ -96,6 +92,10 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
       trackCameraPosition: true,
       myLocationTrackingMode: MyLocationTrackingMode.Tracking,
       onMapCreated: (controller) => onMapCreate(controller),
+      onStyleLoadedCallback: () {
+        carregaDados();
+        // marcadorCentralizado();
+      },
     );
 
     return Container(
@@ -207,7 +207,7 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
     print('[DEBUG] UpdateLocalCentro()');
     if (_mapBoxController != null) {
       LatLng posCamera = _mapBoxController.cameraPosition.target;
-      _centroMapa = _mapBoxController.cameraPosition.target;
+      _centroMapa = posCamera;
       print('[DEBUG] updateCentroMapa updateLocalApontado($_centroMapa)');
       widget.mv.updateLocalApontado(LatLng(
         _centroMapa.latitude,

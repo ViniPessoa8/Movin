@@ -39,6 +39,14 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
   TabController _tabController;
 
   @override
+  void initState() {
+    // atualiza ocorrências
+    // widget.mv.carregaDados();
+
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
     // Cores
     primaryColor = Theme.of(context).primaryColor;
@@ -63,6 +71,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
       },
     ];
 
+    // Tab controller
     _tabController = new TabController(
         length: widget.mv.paineisPrincipais.length,
         vsync: this,

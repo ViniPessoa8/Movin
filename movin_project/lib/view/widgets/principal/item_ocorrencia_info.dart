@@ -126,12 +126,12 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
   /* Functions */
 
   void carregaDados() {
-    downloadImagem();
+    downloadImagem('imagens/imagem_teste.jpg');
   }
 
   // Carrega a imagem da ocorrencia
-  void downloadImagem() async {
-    Image img = await widget.mv.downloadImagem();
+  void downloadImagem(String url) async {
+    Image img = await widget.mv.downloadImagem(url);
     imagemCarregada = true;
 
     setState(() {

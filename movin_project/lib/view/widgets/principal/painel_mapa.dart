@@ -25,6 +25,8 @@ class _PainelMapaState extends State<PainelMapa>
   MapboxMapController _mapBoxController;
   final double _userLocationZoom = 14.0;
   final double _ocorrenciaSelecionadaZoom = 16.0;
+  ByteData bytes;
+  Uint8List marcadorUint8;
 
   LatLng _centroMapa;
   Symbol marcador;
@@ -32,19 +34,20 @@ class _PainelMapaState extends State<PainelMapa>
 
   @override
   void initState() {
-    updateLocalizacao();
     super.initState();
+    // carregaMarcador();
+    carregaDados();
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      addOcorrencias();
-    });
+    // carregaMarcador();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   addOcorrencias();
+    // });
 
     return _localizacao == null
         ? Center(
@@ -99,6 +102,10 @@ class _PainelMapaState extends State<PainelMapa>
       myLocationEnabled: true,
       zoomGesturesEnabled: true,
       myLocationRenderMode: MyLocationRenderMode.NORMAL,
+      onStyleLoadedCallback: () {
+        // carregaMarcador();
+        addOcorrencias();
+      },
       onMapCreated: (controller) => onMapCreate(controller),
     );
 
@@ -117,6 +124,19 @@ class _PainelMapaState extends State<PainelMapa>
   }
 
   // Functions */
+
+  void carregaDados() async {
+    await carregaMarcador();
+    // addOcorrencias();
+    await updateLocalizacao();
+  }
+
+  Future<void> carregaMarcador() async {
+    bytes = await rootBundle.load("assets/media/marker.png");
+    setState(() {
+      marcadorUint8 = bytes.buffer.asUint8List();
+    });
+  }
 
   // Carrega a localização do usuario
   Future<void> updateLocalizacao() async {
@@ -147,6 +167,7 @@ class _PainelMapaState extends State<PainelMapa>
       _localizacao = _locationData;
       _centroMapa = LatLng(_localizacao.latitude, _localizacao.longitude);
     });
+    // setState(() {});
   }
 
   // Move o foco do mapa para o local da ocorrência selecionada
@@ -185,7 +206,6 @@ class _PainelMapaState extends State<PainelMapa>
     if (widget.mv.carregouOcorrencias) {
       print('[DEBUG] addOcorrencias() carregouDados');
       widget.mv.ocorrencias.forEach((element) {
-        print('[DEBUG] addOcorrencia(${element.idOcorrencia})');
         addOcorrencia(element);
       });
     }
@@ -193,6 +213,7 @@ class _PainelMapaState extends State<PainelMapa>
 
   // Adiciona uma ocorrência individual no mapa
   void addOcorrencia(Ocorrencia ocorrencia) async {
+    print('[DEBUG] addOcorrencia(${ocorrencia.idOcorrencia})');
     if (_mapBoxController != null) {
       LatLng _local = LatLng(
         ocorrencia.local.latitude,
@@ -200,9 +221,7 @@ class _PainelMapaState extends State<PainelMapa>
       );
       print('add ponto( ${_local.latitude}, ${_local.longitude})');
 
-      final ByteData bytes = await rootBundle.load("assets/media/marker.png");
-      final Uint8List list = bytes.buffer.asUint8List();
-      await _mapBoxController.addImage('marcador', list);
+      await _mapBoxController.addImage('marcador', marcadorUint8);
       await _mapBoxController.addSymbol(
           SymbolOptions(
             geometry: _local,

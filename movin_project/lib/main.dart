@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movin_project/model_view/model_view.dart';
-import 'package:movin_project/utils/pagina_selecao_argumentos.dart';
 import 'package:movin_project/view/pages/pagina_login.dart';
 import 'package:movin_project/view/pages/pagina_mestre.dart';
 import 'package:movin_project/view/pages/pagina_principal.dart';

@@ -157,7 +157,7 @@ class _PainelLoginState extends State<PainelLogin> {
 
     // Validação do formulário de Login
     if (formLoginValido) {
-      var _resposta;
+      UserCredential _resposta;
       print('form login válido');
       _formKey.currentState.save();
       print(_emailUsuario);
@@ -168,6 +168,7 @@ class _PainelLoginState extends State<PainelLogin> {
           _emailUsuario,
           _senhaUsuario,
         );
+        widget.mv.setUsuario(_resposta.user.uid);
         widget.mv.getUsuarioAtual(); // Carrega informações do usuário que logou
       } on FirebaseAuthException catch (e) {
         // Usuario não encontrado

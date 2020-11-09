@@ -208,13 +208,11 @@ class FirebaseController extends Model {
     print('File Uploaded');
   }
 
-  Future<String> downloadImagemURL() async {
+  Future<String> downloadImagemURL(String url) async {
     String imagemURL;
 
-    imagemURL = await FirebaseStorage.instance
-        .ref()
-        .child('/imagens/imagem_teste.jpg')
-        .getDownloadURL();
+    imagemURL =
+        await FirebaseStorage.instance.ref().child(url).getDownloadURL();
 
     print('IMAGEM: $imagemURL');
 

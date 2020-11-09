@@ -18,7 +18,6 @@ class PainelOcorrencias extends StatefulWidget {
 class _PainelOcorrenciasState extends State<PainelOcorrencias>
     with AutomaticKeepAliveClientMixin<PainelOcorrencias> {
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
   @override
