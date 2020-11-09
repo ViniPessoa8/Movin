@@ -114,41 +114,40 @@ class FirebaseController extends Model {
   Future<List<Ocorrencia>> fetchOcorrencias({String bairro}) async {
     List<Ocorrencia> listaOcorrencias = [];
     if (_dbIniciado) {
-      await _db.collection('ocorrencias').get().then(
-        (value) {
-          value.docs.forEach(
-            (element) {
-              //Tratamento do elemento
-              GeoPoint localBd = element.get('local');
-              gp.GeoPoint local = gp.GeoPoint(
-                latitude: localBd.latitude,
-                longitude: localBd.longitude,
-              );
+      QuerySnapshot _qs = await _db.collection('ocorrencias').get();
 
-              Ocorrencia ocorrencia = Ocorrencia(
-                idOcorrencia: element.id,
-                idUsuario: element.get('idUsuario'),
-                descricao: element.get('descicao'),
-                data: element.get('data').toDate(),
-                categoria: element.get('categoria'),
-                local: local,
-                // endereco: value,
-              );
-              if (bairro != null) {
-                fetchEndereco(local.latitude, local.longitude).then((value) {
-                  if (value.subLocality == bairro) {
-                    listaOcorrencias.add(ocorrencia);
-                  }
-                });
-              } else {
-                listaOcorrencias.add(ocorrencia);
-              }
-            },
-          );
-        },
-      );
-      return listaOcorrencias;
+      for (QueryDocumentSnapshot doc in _qs.docs) {
+        // Tratamento do elemento
+        GeoPoint localBd = doc.get('local');
+        gp.GeoPoint local = gp.GeoPoint(
+          latitude: localBd.latitude,
+          longitude: localBd.longitude,
+        );
+
+        Address _endereco =
+            await fetchEndereco(local.latitude, local.longitude);
+
+        Ocorrencia ocorrencia = Ocorrencia(
+          idOcorrencia: doc.id,
+          idUsuario: doc.get('idUsuario'),
+          descricao: doc.get('descicao'),
+          data: doc.get('data').toDate(),
+          categoria: doc.get('categoria'),
+          local: local,
+          endereco: _endereco,
+        );
+        if (bairro != null) {
+          fetchEndereco(local.latitude, local.longitude).then((value) {
+            if (value.subLocality == bairro) {
+              listaOcorrencias.add(ocorrencia);
+            }
+          });
+        } else {
+          listaOcorrencias.add(ocorrencia);
+        }
+      }
     }
+    return listaOcorrencias;
   }
 
   Future<bool> addOcorrencia({
