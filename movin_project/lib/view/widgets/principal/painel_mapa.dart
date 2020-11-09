@@ -202,9 +202,8 @@ class _PainelMapaState extends State<PainelMapa>
 
   // Adiciona as ocorrências do banco de dados no mapa
   void addOcorrencias() {
-    print('[DEBUG] addOcorrencias()');
+    print('addOcorrencias()');
     if (widget.mv.carregouOcorrencias) {
-      print('[DEBUG] addOcorrencias() carregouDados');
       widget.mv.ocorrencias.forEach((element) {
         addOcorrencia(element);
       });
@@ -213,13 +212,11 @@ class _PainelMapaState extends State<PainelMapa>
 
   // Adiciona uma ocorrência individual no mapa
   void addOcorrencia(Ocorrencia ocorrencia) async {
-    print('[DEBUG] addOcorrencia(${ocorrencia.idOcorrencia})');
     if (_mapBoxController != null) {
       LatLng _local = LatLng(
         ocorrencia.local.latitude,
         ocorrencia.local.longitude,
       );
-      print('add ponto( ${_local.latitude}, ${_local.longitude})');
 
       await _mapBoxController.addImage('marcador', marcadorUint8);
       await _mapBoxController.addSymbol(
