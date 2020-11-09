@@ -190,11 +190,28 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                                             return Container(
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 5),
-                                              child: Image.file(
-                                                model.imagens[index],
-                                                height: 80,
-                                                width: 80,
-                                                fit: BoxFit.fitHeight,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return Container(
+                                                        child: Image.file(
+                                                          model.imagens[index],
+                                                          height: 400,
+                                                          width: 300,
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                child: Image.file(
+                                                  model.imagens[index],
+                                                  height: 80,
+                                                  width: 80,
+                                                  fit: BoxFit.fitHeight,
+                                                ),
                                               ),
                                             );
                                           },

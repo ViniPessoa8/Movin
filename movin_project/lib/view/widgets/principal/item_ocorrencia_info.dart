@@ -163,11 +163,28 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
           itemBuilder: (context, index) {
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 5),
-              child: Image(
-                image: imagens[index].image,
-                height: 80,
-                width: 80,
-                fit: BoxFit.cover,
+              child: InkWell(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        child: Image(
+                          image: imagens[index].image,
+                          height: 400,
+                          width: 300,
+                          fit: BoxFit.contain,
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Image(
+                  image: imagens[index].image,
+                  height: 80,
+                  width: 80,
+                  fit: BoxFit.cover,
+                ),
               ),
             );
           },
