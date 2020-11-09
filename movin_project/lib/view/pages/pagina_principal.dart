@@ -217,9 +217,14 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
   // Mostra painel das informações de uma ocorrência
   void _showPainelOcorrencia() {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (context) {
-        return PainelCriaOcorrencia(widget.mv);
+        return Wrap(
+          children: [
+            PainelCriaOcorrencia(widget.mv),
+          ],
+        );
       },
     );
   }

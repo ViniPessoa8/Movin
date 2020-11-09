@@ -136,16 +136,11 @@ class FirebaseController extends Model {
               );
               if (bairro != null) {
                 fetchEndereco(local.latitude, local.longitude).then((value) {
-                  print('SubLocality: ${value.subLocality} | bairro: $bairro');
-                  print(
-                      'value.subLocality == bairro: ${value.subLocality == bairro}');
                   if (value.subLocality == bairro) {
-                    print(ocorrencia.categoria);
                     listaOcorrencias.add(ocorrencia);
                   }
                 });
               } else {
-                print(ocorrencia.categoria);
                 listaOcorrencias.add(ocorrencia);
               }
             },
@@ -162,11 +157,13 @@ class FirebaseController extends Model {
     @required DateTime data,
     @required gp.GeoPoint local,
     @required String idUsuario,
+    List<File> imagens,
   }) async {
+    // Converte geopoint local para o geopoint do Firestore
     GeoPoint localConvertido = GeoPoint(local.latitude, local.longitude);
 
-    //Criação da ocorrência no banco de dados
-    var id = await _db.collection('ocorrencias').add({
+    // Criação da ocorrência no banco de dados
+    DocumentReference doc = await _db.collection('ocorrencias').add({
       'descicao': descricao,
       'categoria': categoria,
       'data': data,
@@ -174,9 +171,27 @@ class FirebaseController extends Model {
       'idUsuario': idUsuario,
     });
 
-    print(id);
+    // Objeto Ocorrencia criada
+    Ocorrencia ocorrencia = Ocorrencia(
+      idUsuario: doc.id,
+      descricao: descricao,
+      data: data,
+      categoria: categoria,
+      local: local,
+    );
+
+    // Envia imagens
+    List<String> urlImagens = await uploadImagensOcorrencia(imagens, doc.id);
+
+    print('[DEBUG] urlImagens = $urlImagens');
+    print('[DEBUG] urlImagens.toList() = ${urlImagens.toList()}');
+
+    await _db.collection('ocorrencias').doc(doc.id).update({
+      'urlImagens': urlImagens.toList(),
+    });
+
     notifyListeners();
-    return id != null;
+    return doc != null;
   }
 
   void deletaTodasOcorrencias() async {
@@ -199,13 +214,35 @@ class FirebaseController extends Model {
 
   void deletaOcorrencia(String id) {}
 
-  Future uploadImagem(File imagem) async {
+  Future<List<String>> uploadImagensOcorrencia(
+    List<File> imagens,
+    String idOcorrencia,
+  ) async {
+    List<String> urlImagens = [];
+    print('[DEBUG] uploadImagensOcorrencia');
+    print('[DEBUG] uploadImagensOcorrencia imagens = $imagens');
+
+    for (File imagem in imagens) {
+      print('[DEBUG] uploadImagensOcorrencia element = $imagem');
+      String path = 'imagens/ocorrencias/${imagem.hashCode}$idOcorrencia';
+      String urlImagem = await uploadImagem(imagem, path);
+      print('[DEBUG] uploadImagensOcorrencia urlImagem = $urlImagem');
+      urlImagens.add(urlImagem);
+      print('[DEBUG] uploadImagensOcorrencia urlImagens = $urlImagens');
+    }
+    return urlImagens;
+  }
+
+  Future<String> uploadImagem(File imagem, String caminho) async {
     StorageReference storageReference =
-        FirebaseStorage.instance.ref().child('imagens/imagem_teste.jpg');
+        FirebaseStorage.instance.ref().child(caminho);
     print('Basename: ${Path.basename(imagem.path)}\n path: ${imagem.path}');
     StorageUploadTask uploadTask = storageReference.putFile(imagem);
-    await uploadTask.onComplete;
-    print('File Uploaded');
+    StorageTaskSnapshot _taskSnapshot = await uploadTask.onComplete;
+    String path = await _taskSnapshot.ref.getPath();
+    print('[debug] PATH = $path');
+    return path;
+    // print('File Uploaded ${}');
   }
 
   Future<String> downloadImagemURL(String url) async {

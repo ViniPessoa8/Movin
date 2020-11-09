@@ -146,8 +146,8 @@ class ModelView extends Model {
     }
   }
 
-  void uploadImagem(File imagem) {
-    _fc.uploadImagem(imagem);
+  void uploadImagem(File imagem, String caminho) {
+    _fc.uploadImagem(imagem, caminho);
   }
 
   void deslogar() async {
@@ -257,10 +257,12 @@ class ModelView extends Model {
       data: ocorrencia.data,
       local: ocorrencia.local,
       idUsuario: ocorrencia.idUsuario,
+      imagens: imagens,
     );
 
     if (resp) {
       print('Ocorrência criada.');
+      imagens = [];
     } else {
       print('Erro na criação da ocorrência.');
     }
@@ -291,10 +293,13 @@ class ModelView extends Model {
       source: ImageSource.camera,
       imageQuality: 80,
     );
-    print('Imagem selecionada: ${img.path}');
-
-    imagens.add(File(img.path));
-    notifyListeners();
+    if (img != null) {
+      print('Imagem selecionada: ${img.path}');
+      imagens.add(File(img.path));
+      notifyListeners();
+    } else {
+      print('[ERRO] MV imgCamera(): img null');
+    }
   }
 
   imgGaleria() async {
