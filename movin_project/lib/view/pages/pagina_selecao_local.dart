@@ -188,6 +188,7 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
   // Atualiza a posição do marcador central
   void updateMarcadorCentral() {
     print('[DEBUG] UpdateMarcadorCentral()');
+    widget._enderecoApontado.value = null;
     if (_mapBoxController != null) {
       LatLng posCamera = _mapBoxController.cameraPosition.target;
       if (posCamera != _centroMapa) {
