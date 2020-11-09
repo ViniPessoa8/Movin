@@ -245,6 +245,23 @@ class FirebaseController extends Model {
     // print('File Uploaded ${}');
   }
 
+  Future<List<String>> downloadUrlImagensOcorrencia(String idOcorrencia) async {
+    print('[DEBUG] downloadUrlImagensOcorrencia($idOcorrencia)');
+    List<String> urls = [];
+    var resp = await _db.collection('ocorrencias').doc(idOcorrencia).get();
+    List<dynamic> _urls = resp.data()['urlImagens'];
+    print('[DDDDDDDDDDDDDDD] _urls = $_urls');
+    for (var item in _urls) {
+      urls.add(item.toString());
+    }
+    print(urls);
+    return urls;
+
+    // print('IMAGEM: $imagemURL');
+
+    // return imagemURL;
+  }
+
   Future<String> downloadImagemURL(String url) async {
     String imagemURL;
 

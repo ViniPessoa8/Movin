@@ -271,7 +271,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
           ),
           label: 'Teste',
           backgroundColor: Colors.purple,
-          onTap: _showPaginaSelecao, //widget.mv.mudaModo,
+          onTap: widget.mv.deletaTodasOcorrencias, //widget.mv.mudaModo,
         ),
       ],
     );

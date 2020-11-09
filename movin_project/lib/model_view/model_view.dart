@@ -273,6 +273,10 @@ class ModelView extends Model {
     return formatadorData.format(data);
   }
 
+  Future<List<String>> downloadUrlImagensOcorrencia(String idOcorrencia) async {
+    return await _fc.downloadUrlImagensOcorrencia(idOcorrencia);
+  }
+
   Future<Image> downloadImagem(String url) async {
     String imagemURL = await _fc.downloadImagemURL(url);
     Image imagem = Image.network(

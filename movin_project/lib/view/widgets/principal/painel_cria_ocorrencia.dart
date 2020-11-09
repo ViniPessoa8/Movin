@@ -313,9 +313,11 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
 
     var _endereco =
         await widget.mv.getEnderecoBD(local.latitude, local.longitude);
-    setState(() {
-      endereco = _endereco;
-    });
+    if (this.mounted) {
+      setState(() {
+        endereco = _endereco;
+      });
+    }
   }
 
   @override

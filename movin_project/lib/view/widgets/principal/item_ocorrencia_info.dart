@@ -20,9 +20,9 @@ class ItemOcorrenciaInfo extends StatefulWidget {
 
 class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
   // Imagem
-  Image imagem;
+  List<Image> imagens;
   // Util
-  bool imagemCarregada = false;
+  bool imagensCarregadas = false;
 
   @override
   void initState() {
@@ -33,6 +33,8 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 200,
+      height: 200,
       child: SimpleDialog(
         contentPadding: EdgeInsets.all(10),
         children: [
@@ -116,7 +118,8 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
           // Imagens da ocorrencia
           Container(
             height: 100,
-            child: _mostraImagem(),
+            width: 300,
+            child: _mostraImagens(),
           ),
         ],
       ),
@@ -125,29 +128,54 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
 
   /* Functions */
 
-  void carregaDados() {
-    downloadImagem('imagens/imagem_teste.jpg');
+  void carregaDados() async {
+    // downloadImagem('imagens/imagem_teste.jpg');
+    List<String> _urls = await widget.mv
+        .downloadUrlImagensOcorrencia(widget.ocorrencia.idOcorrencia);
+    downloadImagens(_urls);
   }
 
   // Carrega a imagem da ocorrencia
-  void downloadImagem(String url) async {
-    Image img = await widget.mv.downloadImagem(url);
-    imagemCarregada = true;
+  void downloadImagens(List<String> urls) async {
+    print('[DEBUG] downloadImagens($urls)');
+    List<Image> _imagens = [];
+    for (String url in urls) {
+      Image img = await widget.mv.downloadImagem(url);
+      _imagens.add(img);
+    }
+    imagensCarregadas = true;
 
     setState(() {
-      imagem = img;
+      imagens = _imagens;
     });
   }
 
   /* Builders */
 
   // Retorna a imagem carregada
-  Widget _mostraImagem() {
-    if (imagemCarregada && imagem != null) {
-      return imagem;
-    } else if (imagemCarregada) {
+  Widget _mostraImagens() {
+    if (imagensCarregadas && imagens != null) {
+      return Container(
+        child: ListView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: imagens.length,
+          itemBuilder: (context, index) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: Image(
+                image: imagens[index].image,
+                height: 80,
+                width: 80,
+                fit: BoxFit.cover,
+              ),
+            );
+          },
+        ),
+      );
+    } else if (imagensCarregadas) {
       return Center(
-        child: Text('(Sem Imagem)'),
+        child: Text('(Sem Imagens)'),
       );
     } else {
       return Center(child: Text("Carregando Imagem..."));
