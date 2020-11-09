@@ -340,6 +340,8 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
   @override
   void dispose() {
     widget.mv.imagens = [];
+    tituloController.dispose();
+    descricaoController.dispose();
     super.dispose();
   }
 }
