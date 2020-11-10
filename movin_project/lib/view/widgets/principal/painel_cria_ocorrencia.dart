@@ -30,6 +30,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
       FirebaseFirestore.instance.collection('ocorrencias');
   TextEditingController tituloController = new TextEditingController();
   TextEditingController descricaoController = new TextEditingController();
+  ValueNotifier<bool> _formularioInvalido = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -253,37 +254,24 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                   SizedBox(
                     height: 20,
                   ),
-                  RaisedButton(
-                    onPressed: () {
-                      widget.mv.addOcorrencia(
-                        Ocorrencia(
-                          descricao: descricaoController.text,
-                          categoria: categoria,
-                          data: DateTime.now(),
-                          local: local,
-                          idUsuario: FirebaseAuth.instance.currentUser.uid,
-                          endereco: endereco,
-                        ),
-                      );
-                      widget.mv.removeLocalApontado();
-                      Navigator.of(context).pop();
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            content: Text('Ocorrência criada com sucesso.'),
-                            actions: [
-                              RaisedButton(
-                                child: Text('OK'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              )
-                            ],
-                          );
-                        },
-                      );
+                  ValueListenableBuilder(
+                    valueListenable: _formularioInvalido,
+                    builder: (context, value, child) {
+                      return _formularioInvalido.value
+                          ? Text(
+                              'Formulário inválido.',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText2
+                                  .copyWith(
+                                    color: Colors.redAccent,
+                                  ),
+                            )
+                          : SizedBox();
                     },
+                  ),
+                  RaisedButton(
+                    onPressed: addOcorrencia,
                     child: Text(
                       'Criar Ocorrência',
                       style: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -311,6 +299,69 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
         ),
       ),
     );
+  }
+
+  void addOcorrencia() {
+    if (!validaFormulario()) {
+      _formularioInvalido.value = true;
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text('Formulário inválido.'),
+            actions: [
+              RaisedButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        },
+      );
+    } else {
+      widget.mv.addOcorrencia(
+        Ocorrencia(
+          descricao: descricaoController.text,
+          categoria: categoria,
+          data: DateTime.now(),
+          local: local,
+          idUsuario: FirebaseAuth.instance.currentUser.uid,
+          endereco: endereco,
+        ),
+      );
+      widget.mv.removeLocalApontado();
+      Navigator.of(context).pop();
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text('Ocorrência criada com sucesso.'),
+            actions: [
+              RaisedButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  bool validaFormulario() {
+    print('[debug] validaFormulario');
+    if (descricaoController.value == null ||
+        tituloController.value == null ||
+        endereco == null) {
+      print('[debug] validaFormulario false');
+      return false;
+    }
+    print('[debug] validaFormulario true');
+    return true;
   }
 
   /* Functions */
