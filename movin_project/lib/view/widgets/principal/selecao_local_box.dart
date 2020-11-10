@@ -6,9 +6,9 @@ import 'package:movin_project/model_view/model_view.dart';
 
 class SelecaoLocalBox extends StatelessWidget {
   final ValueListenable _enderecoApontado;
-  final ModelView mv;
+  final ModelView _mv;
 
-  SelecaoLocalBox(this._enderecoApontado, this.mv);
+  SelecaoLocalBox(this._enderecoApontado, this._mv);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +20,8 @@ class SelecaoLocalBox extends StatelessWidget {
             child: Text('(Carregando...)'),
             builder: (context, value, child) {
               print('[DEBUG] ValueListenableBuilder');
-              if (value != null && mv.enderecoApontado != null) {
-                return Text('${mv.formatEndereco(value)}');
+              if (value != null && _mv.enderecoApontado != null) {
+                return Text('${_mv.formatEndereco(value)}');
               }
               return Text('(Carregando)');
             },
@@ -39,16 +39,13 @@ class SelecaoLocalBox extends StatelessWidget {
               RaisedButton(
                 onPressed: () {
                   print(
-                      '[DEBUG] mv.escolhendoLocalOcorrencia = ${mv.escolhendoLocalOcorrencia}');
-                  mv.enderecoApontado = _enderecoApontado.value;
-                  mv.updateLocalApontado(LatLng(
-                      mv.enderecoApontado.coordinates.latitude,
-                      mv.enderecoApontado.coordinates.longitude));
-                  print('${mv.enderecoApontado.addressLine}');
-                  print('${mv.localApontado.toString()}');
-                  // mv.escolhendoLocalOcorrencia
-                  //     ? mv.mudaModo(indexPagina: 1)
-                  //     : mv.mudaModo(indexPagina: 0);
+                      '[DEBUG] mv.escolhendoLocalOcorrencia = ${_mv.escolhendoLocalOcorrencia}');
+                  _mv.enderecoApontado = _enderecoApontado.value;
+                  _mv.updateLocalApontado(LatLng(
+                      _mv.enderecoApontado.coordinates.latitude,
+                      _mv.enderecoApontado.coordinates.longitude));
+                  print('${_mv.enderecoApontado.addressLine}');
+                  print('${_mv.localApontado.toString()}');
                   if (Navigator.of(context).canPop()) {
                     Navigator.of(context).pop();
                   }

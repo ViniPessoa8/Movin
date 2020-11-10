@@ -4,9 +4,9 @@ import 'package:movin_project/model_view/model_view.dart';
 
 class PainelLogin extends StatefulWidget {
   static final String nomeRota = '/Login';
-  final ModelView mv;
+  final ModelView _mv;
 
-  PainelLogin(this.mv);
+  PainelLogin(this._mv);
 
   @override
   _PainelLoginState createState() => _PainelLoginState();
@@ -14,8 +14,8 @@ class PainelLogin extends StatefulWidget {
 
 class _PainelLoginState extends State<PainelLogin> {
   // Imagens
-  final AssetImage googleLogo = AssetImage('assets/media/google_logo.png');
-  final AssetImage facebookLogo = AssetImage('assets/media/facebook_logo.png');
+  final AssetImage _googleLogo = AssetImage('assets/media/google_logo.png');
+  final AssetImage _facebookLogo = AssetImage('assets/media/facebook_logo.png');
   // Formulário
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   // Informações do usuario
@@ -135,9 +135,10 @@ class _PainelLoginState extends State<PainelLogin> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        buildLoginAlternativo(context, 'Google  ', googleLogo),
-                        buildLoginAlternativo(
-                            context, 'Facebook', facebookLogo),
+                        _buildLoginAlternativo(
+                            context, 'Google  ', _googleLogo),
+                        _buildLoginAlternativo(
+                            context, 'Facebook', _facebookLogo),
                       ],
                     ),
                   ],
@@ -164,12 +165,13 @@ class _PainelLoginState extends State<PainelLogin> {
       print(_senhaUsuario);
       // Realiza o login
       try {
-        _resposta = await widget.mv.realizaLogin(
+        _resposta = await widget._mv.realizaLogin(
           _emailUsuario,
           _senhaUsuario,
         );
-        widget.mv.setUsuario(_resposta.user.uid);
-        widget.mv.getUsuarioAtual(); // Carrega informações do usuário que logou
+        widget._mv.setUsuario(_resposta.user.uid);
+        widget._mv
+            .getUsuarioAtual(); // Carrega informações do usuário que logou
       } on FirebaseAuthException catch (e) {
         // Usuario não encontrado
         if (e.code == 'user-not-found') {
@@ -196,7 +198,7 @@ class _PainelLoginState extends State<PainelLogin> {
   }
 
   /* Builders */
-  Widget buildLoginAlternativo(
+  Widget _buildLoginAlternativo(
       BuildContext ctx, String titulo, AssetImage imagem) {
     return Container(
       // decoration: BoxDecoration(border: Border.all()),

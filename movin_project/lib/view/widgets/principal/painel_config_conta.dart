@@ -3,9 +3,9 @@ import 'package:movin_project/model_view/model_view.dart';
 
 class PainelConfiguracoesConta extends StatefulWidget {
   static String nomeRota = '/perfil/config';
-  final ModelView mv;
+  final ModelView _mv;
 
-  PainelConfiguracoesConta(this.mv);
+  PainelConfiguracoesConta(this._mv);
 
   @override
   _PainelConfiguracoesContaState createState() =>
@@ -41,19 +41,19 @@ class _PainelConfiguracoesContaState extends State<PainelConfiguracoesConta> {
                   _buildFlatButton(
                     context: context,
                     titulo: 'ID',
-                    dados: widget.mv.usuarioAtual.idUsuario,
+                    dados: widget._mv.usuarioAtual.idUsuario,
                   ),
                   // Nome
                   _buildFlatButton(
                     context: context,
                     titulo: 'Nome',
-                    dados: widget.mv.usuarioAtual.nome,
+                    dados: widget._mv.usuarioAtual.nome,
                   ),
                   // Email
                   _buildFlatButton(
                     context: context,
                     titulo: 'E-mail',
-                    dados: widget.mv.usuarioAtual.email,
+                    dados: widget._mv.usuarioAtual.email,
                   ),
                   // Alterar senha
                   _buildFlatButton(
@@ -72,7 +72,7 @@ class _PainelConfiguracoesContaState extends State<PainelConfiguracoesConta> {
 
   /* Builders */
 
-  _buildFlatButton({
+  Widget _buildFlatButton({
     @required BuildContext context,
     @required String titulo,
     @required String dados,

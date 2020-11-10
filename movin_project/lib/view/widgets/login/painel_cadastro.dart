@@ -4,9 +4,9 @@ import 'package:movin_project/model_view/model_view.dart';
 
 class PainelCadastro extends StatefulWidget {
   static final String nomeRota = '/Cadastro';
-  final ModelView mv;
+  final ModelView _mv;
 
-  PainelCadastro(this.mv);
+  PainelCadastro(this._mv);
 
   @override
   _PainelCadastroState createState() => _PainelCadastroState();
@@ -14,8 +14,8 @@ class PainelCadastro extends StatefulWidget {
 
 class _PainelCadastroState extends State<PainelCadastro> {
   // Imagens
-  final AssetImage googleLogo = AssetImage('assets/media/google_logo.png');
-  final AssetImage facebookLogo = AssetImage('assets/media/facebook_logo.png');
+  final AssetImage _googleLogo = AssetImage('assets/media/google_logo.png');
+  final AssetImage _facebookLogo = AssetImage('assets/media/facebook_logo.png');
   //Formulário
   final _formKey = GlobalKey<FormState>();
   TextEditingController _controllerNome = TextEditingController();
@@ -203,15 +203,15 @@ class _PainelCadastroState extends State<PainelCadastro> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      buildCadastroAlternativo(
+                      _buildCadastroAlternativo(
                         context,
                         'Google  ',
-                        googleLogo,
+                        _googleLogo,
                       ),
-                      buildCadastroAlternativo(
+                      _buildCadastroAlternativo(
                         context,
                         'Facebook',
-                        facebookLogo,
+                        _facebookLogo,
                       ),
                     ],
                   ),
@@ -241,14 +241,14 @@ class _PainelCadastroState extends State<PainelCadastro> {
         pcd: _pcdUsuario,
       );
       _formKey.currentState.save();
-      widget.mv.criaUsuario(_usuario, _senhaUsuario);
+      widget._mv.criaUsuario(_usuario, _senhaUsuario);
     }
   }
 
   /* Builders */
 
   // Retorna um botão de cadasto alternativo
-  Widget buildCadastroAlternativo(
+  Widget _buildCadastroAlternativo(
       BuildContext ctx, String titulo, AssetImage imagem) {
     return Container(
       padding: EdgeInsets.all(10),

@@ -170,7 +170,6 @@ class ModelView extends Model {
   /*** MAIN ***/
   int indexPainelPrincipal;
   ValueNotifier<int> indexPainelPrincipalListenable = ValueNotifier<int>(null);
-  int _indexPaginaOrigemEscolha;
   List<Map<String, Object>> paineisPrincipais;
   bool _escolhendoLocalOcorrencia = false;
 

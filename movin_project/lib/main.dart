@@ -18,14 +18,12 @@ void main() {
 }
 
 class MovinApp extends StatelessWidget {
-  final ModelView mv;
+  final ModelView _mv;
 
-  MovinApp(this.mv);
+  MovinApp(this._mv);
 
   @override
   Widget build(BuildContext context) {
-    // final PaginaSelecaoArgumentos args =
-    //     ModalRoute.of(context).settings.arguments;
     return MaterialApp(
       title: 'Movin',
       theme: ThemeData(
@@ -60,17 +58,19 @@ class MovinApp extends StatelessWidget {
       ),
       initialRoute: PaginaMestre.nomeRota,
       routes: {
-        PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(mv),
-        PaginaMestre.nomeRota: (ctx) => PaginaMestre(mv),
+        PaginaPrincipal.nomeRota: (ctx) => PaginaPrincipal(_mv),
+        PaginaMestre.nomeRota: (ctx) => PaginaMestre(_mv),
         PaginaLogin.nomeRota: (ctx) => PaginaLogin(),
         PainelCarregamento.nomeRota: (ctx) => PainelCarregamento(),
-        PainelLogin.nomeRota: (ctx) => PainelLogin(mv),
-        PainelCadastro.nomeRota: (ctx) => PainelCadastro(mv),
+        PainelLogin.nomeRota: (ctx) => PainelLogin(_mv),
+        PainelCadastro.nomeRota: (ctx) => PainelCadastro(_mv),
         PainelConfiguracoesConta.nomeRota: (ctx) =>
             PainelConfiguracoesConta(modelView),
         PainelEmergencia.nomeRota: (ctx) => PainelEmergencia(),
         PaginaSelecaoLocal.nomeRota: (ctx) => PaginaSelecaoLocal(
-            mv, mv.enderecoApontadoListenable, mv.paineisPrincipais),
+              _mv,
+              _mv.enderecoApontadoListenable,
+            ),
       },
       debugShowCheckedModeBanner: false,
     );

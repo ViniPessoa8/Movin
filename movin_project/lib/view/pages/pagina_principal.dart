@@ -31,20 +31,10 @@ class PaginaPrincipal extends StatefulWidget {
 
 class _PaginaPrincipalState extends State<PaginaPrincipal>
     with TickerProviderStateMixin {
-  // List<Map<String, Object>> paineisPrincipais;
   ValueNotifier<Address> _enderecoApontado;
   Color primaryColor;
   Color accentColor;
-
   TabController _tabController;
-
-  @override
-  void initState() {
-    // atualiza ocorrências
-    // widget.mv.carregaDados();
-
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
@@ -62,7 +52,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
         'titulo': 'Mapa',
       },
       {
-        'pagina': PainelOcorrencias(context, widget.mv),
+        'pagina': PainelOcorrencias(widget.mv),
         'titulo': 'Ocorrências',
       },
       {
@@ -184,28 +174,28 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
 
   /* Showers */
 
-  // Mostra pagina de seleção de local
-  void _showPaginaSelecao() {
-    print('[DEBUG] _showPaginaSelecao()');
-    print(
-        '[DEBUG] _showPaginaSelecao() widget.mv.enderecoApontadoListenable = ${widget.mv.enderecoApontadoListenable}');
-    print(
-        '[DEBUG] _showPaginaSelecao() widget.mv.enderecoApontadoListenable.value = ${widget.mv.enderecoApontadoListenable.value}');
+  // // Mostra pagina de seleção de local
+  // void _showPaginaSelecao() {
+  //   print('[DEBUG] _showPaginaSelecao()');
+  //   print(
+  //       '[DEBUG] _showPaginaSelecao() widget.mv.enderecoApontadoListenable = ${widget.mv.enderecoApontadoListenable}');
+  //   print(
+  //       '[DEBUG] _showPaginaSelecao() widget.mv.enderecoApontadoListenable.value = ${widget.mv.enderecoApontadoListenable.value}');
 
-    Navigator.of(context).pushNamed(
-      PaginaSelecaoLocal.nomeRota,
-      arguments: PaginaSelecaoArgumentos(
-        widget.mv,
-        widget.mv.enderecoApontadoListenable,
-        widget.mv.paineisPrincipais,
-      ),
-    );
-    PaginaSelecaoLocal(
-        widget.mv, _enderecoApontado, widget.mv.paineisPrincipais);
-  }
+  //   Navigator.of(context).pushNamed(
+  //     PaginaSelecaoLocal.nomeRota,
+  //     arguments: PaginaSelecaoArgumentos(
+  //       widget.mv,
+  //       widget.mv.enderecoApontadoListenable,
+  //       widget.mv.paineisPrincipais,
+  //     ),
+  //   );
+  //   PaginaSelecaoLocal(
+  //       widget.mv, _enderecoApontado, widget.mv.paineisPrincipais);
+  // }
 
   // Mostra o diálogo de criação de ocorrência
-  void _showCriaOcorrencia(BuildContext context) {
+  void _showCriaOcorrencia() {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -281,7 +271,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
   Widget _buildBotaoOcorrencias() {
     return FloatingActionButton(
       onPressed: () {
-        _showCriaOcorrencia(context);
+        _showCriaOcorrencia();
       },
       child: Icon(
         Icons.add,

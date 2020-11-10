@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class PainelBoasVindas extends StatelessWidget {
   static final String nomeRota = '/BoasVindas';
-  final Function carregaPainelLogin;
-  final Function carregaPainelCadastro;
+  final Function _carregaPainelLogin;
+  final Function _carregaPainelCadastro;
 
-  PainelBoasVindas(this.carregaPainelLogin, this.carregaPainelCadastro);
+  PainelBoasVindas(this._carregaPainelLogin, this._carregaPainelCadastro);
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class PainelBoasVindas extends StatelessWidget {
                       .bodyText2
                       .copyWith(fontSize: 25, color: Colors.white),
                 ),
-                onPressed: () => carregaPainelCadastro(context),
+                onPressed: () => _carregaPainelCadastro(context),
               ),
             ),
             FlatButton(
@@ -57,7 +57,7 @@ class PainelBoasVindas extends StatelessWidget {
                       color: Theme.of(context).accentColor,
                     ),
               ),
-              onPressed: () => carregaPainelLogin(context),
+              onPressed: () => _carregaPainelLogin(context),
             ),
           ],
         ),

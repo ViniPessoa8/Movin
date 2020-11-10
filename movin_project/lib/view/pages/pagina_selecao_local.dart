@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,18 +10,16 @@ import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/widgets/login/painel_carregamento.dart';
 import 'package:movin_project/view/widgets/principal/item_ocorrencia_info.dart';
 import 'package:movin_project/view/widgets/principal/selecao_local_box.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 const String MAP_BOX_TOKEN =
     'pk.eyJ1IjoidmluaXBlc3NvYTgiLCJhIjoiY2tmNGN1d2Z2MGJzYjJ3bnNtOGtyMzM1eSJ9.7yJ8-KW8DYWRDBS-a8utzg';
 
 class PaginaSelecaoLocal extends StatefulWidget {
   static final String nomeRota = '/selecao_local';
-  final List<Map<String, Object>> _paineisPrincipais;
-  final ModelView mv;
+  final ModelView _mv;
   final ValueNotifier<Address> _enderecoApontado;
 
-  PaginaSelecaoLocal(this.mv, this._enderecoApontado, this._paineisPrincipais);
+  PaginaSelecaoLocal(this._mv, this._enderecoApontado);
 
   @override
   _PaginaSelecaoLocalState createState() => _PaginaSelecaoLocalState();
@@ -34,19 +31,19 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
 
   MapboxMapController _mapBoxController;
 
-  Symbol marcador;
+  Symbol _marcador;
   LatLng _centroMapa;
 
   @override
   void initState() {
-    updateLocalizacao();
+    _updateLocalizacao();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     // if (widget._enderecoApontado.value != null) {
-    Coordinates local = widget.mv.enderecoUsuario.coordinates;
+    Coordinates local = widget._mv.enderecoUsuario.coordinates;
     return Scaffold(
       appBar: AppBar(
         title: Text('Escolha um local'),
@@ -55,13 +52,13 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
         children: [
           //Painel
           // _paineisPrincipais[mv.indexPainelPrincipal]['pagina'],
-          buildMapBox(
+          _buildMapBox(
             latitude: local.latitude,
             longitude: local.longitude,
             // height: 550,
           ),
           // Caixa de opções
-          SelecaoLocalBox(widget._enderecoApontado, widget.mv),
+          SelecaoLocalBox(widget._enderecoApontado, widget._mv),
         ],
       ),
     );
@@ -69,12 +66,12 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
     return PainelCarregamento();
   }
 
-  void carregaDados() async {
-    await updateLocalizacao();
-    marcadorCentralizado();
+  void _carregaDados() async {
+    await _updateLocalizacao();
+    _marcadorCentralizado();
   }
 
-  Widget buildMapBox(
+  Widget _buildMapBox(
       {@required double latitude,
       @required double longitude,
       double zoom,
@@ -91,9 +88,9 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
       zoomGesturesEnabled: true,
       trackCameraPosition: true,
       myLocationTrackingMode: MyLocationTrackingMode.Tracking,
-      onMapCreated: (controller) => onMapCreate(controller),
+      onMapCreated: (controller) => _onMapCreate(controller),
       onStyleLoadedCallback: () {
-        carregaDados();
+        _carregaDados();
         // marcadorCentralizado();
       },
     );
@@ -104,8 +101,8 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
     );
   }
 
-  void getEndereco(LatLng local) async {
-    Address _retorno = await widget.mv.getEnderecoBD(
+  void _getEndereco(LatLng local) async {
+    Address _retorno = await widget._mv.getEnderecoBD(
       local.latitude,
       local.longitude,
     );
@@ -114,23 +111,23 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
     });
   }
 
-  void onMapCreate(MapboxMapController controller) {
+  void _onMapCreate(MapboxMapController controller) {
     print('[DEBUG] onMapCreate() controller = $controller');
     controller.onSymbolTapped.add((argument) {
       var _map = argument.data.cast();
       // Carrega a ocorrência
       Ocorrencia _ocorrencia = _map['ocorrencia'];
-      widget.mv.ocorrenciaSelecionada = _ocorrencia;
+      widget._mv.ocorrenciaSelecionada = _ocorrencia;
       // Move o foco para a ocorrência
-      moveOcorrenciaSelecionada();
+      _moveOcorrenciaSelecionada();
       // Mostra o painel de informações da ocorrência
       showDialog(
         context: context,
         builder: (context) {
-          return ItemOcorrenciaInfo(widget.mv, _ocorrencia, true);
+          return ItemOcorrenciaInfo(widget._mv, _ocorrencia, true);
         },
       );
-      widget.mv.ocorrenciaSelecionada = null;
+      widget._mv.ocorrenciaSelecionada = null;
     });
     setState(() {
       _mapBoxController = controller;
@@ -138,10 +135,10 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
   }
 
   // Move o foco do mapa para o local da ocorrência selecionada
-  void moveOcorrenciaSelecionada() {
+  void _moveOcorrenciaSelecionada() {
     LatLng _local = LatLng(
-      widget.mv.ocorrenciaSelecionada.local.latitude,
-      widget.mv.ocorrenciaSelecionada.local.longitude,
+      widget._mv.ocorrenciaSelecionada.local.latitude,
+      widget._mv.ocorrenciaSelecionada.local.longitude,
     );
     _mapBoxController.animateCamera(
       CameraUpdate.newLatLngZoom(
@@ -155,12 +152,12 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
   }
 
   // Mostra um marcador no meio do mapa
-  void marcadorCentralizado() async {
+  void _marcadorCentralizado() async {
     if (_mapBoxController != null) {
       LatLng _local = _mapBoxController.cameraPosition.target;
       debugPrint('add ponto( ${_local.latitude}, ${_local.longitude})');
 
-      if (marcador == null) {
+      if (_marcador == null) {
         final ByteData bytes = await rootBundle.load("assets/media/marker.png");
         final Uint8List list = bytes.buffer.asUint8List();
         _mapBoxController.addImage('marcador', list);
@@ -173,44 +170,44 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
           ),
         );
         setState(() {
-          marcador = _symbol;
+          _marcador = _symbol;
         });
       }
       _mapBoxController.addListener(() {
         print('_mapBoxController LISTENED');
         _mapBoxController.isCameraMoving
-            ? updateMarcadorCentral()
-            : updateLocalCentro();
+            ? _updateMarcadorCentral()
+            : _updateLocalCentro();
       });
     }
   }
 
   // Atualiza a posição do marcador central
-  void updateMarcadorCentral() {
+  void _updateMarcadorCentral() {
     print('[DEBUG] UpdateMarcadorCentral()');
     widget._enderecoApontado.value = null;
     if (_mapBoxController != null) {
       LatLng posCamera = _mapBoxController.cameraPosition.target;
       if (posCamera != _centroMapa) {
         _centroMapa = _mapBoxController.cameraPosition.target;
-        SymbolOptions _mudancas = marcador.options.copyWith(
+        SymbolOptions _mudancas = _marcador.options.copyWith(
           SymbolOptions(
             geometry: _centroMapa,
           ),
         );
-        _mapBoxController.updateSymbol(marcador, _mudancas);
+        _mapBoxController.updateSymbol(_marcador, _mudancas);
       }
     }
   }
 
   // Atualiza o local selecionado pelo usuario
-  void updateLocalCentro() {
+  void _updateLocalCentro() {
     print('[DEBUG] UpdateLocalCentro()');
     if (_mapBoxController != null) {
       LatLng posCamera = _mapBoxController.cameraPosition.target;
       _centroMapa = posCamera;
       print('[DEBUG] updateCentroMapa updateLocalApontado($_centroMapa)');
-      widget.mv.updateLocalApontado(LatLng(
+      widget._mv.updateLocalApontado(LatLng(
         _centroMapa.latitude,
         _centroMapa.longitude,
       ));
@@ -219,7 +216,7 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
     }
   }
 
-  Future<void> updateLocalizacao() async {
+  Future<void> _updateLocalizacao() async {
     Location location = new Location();
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
@@ -253,7 +250,7 @@ class _PaginaSelecaoLocalState extends State<PaginaSelecaoLocal> {
 
   @override
   void dispose() {
-    // widget.mv.mudaModo();
+    // widget._mv.mudaModo();
     super.dispose();
   }
 }

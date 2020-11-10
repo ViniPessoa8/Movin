@@ -3,9 +3,9 @@ import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/widgets/principal/painel_emergencia.dart';
 
 class PainelDrawer extends StatelessWidget {
-  final ModelView mv;
+  final ModelView _mv;
 
-  PainelDrawer(this.mv);
+  PainelDrawer(this._mv);
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +28,16 @@ class PainelDrawer extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20),
-          buildListTile('Home', Icons.home, () {
-            mv.selecionaPagina(0);
-            mv.rebuild();
+          _buildListTile('Home', Icons.home, () {
+            _mv.selecionaPagina(0);
+            _mv.rebuild();
             Navigator.of(context).pop();
           }),
-          buildListTile('Emergência', Icons.settings, () {
+          _buildListTile('Emergência', Icons.settings, () {
             Navigator.of(context).pushNamed(PainelEmergencia.nomeRota);
           }),
-          buildListTile('Sair', Icons.chevron_left, () {
-            mv.deslogar();
+          _buildListTile('Sair', Icons.chevron_left, () {
+            _mv.deslogar();
           })
         ],
       ),
@@ -46,7 +46,7 @@ class PainelDrawer extends StatelessWidget {
 
   /* Builders */
 
-  Widget buildListTile(String title, IconData icon, Function tapHandler) {
+  Widget _buildListTile(String title, IconData icon, Function tapHandler) {
     return ListTile(
       leading: Icon(
         icon,

@@ -3,9 +3,9 @@ import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/widgets/principal/painel_config_conta.dart';
 
 class PainelPerfil extends StatefulWidget {
-  final ModelView mv;
+  final ModelView _mv;
 
-  PainelPerfil(this.mv);
+  PainelPerfil(this._mv);
 
   @override
   _PainelPerfilState createState() => _PainelPerfilState();
@@ -17,7 +17,7 @@ class _PainelPerfilState extends State<PainelPerfil> {
 
   @override
   initState() {
-    carregaDados();
+    _carregaDados();
     super.initState();
   }
 
@@ -128,11 +128,11 @@ class _PainelPerfilState extends State<PainelPerfil> {
 
   /* Functions */
 
-  void carregaDados() async {
-    if (widget.mv.dbIniciado && widget.mv.usuarioCarregado) {
+  void _carregaDados() async {
+    if (widget._mv.dbIniciado && widget._mv.usuarioCarregado) {
       setState(() {
-        _nomeUsuario = widget.mv.usuarioAtual.nome;
-        _emailUsuario = widget.mv.usuarioAtual.email;
+        _nomeUsuario = widget._mv.usuarioAtual.nome;
+        _emailUsuario = widget._mv.usuarioAtual.email;
       });
     } else {
       setState(() {

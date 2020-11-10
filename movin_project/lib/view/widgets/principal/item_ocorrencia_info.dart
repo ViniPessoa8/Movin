@@ -3,15 +3,15 @@ import 'package:movin_project/model/ocorrencia.dart';
 import 'package:movin_project/model_view/model_view.dart';
 
 class ItemOcorrenciaInfo extends StatefulWidget {
-  final Ocorrencia ocorrencia;
-  final ModelView mv;
+  final Ocorrencia _ocorrencia;
+  final ModelView _mv;
   // Se a ocorrência foi selecionada no mapa ou não. Se sim, não é mostrado
-  final bool doMapa;
+  final bool _doMapa;
 
   ItemOcorrenciaInfo(
-    this.mv,
-    this.ocorrencia,
-    this.doMapa,
+    this._mv,
+    this._ocorrencia,
+    this._doMapa,
   );
 
   @override
@@ -20,13 +20,13 @@ class ItemOcorrenciaInfo extends StatefulWidget {
 
 class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
   // Imagem
-  List<Image> imagens;
+  List<Image> _imagens;
   // Util
-  bool imagensCarregadas = false;
+  bool _imagensCarregadas = false;
 
   @override
   void initState() {
-    carregaDados();
+    _carregaDados();
     super.initState();
   }
 
@@ -40,7 +40,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
         children: [
           // Categoria
           Text(
-            widget.ocorrencia.categoria,
+            widget._ocorrencia.categoria,
             style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 40),
             overflow: TextOverflow.fade,
             maxLines: 1,
@@ -51,7 +51,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
             children: [
               // Data
               Text(
-                widget.mv.formatData(widget.ocorrencia.data),
+                widget._mv.formatData(widget._ocorrencia.data),
                 style: Theme.of(context)
                     .textTheme
                     .bodyText1
@@ -64,7 +64,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
           ),
           // Descrição
           Text(
-            widget.ocorrencia.descricao,
+            widget._ocorrencia.descricao,
             style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 25),
             overflow: TextOverflow.ellipsis,
             maxLines: 3,
@@ -72,10 +72,10 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
           ),
           InkWell(
             onTap: () {
-              if (!widget.doMapa) {
-                widget.mv.selecionaPagina(0);
-                widget.mv.ocorrenciaSelecionada = widget.ocorrencia;
-                print(widget.ocorrencia.idOcorrencia);
+              if (!widget._doMapa) {
+                widget._mv.selecionaPagina(0);
+                widget._mv.ocorrenciaSelecionada = widget._ocorrencia;
+                print(widget._ocorrencia.idOcorrencia);
               }
               Navigator.of(context).canPop()
                   ? Navigator.of(context).pop()
@@ -95,7 +95,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
                   Container(
                     width: 260,
                     child: Text(
-                      widget.mv.formatEndereco(widget.ocorrencia.endereco),
+                      widget._mv.formatEndereco(widget._ocorrencia.endereco),
                       style: Theme.of(context).textTheme.bodyText2.copyWith(
                             fontSize: 20,
                             color: Colors.grey[600],
@@ -128,25 +128,25 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
 
   /* Functions */
 
-  void carregaDados() async {
+  void _carregaDados() async {
     // downloadImagem('imagens/imagem_teste.jpg');
-    List<String> _urls = await widget.mv
-        .downloadUrlImagensOcorrencia(widget.ocorrencia.idOcorrencia);
-    downloadImagens(_urls);
+    List<String> _urls = await widget._mv
+        .downloadUrlImagensOcorrencia(widget._ocorrencia.idOcorrencia);
+    _downloadImagens(_urls);
   }
 
   // Carrega a imagem da ocorrencia
-  void downloadImagens(List<String> urls) async {
+  void _downloadImagens(List<String> urls) async {
     print('[DEBUG] downloadImagens($urls)');
     List<Image> _imagens = [];
     for (String url in urls) {
-      Image img = await widget.mv.downloadImagem(url);
+      Image img = await widget._mv.downloadImagem(url);
       _imagens.add(img);
     }
-    imagensCarregadas = true;
+    _imagensCarregadas = true;
 
     setState(() {
-      imagens = _imagens;
+      _imagens = _imagens;
     });
   }
 
@@ -154,12 +154,12 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
 
   // Retorna a imagem carregada
   Widget _mostraImagens() {
-    if (imagensCarregadas && imagens != null) {
+    if (_imagensCarregadas && _imagens != null) {
       return Container(
         child: ListView.builder(
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: imagens.length,
+          itemCount: _imagens.length,
           itemBuilder: (context, index) {
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 5),
@@ -170,7 +170,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
                     builder: (context) {
                       return Container(
                         child: Image(
-                          image: imagens[index].image,
+                          image: _imagens[index].image,
                           height: 400,
                           width: 300,
                           fit: BoxFit.contain,
@@ -180,7 +180,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
                   );
                 },
                 child: Image(
-                  image: imagens[index].image,
+                  image: _imagens[index].image,
                   height: 80,
                   width: 80,
                   fit: BoxFit.cover,
@@ -190,7 +190,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
           },
         ),
       );
-    } else if (imagensCarregadas) {
+    } else if (_imagensCarregadas) {
       return Center(
         child: Text('(Sem Imagens)'),
       );

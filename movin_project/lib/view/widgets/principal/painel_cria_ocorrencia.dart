@@ -13,35 +13,35 @@ import 'package:scoped_model/scoped_model.dart';
 
 class PainelCriaOcorrencia extends StatefulWidget {
   static String nomeRota = '/ocorrencia/criar';
-  final ModelView mv;
+  final ModelView _mv;
 
-  PainelCriaOcorrencia(this.mv);
+  PainelCriaOcorrencia(this._mv);
 
   @override
   _PainelCriaOcorrenciaState createState() => _PainelCriaOcorrenciaState();
 }
 
 class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
-  gp.GeoPoint local;
-  Address endereco;
-  List<String> valores = DadosInternos.categorias;
-  String categoria;
+  gp.GeoPoint _local;
+  Address _endereco;
+  List<String> _valores = DadosInternos.categorias;
+  String _categoria;
   CollectionReference ocorrencias =
       FirebaseFirestore.instance.collection('ocorrencias');
-  TextEditingController tituloController = new TextEditingController();
-  TextEditingController descricaoController = new TextEditingController();
+  TextEditingController _tituloController = new TextEditingController();
+  TextEditingController _descricaoController = new TextEditingController();
   ValueNotifier<bool> _formularioInvalido = ValueNotifier<bool>(false);
 
   @override
   void initState() {
-    getLocal();
+    _getLocal();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return ScopedModel<ModelView>(
-      model: widget.mv,
+      model: widget._mv,
       child: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(10),
@@ -75,8 +75,8 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                                       fontSize: 20,
                                     ),
                               ),
-                              value: categoria,
-                              items: valores.map((elemento) {
+                              value: _categoria,
+                              items: _valores.map((elemento) {
                                 return DropdownMenuItem(
                                   value: elemento,
                                   child: Text(elemento),
@@ -84,7 +84,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                               }).toList(),
                               onChanged: (value) {
                                 setState(() {
-                                  categoria = value;
+                                  _categoria = value;
                                 });
                               },
                             ),
@@ -92,7 +92,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                         ),
                         // Descrição
                         TextField(
-                          controller: descricaoController,
+                          controller: _descricaoController,
                           decoration: InputDecoration(
                             labelText: 'Descrição',
                             labelStyle:
@@ -109,25 +109,25 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                               context: context,
                               builder: (context) {
                                 return PaginaSelecaoLocal(
-                                    widget.mv,
-                                    widget.mv.enderecoApontadoListenable,
-                                    widget.mv.paineisPrincipais);
+                                  widget._mv,
+                                  widget._mv.enderecoApontadoListenable,
+                                );
                               },
                             );
                           },
                           child: ValueListenableBuilder<Address>(
                               valueListenable:
-                                  widget.mv.enderecoApontadoListenable,
+                                  widget._mv.enderecoApontadoListenable,
                               builder: (context, value, child) {
                                 if (widget
-                                        .mv.enderecoApontadoListenable.value !=
+                                        ._mv.enderecoApontadoListenable.value !=
                                     null) {
-                                  getLocal(
+                                  _getLocal(
                                     latitude: value.coordinates.latitude,
                                     longitude: value.coordinates.longitude,
                                   );
                                 } else {
-                                  getLocal();
+                                  _getLocal();
                                 }
 
                                 return Container(
@@ -146,9 +146,9 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                                       Container(
                                         width: 260,
                                         child: Text(
-                                          endereco == null
+                                          _endereco == null
                                               ? '(Carregando endereço)'
-                                              : '${endereco.addressLine}',
+                                              : '${_endereco.addressLine}',
                                           overflow: TextOverflow.clip,
                                           maxLines: 2,
                                           softWrap: true,
@@ -227,18 +227,18 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                           children: [
                             FlatButton(
                               child: Icon(Icons.image, size: 40),
-                              onPressed: widget.mv.imgGaleria,
+                              onPressed: widget._mv.imgGaleria,
                             ),
                             FlatButton(
                               child: Icon(Icons.add_a_photo, size: 40),
-                              onPressed: widget.mv.imgCamera,
+                              onPressed: widget._mv.imgCamera,
                             ),
                           ],
                         ),
                         FlatButton(
                           onPressed: () {
-                            for (File imagem in widget.mv.imagens) {
-                              widget.mv.uploadImagem(imagem,
+                            for (File imagem in widget._mv.imagens) {
+                              widget._mv.uploadImagem(imagem,
                                   'imagens/ocorrencias/${imagem.hashCode}.jpg');
                             }
                           },
@@ -271,7 +271,7 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
                     },
                   ),
                   RaisedButton(
-                    onPressed: addOcorrencia,
+                    onPressed: _addOcorrencia,
                     child: Text(
                       'Criar Ocorrência',
                       style: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -301,8 +301,8 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
     );
   }
 
-  void addOcorrencia() {
-    if (!validaFormulario()) {
+  void _addOcorrencia() {
+    if (!_validaFormulario()) {
       _formularioInvalido.value = true;
       showDialog(
         context: context,
@@ -321,17 +321,17 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
         },
       );
     } else {
-      widget.mv.addOcorrencia(
+      widget._mv.addOcorrencia(
         Ocorrencia(
-          descricao: descricaoController.text,
-          categoria: categoria,
+          descricao: _descricaoController.text,
+          categoria: _categoria,
           data: DateTime.now(),
-          local: local,
+          local: _local,
           idUsuario: FirebaseAuth.instance.currentUser.uid,
-          endereco: endereco,
+          endereco: _endereco,
         ),
       );
-      widget.mv.removeLocalApontado();
+      widget._mv.removeLocalApontado();
       Navigator.of(context).pop();
       showDialog(
         context: context,
@@ -352,11 +352,11 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
     }
   }
 
-  bool validaFormulario() {
+  bool _validaFormulario() {
     print('[debug] validaFormulario');
-    if (descricaoController.value == null ||
-        tituloController.value == null ||
-        endereco == null) {
+    if (_descricaoController.value == null ||
+        _tituloController.value == null ||
+        _endereco == null) {
       print('[debug] validaFormulario false');
       return false;
     }
@@ -365,34 +365,34 @@ class _PainelCriaOcorrenciaState extends State<PainelCriaOcorrencia> {
   }
 
   /* Functions */
-  getLocal({double latitude, double longitude}) async {
+  void _getLocal({double latitude, double longitude}) async {
     if (latitude == null || longitude == null) {
       LocationData localAtual = await Location().getLocation();
-      local = gp.GeoPoint(
+      _local = gp.GeoPoint(
         latitude: localAtual.latitude,
         longitude: localAtual.longitude,
       );
     } else {
-      local = gp.GeoPoint(
+      _local = gp.GeoPoint(
         latitude: latitude,
         longitude: longitude,
       );
     }
 
     var _endereco =
-        await widget.mv.getEnderecoBD(local.latitude, local.longitude);
+        await widget._mv.getEnderecoBD(_local.latitude, _local.longitude);
     if (this.mounted) {
       setState(() {
-        endereco = _endereco;
+        _endereco = _endereco;
       });
     }
   }
 
   @override
   void dispose() {
-    widget.mv.imagens = [];
-    tituloController.dispose();
-    descricaoController.dispose();
+    widget._mv.imagens = [];
+    _tituloController.dispose();
+    _descricaoController.dispose();
     super.dispose();
   }
 }

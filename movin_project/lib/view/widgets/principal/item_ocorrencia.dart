@@ -6,24 +6,24 @@ import 'package:movin_project/model_view/model_view.dart';
 import 'package:movin_project/view/widgets/principal/item_ocorrencia_info.dart';
 
 class ItemOcorrencia extends StatefulWidget {
-  final int indexOcorrencia;
-  final ModelView mv;
+  final int _indexOcorrencia;
+  final ModelView _mv;
 
-  ItemOcorrencia(this.mv, this.indexOcorrencia);
+  ItemOcorrencia(this._mv, this._indexOcorrencia);
 
   @override
   _ItemOcorrenciaState createState() => _ItemOcorrenciaState();
 }
 
 class _ItemOcorrenciaState extends State<ItemOcorrencia> {
-  final DateFormat formatadorData = DateFormat('dd/MM/yyyy');
-  Address endereco;
-  Ocorrencia ocorrencia;
+  final DateFormat _formatadorData = DateFormat('dd/MM/yyyy');
+  Address _endereco;
+  Ocorrencia _ocorrencia;
 
   @override
   void initState() {
-    ocorrencia = widget.mv.ocorrencias[widget.indexOcorrencia];
-    carregaEndereco();
+    _ocorrencia = widget._mv.ocorrencias[widget._indexOcorrencia];
+    _carregaEndereco();
     super.initState();
   }
 
@@ -32,7 +32,8 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
     return InkWell(
       onTap: () => showDialog(
         context: context,
-        builder: (context) => ItemOcorrenciaInfo(widget.mv, ocorrencia, false),
+        builder: (context) =>
+            ItemOcorrenciaInfo(widget._mv, _ocorrencia, false),
       ),
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 10),
@@ -69,7 +70,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                           Container(
                             width: 190,
                             child: Text(
-                              ocorrencia.categoria,
+                              _ocorrencia.categoria,
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -84,7 +85,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                           //Data
                           Container(
                             child: Text(
-                              widget.mv.formatData(ocorrencia.data),
+                              widget._mv.formatData(_ocorrencia.data),
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyText1
@@ -104,7 +105,7 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                     Container(
                       padding: EdgeInsets.only(bottom: 5),
                       child: Text(
-                        ocorrencia.descricao,
+                        _ocorrencia.descricao,
                         style: Theme.of(context).textTheme.bodyText2.copyWith(
                               fontSize: 20,
                             ),
@@ -115,9 +116,9 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
                     ),
                     // Endereço
                     Text(
-                      endereco == null
+                      _endereco == null
                           ? '(Sem Endereço)'
-                          : widget.mv.formatEndereco(endereco),
+                          : widget._mv.formatEndereco(_endereco),
                       style: Theme.of(context).textTheme.bodyText1.copyWith(
                             fontSize: 17,
                           ),
@@ -137,15 +138,15 @@ class _ItemOcorrenciaState extends State<ItemOcorrencia> {
 
   /* Functions */
 
-  carregaEndereco() async {
+  void _carregaEndereco() async {
     print('carregaEndereco()');
-    double latitude = ocorrencia.local.latitude;
-    double longitude = ocorrencia.local.longitude;
+    double latitude = _ocorrencia.local.latitude;
+    double longitude = _ocorrencia.local.longitude;
 
-    Address localEnd = await widget.mv.getEnderecoBD(latitude, longitude);
+    Address localEnd = await widget._mv.getEnderecoBD(latitude, longitude);
     setState(() {
-      endereco = localEnd;
-      ocorrencia.endereco = endereco;
+      _endereco = localEnd;
+      _ocorrencia.endereco = _endereco;
     });
   }
 }
