@@ -53,12 +53,14 @@ class _PainelPerfilState extends State<PainelPerfil> {
                 Column(
                   children: [
                     _buildBotaoConfig(
-                        context: context,
-                        titulo: 'Configurações da Conta',
-                        onPressed: () {
-                          Navigator.of(context)
-                              .pushNamed(PainelConfiguracoesConta.nomeRota);
-                        }),
+                      context: context,
+                      titulo: 'Configurações da Conta',
+                      onPressed: () {
+                        print('[DEBUG] Config Conta');
+                        Navigator.of(context)
+                            .pushNamed(PainelConfiguracoesConta.nomeRota);
+                      },
+                    ),
                     _buildBotaoConfig(
                       context: context,
                       titulo: 'Minhas Ocorrências',
@@ -101,10 +103,13 @@ class _PainelPerfilState extends State<PainelPerfil> {
         vertical: 20,
       ),
       child: FlatButton(
-        onPressed: () => onPressed,
+        onPressed: onPressed,
         child: Column(
           children: [
-            Icon(icone, size: 80),
+            Icon(
+              icone,
+              size: 80,
+            ),
             Container(
               alignment: Alignment.center,
               width: 150,

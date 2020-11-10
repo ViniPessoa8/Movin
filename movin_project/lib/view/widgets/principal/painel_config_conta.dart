@@ -79,7 +79,7 @@ class _PainelConfiguracoesContaState extends State<PainelConfiguracoesConta> {
     Function onPressed,
   }) {
     return FlatButton(
-      onPressed: () {},
+      onPressed: onPressed,
       child: Container(
         width: 400,
         height: 70,
