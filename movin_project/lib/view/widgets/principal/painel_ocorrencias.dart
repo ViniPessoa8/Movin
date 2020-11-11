@@ -6,10 +6,10 @@ import 'package:movin_project/view/widgets/principal/item_ocorrencia.dart';
 import 'package:loading/loading.dart';
 
 class PainelOcorrencias extends StatefulWidget {
-  final ModelView mv;
-  final BuildContext context;
+  final ModelView _mv;
+  // final BuildContext context;
 
-  PainelOcorrencias(this.context, this.mv);
+  PainelOcorrencias(this._mv);
 
   @override
   _PainelOcorrenciasState createState() => _PainelOcorrenciasState();
@@ -37,14 +37,14 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias>
   }
 
   Widget _buildListaOcorrencias() {
-    if (widget.mv.carregouOcorrencias && widget.mv.carregouLocalUsuario) {
-      if (widget.mv.ocorrencias == null) {
+    if (widget._mv.carregouOcorrencias && widget._mv.carregouLocalUsuario) {
+      if (widget._mv.ocorrencias == null) {
         return Text('ocorrencias null');
-      } else if (widget.mv.ocorrencias.isEmpty) {
+      } else if (widget._mv.ocorrencias.isEmpty) {
         return Container(
           alignment: Alignment.center,
           child: RefreshIndicator(
-            onRefresh: widget.mv.atualizaOcorrencias,
+            onRefresh: widget._mv.atualizaOcorrencias,
             child: ListView.builder(
               itemCount: 1,
               itemBuilder: (ctx, index) {
@@ -67,13 +67,13 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias>
           children: [
             Container(
               child: RefreshIndicator(
-                onRefresh: widget.mv.atualizaOcorrencias,
+                onRefresh: widget._mv.atualizaOcorrencias,
                 child: ListView.builder(
-                  itemCount: widget.mv.ocorrencias.length,
+                  itemCount: widget._mv.ocorrencias.length,
                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   itemBuilder: (context, index) {
                     return ItemOcorrencia(
-                      widget.mv,
+                      widget._mv,
                       index,
                     );
                   },
@@ -91,7 +91,7 @@ class _PainelOcorrenciasState extends State<PainelOcorrencias>
             Loading(
               indicator: BallPulseIndicator(),
               size: 50.0,
-              color: Theme.of(widget.context).accentColor,
+              color: Theme.of(context).accentColor,
             ),
             Text('Carregando ocorrêncais...'),
           ],

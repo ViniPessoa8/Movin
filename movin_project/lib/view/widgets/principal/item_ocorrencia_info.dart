@@ -138,15 +138,15 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
   // Carrega a imagem da ocorrencia
   void _downloadImagens(List<String> urls) async {
     print('[DEBUG] downloadImagens($urls)');
-    List<Image> _imagens = [];
+    List<Image> _imagensList = [];
     for (String url in urls) {
       Image img = await widget._mv.downloadImagem(url);
-      _imagens.add(img);
+      _imagensList.add(img);
     }
     _imagensCarregadas = true;
 
     setState(() {
-      _imagens = _imagens;
+      _imagens = _imagensList;
     });
   }
 
