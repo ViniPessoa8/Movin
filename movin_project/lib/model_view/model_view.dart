@@ -41,6 +41,7 @@ class ModelView extends Model {
   bool _aguardandoResposta;
   bool modoSelecao;
   ValueNotifier<Address> enderecoApontadoListenable;
+  TabController tabController;
 
   ModelView() {
     enderecoApontadoListenable = ValueNotifier<Address>(null);
@@ -321,6 +322,7 @@ class ModelView extends Model {
   }
 
   /* Endereço */
+  bool ocorrenciaCarregaLocal = false;
 
   Future<Address> getEnderecoBD(double latitude, double longitude) async {
     Address result;
@@ -340,6 +342,15 @@ class ModelView extends Model {
           '${endereco.countryName}';
     }
     return saida;
+  }
+
+  void irLocalOcorrencia(Ocorrencia ocorrencia) {
+    ocorrenciaSelecionada = ocorrencia;
+    if (indexPainelPrincipalListenable.value == 1) {
+      ocorrenciaCarregaLocal = true;
+      selecionaPagina(0);
+      notifyListeners();
+    }
   }
 
   void rebuild() {

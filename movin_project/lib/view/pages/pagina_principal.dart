@@ -21,9 +21,9 @@ import 'package:scoped_model/scoped_model.dart';
 
 class PaginaPrincipal extends StatefulWidget {
   static final nomeRota = '/principal';
-  final ModelView mv;
+  final ModelView _mv;
 
-  PaginaPrincipal(this.mv);
+  PaginaPrincipal(this._mv);
 
   @override
   _PaginaPrincipalState createState() => _PaginaPrincipalState();
@@ -34,7 +34,6 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
   ValueNotifier<Address> _enderecoApontado;
   Color primaryColor;
   Color accentColor;
-  TabController _tabController;
 
   @override
   void didChangeDependencies() {
@@ -43,40 +42,40 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
     accentColor = Theme.of(context).accentColor;
 
     // Endereço escolhido pelo usuario
-    _enderecoApontado = widget.mv.enderecoApontadoListenable;
+    _enderecoApontado = widget._mv.enderecoApontadoListenable;
 
     // Paineis da página principal (Mapa, Ocorrencias e Perfil)
-    widget.mv.paineisPrincipais = [
+    widget._mv.paineisPrincipais = [
       {
-        'pagina': PainelMapa(widget.mv),
+        'pagina': PainelMapa(widget._mv),
         'titulo': 'Mapa',
       },
       {
-        'pagina': PainelOcorrencias(widget.mv),
+        'pagina': PainelOcorrencias(widget._mv),
         'titulo': 'Ocorrências',
       },
       {
-        'pagina': PainelPerfil(widget.mv),
+        'pagina': PainelPerfil(widget._mv),
         'titulo': 'Perfil',
       },
     ];
 
     // Tab controller
-    _tabController = new TabController(
-        length: widget.mv.paineisPrincipais.length,
+    widget._mv.tabController = new TabController(
+        length: widget._mv.paineisPrincipais.length,
         vsync: this,
-        initialIndex: widget.mv.indexPainelPrincipal);
+        initialIndex: widget._mv.indexPainelPrincipal);
 
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.mv.deslogado) {
+    if (widget._mv.deslogado) {
       // Remove a tela de login quando o usuário realiza o login
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.of(context).pop();
-        widget.mv.deslogado = false;
+        widget._mv.deslogado = false;
       });
     }
 
@@ -84,11 +83,11 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
       length: 3,
       child: Scaffold(
         appBar: AppBar(title: _buildTituloAppbar()),
-        drawer: PainelDrawer(widget.mv),
+        drawer: PainelDrawer(widget._mv),
         body: TabBarView(
           physics: NeverScrollableScrollPhysics(),
-          controller: _tabController,
-          children: widget.mv.paineisPrincipais.map((tab) {
+          controller: widget._mv.tabController,
+          children: widget._mv.paineisPrincipais.map((tab) {
             return Container(
               height: 300,
               child: Center(
@@ -102,11 +101,11 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
           child: TabBar(
             // physics: NeverScrollableScrollPhysics(),
             dragStartBehavior: DragStartBehavior.down,
-            controller: _tabController,
+            controller: widget._mv.tabController,
             onTap: (value) {
-              widget.mv.selecionaPagina(value);
+              widget._mv.selecionaPagina(value);
               print(
-                  '[DEBUG] widget.mv.indexPainelPrincipal = ${widget.mv.indexPainelPrincipal}');
+                  '[DEBUG] widget.mv.indexPainelPrincipal = ${widget._mv.indexPainelPrincipal}');
             },
             labelColor: Theme.of(context).accentColor,
             unselectedLabelColor: Colors.black,
@@ -137,7 +136,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
     );
 
     return ScopedModel<ModelView>(
-      model: widget.mv,
+      model: widget._mv,
       child: ScopedModelDescendant<ModelView>(
         builder: (context, child, model) {
           if (model.dbIniciado) {
@@ -163,7 +162,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
 
   // Carrega o endereço de determinado local em LatLng na variavel _enderecoApontado
   void getEndereco(LatLng local) async {
-    Address _retorno = await widget.mv.getEnderecoBD(
+    Address _retorno = await widget._mv.getEnderecoBD(
       local.latitude,
       local.longitude,
     );
@@ -199,7 +198,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return PainelCriaOcorrencia(widget.mv);
+        return PainelCriaOcorrencia(widget._mv);
       },
     );
   }
@@ -212,7 +211,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
       builder: (context) {
         return Wrap(
           children: [
-            PainelCriaOcorrencia(widget.mv),
+            PainelCriaOcorrencia(widget._mv),
           ],
         );
       },
@@ -261,7 +260,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
           ),
           label: 'Teste',
           backgroundColor: Colors.purple,
-          onTap: widget.mv.deletaTodasOcorrencias, //widget.mv.mudaModo,
+          onTap: widget._mv.deletaTodasOcorrencias, //widget.mv.mudaModo,
         ),
       ],
     );
@@ -285,7 +284,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
   // Retorna o botão flutuante
   Widget _buildFloatingButton() {
     return ValueListenableBuilder(
-      valueListenable: widget.mv.indexPainelPrincipalListenable,
+      valueListenable: widget._mv.indexPainelPrincipalListenable,
       child: SpeedDial(
         visible: false,
       ),
@@ -302,7 +301,7 @@ class _PaginaPrincipalState extends State<PaginaPrincipal>
   // Retorna o título a ser usado no AppBar
   Widget _buildTituloAppbar() {
     String texto;
-    switch (widget.mv.indexPainelPrincipal) {
+    switch (widget._mv.indexPainelPrincipal) {
       case 0:
         texto = 'Home';
         break;
