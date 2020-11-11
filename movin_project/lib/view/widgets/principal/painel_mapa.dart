@@ -27,7 +27,6 @@ class _PainelMapaState extends State<PainelMapa>
   final double _ocorrenciaSelecionadaZoom = 16.0;
   ByteData _bytes;
   Uint8List _marcadorUint8;
-
   LatLng _centroMapa;
   Symbol _marcador;
   Symbol _marcadorSelecionado;
@@ -35,6 +34,7 @@ class _PainelMapaState extends State<PainelMapa>
   @override
   void initState() {
     super.initState();
+
     // carregaMarcador();
     _carregaDados();
   }
@@ -44,11 +44,6 @@ class _PainelMapaState extends State<PainelMapa>
 
   @override
   Widget build(BuildContext context) {
-    // carregaMarcador();
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   addOcorrencias();
-    // });
-
     return _localizacao == null
         ? Center(
             child: Text('Carregando Mapa...'),
@@ -84,7 +79,7 @@ class _PainelMapaState extends State<PainelMapa>
       double zoom,
       double height = 700.0}) {
     // Mapa normal da tela inicial
-    MapboxMap _mapNormal = new MapboxMap(
+    MapboxMap _map = new MapboxMap(
       initialCameraPosition: widget._mv.ocorrenciaSelecionada != null
           ? new CameraPosition(
               target: LatLng(
@@ -119,13 +114,17 @@ class _PainelMapaState extends State<PainelMapa>
 
     return Container(
       height: height,
-      child: _mapNormal,
+      child: _map,
     );
   }
 
   // Functions */
 
   void _carregaDados() async {
+    if (!widget._mv.ocorrenciaCarregaLocal) {
+      widget._mv.ocorrenciaSelecionada = null;
+      widget._mv.ocorrenciaCarregaLocal = false;
+    }
     await _carregaMarcador();
     // addOcorrencias();
     await _updateLocalizacao();
@@ -172,19 +171,22 @@ class _PainelMapaState extends State<PainelMapa>
 
   // Move o foco do mapa para o local da ocorrência selecionada
   void _moveOcorrenciaSelecionada() {
-    LatLng _local = LatLng(
-      widget._mv.ocorrenciaSelecionada.local.latitude,
-      widget._mv.ocorrenciaSelecionada.local.longitude,
-    );
-    _mapBoxController.animateCamera(
-      CameraUpdate.newLatLngZoom(
-        LatLng(
-          _local.latitude,
-          _local.longitude,
+    if (widget._mv.ocorrenciaSelecionada != null) {
+      LatLng _local = LatLng(
+        widget._mv.ocorrenciaSelecionada.local.latitude,
+        widget._mv.ocorrenciaSelecionada.local.longitude,
+      );
+      _mapBoxController.animateCamera(
+        CameraUpdate.newLatLngZoom(
+          LatLng(
+            _local.latitude,
+            _local.longitude,
+          ),
+          _ocorrenciaSelecionadaZoom,
         ),
-        _ocorrenciaSelecionadaZoom,
-      ),
-    );
+      );
+      widget._mv.ocorrenciaSelecionada = null;
+    }
   }
 
   // Move o foco do mapa para o local atual do usuário

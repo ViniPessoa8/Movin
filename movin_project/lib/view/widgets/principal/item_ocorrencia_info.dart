@@ -72,11 +72,7 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
           ),
           InkWell(
             onTap: () {
-              if (!widget._doMapa) {
-                widget._mv.selecionaPagina(0);
-                widget._mv.ocorrenciaSelecionada = widget._ocorrencia;
-                print(widget._ocorrencia.idOcorrencia);
-              }
+              widget._mv.irLocalOcorrencia(widget._ocorrencia);
               Navigator.of(context).canPop()
                   ? Navigator.of(context).pop()
                   : null;
@@ -149,6 +145,8 @@ class _ItemOcorrenciaInfoState extends State<ItemOcorrenciaInfo> {
       _imagens = _imagensList;
     });
   }
+
+  void irLocalOcorrencia(Ocorrencia ocorrencia) {}
 
   /* Builders */
 
