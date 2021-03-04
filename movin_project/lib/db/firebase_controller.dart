@@ -233,15 +233,15 @@ class FirebaseController extends Model {
   }
 
   Future<String> uploadImagem(File imagem, String caminho) async {
-    StorageReference storageReference =
-        FirebaseStorage.instance.ref().child(caminho);
-    print('Basename: ${Path.basename(imagem.path)}\n path: ${imagem.path}');
-    StorageUploadTask uploadTask = storageReference.putFile(imagem);
-    StorageTaskSnapshot _taskSnapshot = await uploadTask.onComplete;
-    String path = await _taskSnapshot.ref.getPath();
-    print('[debug] PATH = $path');
-    return path;
-    // print('File Uploaded ${}');
+    // StorageReference storageReference =
+    //     FirebaseStorage.instance.ref().child(caminho);
+    // print('Basename: ${Path.basename(imagem.path)}\n path: ${imagem.path}');
+    // StorageUploadTask uploadTask = storageReference.putFile(imagem);
+    // StorageTaskSnapshot _taskSnapshot = await uploadTask.onComplete;
+    // String path = await _taskSnapshot.ref.getPath();
+    // print('[debug] PATH = $path');
+    // return path;
+    // // print('File Uploaded ${}');
   }
 
   Future<List<String>> downloadUrlImagensOcorrencia(String idOcorrencia) async {

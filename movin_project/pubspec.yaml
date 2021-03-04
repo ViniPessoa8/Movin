@@ -23,19 +23,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_image: ^0.2.0
-  firebase_core: ^0.5.0
-  firebase_storage: ^4.0.1
-  firebase_auth: ^0.18.1+2
-  cloud_firestore: ^0.14.1+2
+  firebase_core: ^0.7.0
+  firebase_storage: ^7.0.0
+  # firebase_image: ^0.3.0
+  firebase_auth: ^0.20.1
+  cloud_firestore: ^0.16.0+1
   location: ^3.0.0
   mapbox_gl: ^0.8.0
   flutter_speed_dial: ^1.2.5
   intl: ^0.16.1
-  scoped_model: ^0.3.0
+  scoped_model: ^1.1.0
   loading: ^1.0.2
   geocoder: ^0.2.1
-  geopoint: ^0.7.1
+  geopoint: ^0.8.0
   multiselect_formfield: ^0.1.4
   image_picker: ^0.6.7+11
   url_launcher: ^5.7.10
